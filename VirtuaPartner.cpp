@@ -429,7 +429,6 @@ void liftAllKeys()
 {
 	keybd_event(VK_P, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_K, 0, KEYEVENTF_KEYUP, 0);
-	keybd_event(VK_G, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_W, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_A, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_S, 0, KEYEVENTF_KEYUP, 0);
@@ -528,8 +527,12 @@ void executeCommandString(std::string str) {
 			executeNext = false;
 		}
 	}
+
 	Sleep(ONE_FRAME * 12);
 	liftAllKeys();
+	keybd_event(VK_G, 0, 0, 0);
+	Sleep(ONE_FRAME * 120);
+	keybd_event(VK_G, 0, KEYEVENTF_KEYUP, 0);
 	std::cout << std::endl;
 }
 
