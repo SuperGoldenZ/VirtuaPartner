@@ -68,7 +68,7 @@ void liftAllKeys(bool defense = false)
 
 }
 
-void executeCommandString(std::string str, bool defense = false, int loopCount = 1, int sleepCount = ONE_FRAME) {
+void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
 	bool executeNext = false;
 	liftAllKeys();
 
@@ -79,8 +79,8 @@ void executeCommandString(std::string str, bool defense = false, int loopCount =
 		std::cout << " Holding Guard (";
 	}
 
-	for (int loop = 0; loop < loopCount; loop++) {
-		for (int i = 0; i < str.size(); i++) {
+	for (size_t loop = 0; loop < loopCount; loop++) {
+		for (size_t i = 0; i < str.size(); i++) {
 
 			//60 / 12 = 5 ms
 			if (executeNext == true) {
