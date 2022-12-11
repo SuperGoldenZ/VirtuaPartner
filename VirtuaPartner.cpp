@@ -10,6 +10,7 @@ VirtuaPartner.cpp
 #include <tchar.h>
 
 #include "lau.h"
+#include "jeffry.h"
 #include "defense.h"
 
 
@@ -24,10 +25,11 @@ const byte VK_D = 0x44;
 const byte VK_W = 0x57;
 const byte VK_S = 0x53;
 const byte VK_L = 0x4C;
+const byte VK_R = 0x52;
 
 int struggleType = 0;
 
-enum class Categories { Lau, Defense };
+enum class Categories { Lau, Defense, Jeffry };
 
 HANDLE hConsole;
 Categories category = Categories::Lau;
@@ -48,7 +50,7 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	return TRUE;
 }
 
-void liftAllKeys()
+void liftAllKeys(bool defense = false)
 {
 	keybd_event(VK_P, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_K, 0, KEYEVENTF_KEYUP, 0);
@@ -56,6 +58,10 @@ void liftAllKeys()
 	keybd_event(VK_A, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_S, 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(VK_D, 0, KEYEVENTF_KEYUP, 0);
+
+	if (defense == false) {
+		keybd_event(VK_G, 0, KEYEVENTF_KEYUP, 0);
+	}
 
 	while (GetAsyncKeyState(VK_D) != 0);
 	while (GetAsyncKeyState(VK_A) != 0);
@@ -84,7 +90,7 @@ void executeCommandString(std::string str, bool defense = false, int loopCount =
 					std::cout << "_";
 				}
 				else {
-					liftAllKeys();
+					liftAllKeys(defense);
 				}
 
 				if (i > 0 && str[i - 1] != '_' && defense == false) {
@@ -142,6 +148,12 @@ void executeCommandString(std::string str, bool defense = false, int loopCount =
 				keybd_event(VK_D, 0, 0, 0);
 				keybd_event(VK_S, 0, 0, 0);
 				std::cout << "3";
+				executeNext = true;
+				break;
+			case '1':
+				keybd_event(VK_A, 0, 0, 0);
+				keybd_event(VK_S, 0, 0, 0);
+				std::cout << "1";
 				executeNext = true;
 				break;
 			case '9':
@@ -209,7 +221,7 @@ void printMenu(std::string str = "")
 		std::cout << "* ";
 	}
 	else {
-		std::cout << "  ";
+		std::cout << " ";
 	}
 
 	std::cout << "[";
@@ -219,11 +231,26 @@ void printMenu(std::string str = "")
 	std::cout << "]";
 	std::cout << "au" << std::endl;
 
+	if (category == Categories::Jeffry) {
+		std::cout << "* ";
+	}
+	else {
+		std::cout << " ";
+	}
+	std::cout << "Jeff";
+	std::cout << "[";
+	SetConsoleTextAttribute(hConsole, 15);
+	std::cout << "r";
+	SetConsoleTextAttribute(hConsole, 8);
+	std::cout << "]";
+	std::cout << "y" << std::endl;
+
+
 	if (category == Categories::Defense) {
 		std::cout << "* ";
 	}
 	else {
-		std::cout << "  ";
+		std::cout << " ";
 	}
 	std::cout << "[";
 	SetConsoleTextAttribute(hConsole, 15);
@@ -233,7 +260,7 @@ void printMenu(std::string str = "")
 	std::cout << "efense" << std::endl;
 
 	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "  [";
+	std::cout << " [";
 	SetConsoleTextAttribute(hConsole, 15);
 	std::cout << "+";
 	SetConsoleTextAttribute(hConsole, 8);
@@ -241,7 +268,7 @@ void printMenu(std::string str = "")
 	std::cout << " Next String" << std::endl;
 
 	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "  [";
+	std::cout << " [";
 	SetConsoleTextAttribute(hConsole, 15);
 	std::cout << "-";
 	SetConsoleTextAttribute(hConsole, 8);
@@ -259,6 +286,10 @@ const std::string* getStrings() {
 
 	if (category == Categories::Defense) {
 		return struggle_strings;
+	}
+
+	if (category == Categories::Jeffry) {
+		return jeffry_strings;
 	}
 
 	return 0;
@@ -302,6 +333,13 @@ int main()
 		else if (GetAsyncKeyState(VK_L) != 0) {
 			while (GetAsyncKeyState(VK_L) != 0);
 			category = Categories::Lau;
+			stringArray = getStrings();
+			stringIndex = 0;
+			printMenu(stringArray[stringIndex]);
+		}
+		else if (GetAsyncKeyState(VK_R) != 0) {
+			while (GetAsyncKeyState(VK_R) != 0);
+			category = Categories::Jeffry;
 			stringArray = getStrings();
 			stringIndex = 0;
 			printMenu(stringArray[stringIndex]);
