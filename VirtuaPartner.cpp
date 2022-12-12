@@ -4,11 +4,13 @@ VirtuaPartner.cpp
 
 #include <time.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
 #include <windows.h>
 #include <string.h>
 #include <tchar.h>
 
+#include "akira.h"
 #include "aoi.h"
 #include "lau.h"
 #include "jeffry.h"
@@ -27,13 +29,18 @@ const byte VK_W = 0x57;
 const byte VK_S = 0x53;
 const byte VK_L = 0x4C;
 const byte VK_R = 0x52;
+const byte VK_1 = 0x31;
+const byte VK_2 = 0x32;
+const byte VK_O = 0x4F;
 
 int struggleType = 0;
 
-enum class Categories { Lau, Defense, Jeffry, Aoi };
+enum class Categories { Akira, Lau, Defense, Jeffry, Aoi };
 
 HANDLE hConsole;
-Categories category = Categories::Aoi;
+Categories category = Categories::Akira;
+
+bool leftSide = true;
 
 static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	int length = GetWindowTextLength(hWnd);
@@ -82,15 +89,23 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 
 	for (size_t loop = 0; loop < loopCount; loop++) {
 		for (size_t i = 0; i < str.size(); i++) {
+			if (i <= str.size() - 1 && str[i] == '!') {
+				std::cout << "!";
+				Sleep(3);
+				keybd_event(VK_G, 0, KEYEVENTF_KEYUP, 0);
+			}
 
 			//60 / 12 = 5 ms
 			if (executeNext == true) {
 				std::cout << " ";
+
 				Sleep(sleepCount);
+
+
 				if (str[i] == '_') {
 					std::cout << "_";
 				}
-				else {
+				else if (str[i] != '!') {
 					liftAllKeys(defense);
 				}
 
@@ -120,12 +135,22 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '4':
-				keybd_event(VK_A, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_A, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_D, 0, 0, 0);
+				}
 				std::cout << "4";
 				executeNext = true;
 				break;
 			case '6':
-				keybd_event(VK_D, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_D, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_A, 0, 0, 0);
+				}
 				std::cout << "6";
 				executeNext = true;
 				break;
@@ -140,25 +165,49 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '7':
-				keybd_event(VK_A, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_A, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_D, 0, 0, 0);
+				}
+
 				keybd_event(VK_W, 0, 0, 0);
 				std::cout << "7";
 				executeNext = true;
 				break;
 			case '3':
-				keybd_event(VK_D, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_D, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_A, 0, 0, 0);
+				}
+
 				keybd_event(VK_S, 0, 0, 0);
 				std::cout << "3";
 				executeNext = true;
 				break;
 			case '1':
-				keybd_event(VK_A, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_A, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_D, 0, 0, 0);
+				}
+
 				keybd_event(VK_S, 0, 0, 0);
 				std::cout << "1";
 				executeNext = true;
 				break;
 			case '9':
-				keybd_event(VK_D, 0, 0, 0);
+				if (leftSide) {
+					keybd_event(VK_D, 0, 0, 0);
+				}
+				else {
+					keybd_event(VK_A, 0, 0, 0);
+				}
+
 				keybd_event(VK_W, 0, 0, 0);
 				std::cout << "9";
 				executeNext = true;
@@ -246,7 +295,10 @@ void printMenu(std::string str = "")
 	std::cout << "Virtua Partner (alpha 1)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
-	printCharacterName("[A]oi", category == Categories::Aoi);
+	printCharacterName("[1] Left Side", !leftSide, 0);
+	printCharacterName("[2] Right Side", leftSide, 2);
+	printCharacterName("[A]kira", category == Categories::Akira);
+	printCharacterName("A[o]i", category == Categories::Aoi);
 	printCharacterName("[L]au", category == Categories::Lau);
 	printCharacterName("Jeff[r]y", category == Categories::Jeffry);
 	printCharacterName("[D]efense", category == Categories::Defense, 2);
@@ -256,14 +308,17 @@ void printMenu(std::string str = "")
 	printCharacterName("[-] Prev String", false, 1);
 	printCharacterName("[1] Play string one time", false, 1);
 	printCharacterName("[0] Start repeat", false, 1);
-	printCharacterName("[2] Stop repeat", false, 1);
+	printCharacterName("[2] Start random repeat", false, 1);
+	printCharacterName("[3] Stop repeat", false, 1);
 
 	std::cout << "? ";
 }
 
 const std::string* getStrings() {
-
-	if (category == Categories::Lau) {
+	switch (category) {
+	case Categories::Akira:
+		return akira_strings;
+	case Categories::Lau:
 		return lau_strings;
 	}
 
@@ -284,7 +339,7 @@ const std::string* getStrings() {
 
 int main()
 {
-	std::cout << "Virtua Partner" << std::endl;
+	srand(time(NULL));
 	EnumWindows(focusVfWindow, NULL);
 	while (!vfWindow) {
 		std::cout << ".";
@@ -293,6 +348,7 @@ int main()
 	int stringIndex = 0;
 	bool randomMode = false;
 	bool repeat = false;
+	bool random = false;
 
 	const std::string* stringArray;
 
@@ -303,14 +359,36 @@ int main()
 	printMenu(stringArray[stringIndex]);
 
 	while (true) {
+		if (random) {
+			stringIndex = rand() % sizeof(stringArray);
+
+			printMenu(stringArray[stringIndex]);
+		}
+
+		if (GetAsyncKeyState(VK_1) != 0) {
+			while (GetAsyncKeyState(VK_1) != 0);
+			leftSide = false;
+			printMenu(stringArray[stringIndex]);
+		}
+		if (GetAsyncKeyState(VK_2) != 0) {
+			while (GetAsyncKeyState(VK_2) != 0);
+			leftSide = true;
+			printMenu(stringArray[stringIndex]);
+		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
 			repeat = true;
 		}
-
 		if (GetAsyncKeyState(VK_NUMPAD2) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD2) != 0);
+			repeat = true;
+			random = true;
+		}
+
+		if (GetAsyncKeyState(VK_NUMPAD3) != 0) {
+			while (GetAsyncKeyState(VK_NUMPAD3) != 0);
 			repeat = false;
+			random = false;
 		}
 
 		if (GetAsyncKeyState(VK_ADD) != 0) {
@@ -321,9 +399,16 @@ int main()
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			printMenu(stringArray[--stringIndex]);
 		}
+		else if (GetAsyncKeyState(VK_O) != 0) {
+			while (GetAsyncKeyState(VK_O) != 0);
+			category = Categories::Aoi;
+			stringArray = getStrings();
+			stringIndex = 0;
+			printMenu(stringArray[stringIndex]);
+		}
 		else if (GetAsyncKeyState(VK_A) != 0) {
 			while (GetAsyncKeyState(VK_A) != 0);
-			category = Categories::Aoi;
+			category = Categories::Akira;
 			stringArray = getStrings();
 			stringIndex = 0;
 			printMenu(stringArray[stringIndex]);
@@ -349,8 +434,8 @@ int main()
 			stringIndex = 0;
 			printMenu(stringArray[stringIndex]);
 		}
-		else if (GetAsyncKeyState(0x31) != 0 || repeat) {
-			while (GetAsyncKeyState(0x31) != 0);
+		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat) {
+			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
 			if (category == Categories::Defense) {
 				executeCommandString(stringArray[stringIndex], true, 8, 1);
 			}
@@ -360,6 +445,7 @@ int main()
 
 			std::cout << "? ";
 		}
+
 
 		Sleep(ONE_FRAME);
 
