@@ -209,72 +209,54 @@ void clear_screen(char fill = ' ') {
 	SetConsoleCursorPosition(console, tl);
 }
 
+int getColor(bool selected)
+{
+	if (selected) return 14;
+
+	return 7;
+}
+
+void printCharacterName(std::string name, bool selected, int numEndline = 0)
+{
+	for (int i = 0; i < name.size(); i++) {
+		if (i > 0 && name[i - 1] == '[') {
+			SetConsoleTextAttribute(hConsole, 15);
+		}
+		else {
+			SetConsoleTextAttribute(hConsole, getColor(selected));
+		}
+		std::cout << name[i];
+	}
+
+	//Set to default non selected color
+	SetConsoleTextAttribute(hConsole, getColor(false));
+
+	if (numEndline == 0) {
+		std::cout << " ";
+	}
+
+	for (int i = 0; i < numEndline; i++) {
+		std::cout << std::endl;
+	}
+}
+
 void printMenu(std::string str = "")
 {
 	clear_screen();
+	std::cout << "Virtua Partner (alpha 1)" << std::endl;
+	std::cout << "-----------------------" << std::endl;
 
-	SetConsoleTextAttribute(hConsole, 15);
+	printCharacterName("[A]oi", category == Categories::Aoi);
+	printCharacterName("[L]au", category == Categories::Lau);
+	printCharacterName("Jeff[r]y", category == Categories::Jeffry);
+	printCharacterName("[D]efense", category == Categories::Defense, 2);
+
 	std::cout << str << std::endl;
-
-	SetConsoleTextAttribute(hConsole, 8);
-
-	if (category == Categories::Lau) {
-		std::cout << "* ";
-	}
-	else {
-		std::cout << " ";
-	}
-
-	std::cout << "[";
-	SetConsoleTextAttribute(hConsole, 15);
-	std::cout << "L";
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "]";
-	std::cout << "au" << std::endl;
-
-	if (category == Categories::Jeffry) {
-		std::cout << "* ";
-	}
-	else {
-		std::cout << " ";
-	}
-	std::cout << "Jeff";
-	std::cout << "[";
-	SetConsoleTextAttribute(hConsole, 15);
-	std::cout << "r";
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "]";
-	std::cout << "y" << std::endl;
-
-
-	if (category == Categories::Defense) {
-		std::cout << "* ";
-	}
-	else {
-		std::cout << " ";
-	}
-	std::cout << "[";
-	SetConsoleTextAttribute(hConsole, 15);
-	std::cout << "D";
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "]";
-	std::cout << "efense" << std::endl;
-
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << " [";
-	SetConsoleTextAttribute(hConsole, 15);
-	std::cout << "+";
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "]";
-	std::cout << " Next String" << std::endl;
-
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << " [";
-	SetConsoleTextAttribute(hConsole, 15);
-	std::cout << "-";
-	SetConsoleTextAttribute(hConsole, 8);
-	std::cout << "]";
-	std::cout << " Previous String" << std::endl;
+	printCharacterName("[+] Next String", false, false);
+	printCharacterName("[-] Prev String", false, 1);
+	printCharacterName("[1] Play string one time", false, 1);
+	printCharacterName("[0] Start repeat", false, 1);
+	printCharacterName("[2] Stop repeat", false, 1);
 
 	std::cout << "? ";
 }
@@ -296,6 +278,7 @@ const std::string* getStrings() {
 	if (category == Categories::Aoi) {
 		return aoi_strings;
 	}
+
 	return 0;
 }
 
@@ -309,6 +292,7 @@ int main()
 
 	int stringIndex = 0;
 	bool randomMode = false;
+	bool repeat = false;
 
 	const std::string* stringArray;
 
@@ -316,9 +300,19 @@ int main()
 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	printMenu(lau_strings[stringIndex]);
+	printMenu(stringArray[stringIndex]);
 
 	while (true) {
+		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
+			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
+			repeat = true;
+		}
+
+		if (GetAsyncKeyState(VK_NUMPAD2) != 0) {
+			while (GetAsyncKeyState(VK_NUMPAD2) != 0);
+			repeat = false;
+		}
+
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			printMenu(stringArray[++stringIndex]);
@@ -326,6 +320,13 @@ int main()
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			printMenu(stringArray[--stringIndex]);
+		}
+		else if (GetAsyncKeyState(VK_A) != 0) {
+			while (GetAsyncKeyState(VK_A) != 0);
+			category = Categories::Aoi;
+			stringArray = getStrings();
+			stringIndex = 0;
+			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_D) != 0) {
 			while (GetAsyncKeyState(VK_D) != 0);
@@ -348,7 +349,7 @@ int main()
 			stringIndex = 0;
 			printMenu(stringArray[stringIndex]);
 		}
-		else if (GetAsyncKeyState(0x31) != 0) {
+		else if (GetAsyncKeyState(0x31) != 0 || repeat) {
 			while (GetAsyncKeyState(0x31) != 0);
 			if (category == Categories::Defense) {
 				executeCommandString(stringArray[stringIndex], true, 8, 1);
