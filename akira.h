@@ -6,6 +6,7 @@
 
 std::string const akira_strings[] = {
 	//Normal
+	"9+G5K",
 	"K+G!",
 	"66+KK",
 	"2+K",
