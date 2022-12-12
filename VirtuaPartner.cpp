@@ -9,6 +9,7 @@ VirtuaPartner.cpp
 #include <string.h>
 #include <tchar.h>
 
+#include "aoi.h"
 #include "lau.h"
 #include "jeffry.h"
 #include "defense.h"
@@ -29,10 +30,10 @@ const byte VK_R = 0x52;
 
 int struggleType = 0;
 
-enum class Categories { Lau, Defense, Jeffry };
+enum class Categories { Lau, Defense, Jeffry, Aoi };
 
 HANDLE hConsole;
-Categories category = Categories::Lau;
+Categories category = Categories::Aoi;
 
 static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	int length = GetWindowTextLength(hWnd);
@@ -292,6 +293,9 @@ const std::string* getStrings() {
 		return jeffry_strings;
 	}
 
+	if (category == Categories::Aoi) {
+		return aoi_strings;
+	}
 	return 0;
 }
 
