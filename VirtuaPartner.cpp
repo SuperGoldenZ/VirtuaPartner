@@ -15,7 +15,8 @@ VirtuaPartner.cpp
 #include "lau.h"
 #include "jeffry.h"
 #include "defense.h"
-
+#include "goh.h"
+#include "lion.h"
 
 HWND vfWindow;
 
@@ -35,10 +36,10 @@ const byte VK_O = 0x4F;
 
 int struggleType = 0;
 
-enum class Categories { Akira, Lau, Defense, Jeffry, Aoi };
+enum class Categories { Akira, Lau, Defense, Jeffry, Aoi, Lion, Goh };
 
 HANDLE hConsole;
-Categories category = Categories::Akira;
+Categories category = Categories::Lion;
 
 bool leftSide = true;
 
@@ -99,8 +100,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			if (executeNext == true) {
 				std::cout << " ";
 
-				Sleep(sleepCount);
-
+				Sleep(sleepCount);				
 
 				if (str[i] == '_') {
 					std::cout << "_";
@@ -109,7 +109,14 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 					liftAllKeys(defense);
 				}
 
-				if (i > 0 && str[i - 1] != '_' && defense == false) {
+				//Double tap in the same direction
+				if (i > 0 && str[i] == str[i - 1]) {
+					Sleep(sleepCount * 10);
+				} else if (i > 0 && str[i - 1] != '_' && 				
+					//Don't delay if in defensive mode
+					defense == false  && 
+					//If moving two directions not in same direction, don't delay
+					(str[i] == 'P' || str[i] == 'G' || str[i] == 'K' || str[i] == '5')) {
 					Sleep(sleepCount * 10);
 				}
 			}
@@ -301,6 +308,7 @@ void printMenu(std::string str = "")
 	printCharacterName("A[o]i", category == Categories::Aoi);
 	printCharacterName("[L]au", category == Categories::Lau);
 	printCharacterName("Jeff[r]y", category == Categories::Jeffry);
+	printCharacterName("L[i]on", category == Categories::Lion);
 	printCharacterName("[D]efense", category == Categories::Defense, 2);
 
 	std::cout << str << std::endl;
@@ -320,6 +328,8 @@ const std::string* getStrings() {
 		return akira_strings;
 	case Categories::Lau:
 		return lau_strings;
+	case Categories::Lion:
+		return lion_strings;
 	}
 
 	if (category == Categories::Defense) {
