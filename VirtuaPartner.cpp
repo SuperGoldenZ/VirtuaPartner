@@ -36,6 +36,8 @@ const byte VK_O = 0x4F;
 
 int struggleType = 0;
 
+const std::string WAIT_CHARACTERS = "|\\-/|\\-/";
+
 enum class Categories { Akira, Lau, Defense, Jeffry, Aoi, Lion, Goh };
 
 HANDLE hConsole;
@@ -100,7 +102,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			if (executeNext == true) {
 				std::cout << " ";
 
-				Sleep(sleepCount);				
+				Sleep(sleepCount);
 
 				if (str[i] == '_') {
 					std::cout << "_";
@@ -112,9 +114,10 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				//Double tap in the same direction
 				if (i > 0 && str[i] == str[i - 1]) {
 					Sleep(sleepCount * 10);
-				} else if (i > 0 && str[i - 1] != '_' && 				
+				}
+				else if (i > 0 && str[i - 1] != '_' &&
 					//Don't delay if in defensive mode
-					defense == false  && 
+					defense == false &&
 					//If moving two directions not in same direction, don't delay
 					(str[i] == 'P' || str[i] == 'G' || str[i] == 'K' || str[i] == '5')) {
 					Sleep(sleepCount * 10);
@@ -351,8 +354,19 @@ int main()
 {
 	srand(time(NULL));
 	EnumWindows(focusVfWindow, NULL);
+
+	int waitIndex = 0;
 	while (!vfWindow) {
-		std::cout << ".";
+		clear_screen();
+		std::cout << "Searching for \"Virtua Fighter\" window. Please start game in a window containing \"Virtua Fighter\" text" << std::endl;
+		std::cout << WAIT_CHARACTERS[waitIndex++] << std::endl;
+
+		if (waitIndex == WAIT_CHARACTERS.size()) {
+			waitIndex = 0;
+		}
+
+		Sleep(250);
+		EnumWindows(focusVfWindow, NULL);
 	}
 
 	int stringIndex = 0;
