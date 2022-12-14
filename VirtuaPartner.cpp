@@ -17,6 +17,7 @@ VirtuaPartner.cpp
 #include "defense.h"
 #include "goh.h"
 #include "lion.h"
+#include "wolf.h"
 
 HWND vfWindow;
 
@@ -33,17 +34,19 @@ const byte VK_R = 0x52;
 const byte VK_1 = 0x31;
 const byte VK_2 = 0x32;
 const byte VK_O = 0x4F;
+const byte VK_Z = 0x5A;
 
 int struggleType = 0;
 
 const std::string WAIT_CHARACTERS = "|\\-/|\\-/";
 
-enum class Categories { Akira, Lau, Defense, Jeffry, Aoi, Lion, Goh };
+enum class Categories { Akira, Lau, Defense, Jeffry, Aoi, Lion, Goh, Wolf };
 
 HANDLE hConsole;
 Categories category = Categories::Lion;
 
-bool leftSide = true;
+//If CPU is on the left side or not
+bool leftSide = false;
 
 static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	int length = GetWindowTextLength(hWnd);
@@ -312,6 +315,7 @@ void printMenu(std::string str = "")
 	printCharacterName("[L]au", category == Categories::Lau);
 	printCharacterName("Jeff[r]y", category == Categories::Jeffry);
 	printCharacterName("L[i]on", category == Categories::Lion);
+	printCharacterName("[W]olf", category == Categories::Wolf);
 	printCharacterName("[D]efense", category == Categories::Defense, 2);
 
 	std::cout << str << std::endl;
@@ -325,6 +329,15 @@ void printMenu(std::string str = "")
 	std::cout << "? ";
 }
 
+const int getStringCount()
+{
+	switch (category) {
+	case Categories::Wolf:
+		return wolf_strings_count;
+	}
+	return 1;
+}
+
 const std::string* getStrings() {
 	switch (category) {
 	case Categories::Akira:
@@ -333,6 +346,8 @@ const std::string* getStrings() {
 		return lau_strings;
 	case Categories::Lion:
 		return lion_strings;
+	case Categories::Wolf:
+		return wolf_strings;
 	}
 
 	if (category == Categories::Defense) {
@@ -384,9 +399,10 @@ int main()
 
 	while (true) {
 		if (random) {
-			stringIndex = rand() % sizeof(stringArray);
+			stringIndex = rand() % getStringCount();
 
 			printMenu(stringArray[stringIndex]);
+			std::cout << std::endl << "Random string #" << stringIndex << " / " << getStringCount() << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
@@ -451,6 +467,13 @@ int main()
 			stringIndex = 0;
 			printMenu(stringArray[stringIndex]);
 		}
+		else if (GetAsyncKeyState(VK_W) != 0) {
+			while (GetAsyncKeyState(VK_W) != 0);
+			category = Categories::Wolf;
+			stringArray = getStrings();
+			stringIndex = 0;
+			printMenu(stringArray[stringIndex]);
+		}
 		else if (GetAsyncKeyState(VK_R) != 0) {
 			while (GetAsyncKeyState(VK_R) != 0);
 			category = Categories::Jeffry;
@@ -467,7 +490,7 @@ int main()
 				executeCommandString(stringArray[stringIndex]);
 			}
 
-			std::cout << "? ";
+			printMenu(stringArray[stringIndex]);
 		}
 
 
