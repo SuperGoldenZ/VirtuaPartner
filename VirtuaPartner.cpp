@@ -9,15 +9,8 @@ VirtuaPartner.cpp
 #include <windows.h>
 #include <string.h>
 #include <tchar.h>
-
-#include "akira.h"
-#include "aoi.h"
-#include "lau.h"
-#include "jeffry.h"
-#include "defense.h"
-#include "goh.h"
-#include "lion.h"
-#include "wolf.h"
+#include <fstream>
+#include <vector>
 
 HWND vfWindow;
 
@@ -35,19 +28,35 @@ const byte VK_1 = 0x31;
 const byte VK_2 = 0x32;
 const byte VK_O = 0x4F;
 const byte VK_Z = 0x5A;
+const byte VK_J = 0x4A;
+const byte VK_I = 0x49;
 
 int struggleType = 0;
 
 const std::string WAIT_CHARACTERS = "|\\-/|\\-/";
 
-enum class Categories { Akira, Lau, Defense, Jeffry, Aoi, Lion, Goh, Wolf };
-
 HANDLE hConsole;
-Categories category = Categories::Lion;
+using namespace std;
+
+std::string category;
 
 //If CPU is on the left side or not
 bool leftSide = false;
 
+
+
+vector<vector<string>> categories;
+
+vector<string> getStrings(string category) {
+
+	for (int i = 0; i < categories.size(); i++) {
+		if (categories[i][0] == category) {
+			return categories[i];
+		}
+	}
+
+	return categories[0];
+}
 static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	int length = GetWindowTextLength(hWnd);
 	char* buffer = new char[length + 1];
@@ -287,8 +296,9 @@ void printCharacterName(std::string name, bool selected, int numEndline = 0)
 		else {
 			SetConsoleTextAttribute(hConsole, getColor(selected));
 		}
-		std::cout << name[i];
+		cout << name[i];
 	}
+
 
 	//Set to default non selected color
 	SetConsoleTextAttribute(hConsole, getColor(false));
@@ -310,13 +320,12 @@ void printMenu(std::string str = "")
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
 	printCharacterName("[2] Right Side", leftSide, 2);
-	printCharacterName("[A]kira", category == Categories::Akira);
-	printCharacterName("A[o]i", category == Categories::Aoi);
-	printCharacterName("[L]au", category == Categories::Lau);
-	printCharacterName("Jeff[r]y", category == Categories::Jeffry);
-	printCharacterName("L[i]on", category == Categories::Lion);
-	printCharacterName("[W]olf", category == Categories::Wolf);
-	printCharacterName("[D]efense", category == Categories::Defense, 2);
+
+	for (int i = 0; i < categories.size(); i++) {
+		printCharacterName(categories[i][0], category == categories[i][0]);
+	}
+
+	cout << endl;
 
 	std::cout << str << std::endl;
 	printCharacterName("[+] Next String", false, false);
@@ -329,40 +338,27 @@ void printMenu(std::string str = "")
 	std::cout << "? ";
 }
 
-const int getStringCount()
+std::vector<std::string> readFile(const char* filename)
 {
-	switch (category) {
-	case Categories::Wolf:
-		return wolf_strings_count;
+	std::vector<std::string> strings;
+
+	std::ifstream file(filename);
+	std::string s;
+
+	if (file.is_open()) {
+		while (file.good()) {
+			file >> s;
+			strings.push_back(s);
+		}
 	}
-	return 1;
+
+	return strings;
 }
 
-const std::string* getStrings() {
-	switch (category) {
-	case Categories::Akira:
-		return akira_strings;
-	case Categories::Lau:
-		return lau_strings;
-	case Categories::Lion:
-		return lion_strings;
-	case Categories::Wolf:
-		return wolf_strings;
+void printStrings(const std::vector<std::string> strings) {
+	for (int i = 0; i < strings.size(); i++) {
+		std::cout << strings[i] << std::endl;
 	}
-
-	if (category == Categories::Defense) {
-		return struggle_strings;
-	}
-
-	if (category == Categories::Jeffry) {
-		return jeffry_strings;
-	}
-
-	if (category == Categories::Aoi) {
-		return aoi_strings;
-	}
-
-	return 0;
 }
 
 int main()
@@ -384,25 +380,36 @@ int main()
 		EnumWindows(focusVfWindow, NULL);
 	}
 
-	int stringIndex = 0;
 	bool randomMode = false;
 	bool repeat = false;
 	bool random = false;
 
-	const std::string* stringArray;
-
-	stringArray = getStrings();
+	vector<string> stringArray;
 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	categories.push_back(readFile("akira.txt"));
+	categories.push_back(readFile("aoi.txt"));
+	categories.push_back(readFile("lion.txt"));
+	categories.push_back(readFile("lau.txt"));
+	categories.push_back(readFile("jeffry.txt"));
+	categories.push_back(readFile("jean.txt"));
+	categories.push_back(readFile("wolf.txt"));
+	categories.push_back(readFile("defense.txt"));
+
+	category = categories[0][0];
+	stringArray = getStrings(category);
+
+	int stringIndex = 1;
 
 	printMenu(stringArray[stringIndex]);
 
 	while (true) {
 		if (random) {
-			stringIndex = rand() % getStringCount();
+			stringIndex = rand() % stringArray.size();
 
 			printMenu(stringArray[stringIndex]);
-			std::cout << std::endl << "Random string #" << stringIndex << " / " << getStringCount() << std::endl;
+			std::cout << std::endl << "Random string #" << stringIndex << " / " << stringArray.size() << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
@@ -433,66 +440,83 @@ int main()
 
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
-			printMenu(stringArray[++stringIndex]);
+			if (stringIndex < stringArray.size() - 1) {
+				printMenu(stringArray[++stringIndex]);
+			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
-			printMenu(stringArray[--stringIndex]);
+			if (stringIndex > 1) {
+				printMenu(stringArray[--stringIndex]);
+			}
 		}
 		else if (GetAsyncKeyState(VK_O) != 0) {
 			while (GetAsyncKeyState(VK_O) != 0);
-			category = Categories::Aoi;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "A[o]i";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_A) != 0) {
 			while (GetAsyncKeyState(VK_A) != 0);
-			category = Categories::Akira;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "[A]kira";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_D) != 0) {
 			while (GetAsyncKeyState(VK_D) != 0);
-			category = Categories::Defense;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "[D]efense";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_L) != 0) {
 			while (GetAsyncKeyState(VK_L) != 0);
-			category = Categories::Lau;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "[L]au";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_W) != 0) {
 			while (GetAsyncKeyState(VK_W) != 0);
-			category = Categories::Wolf;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "[W]olf";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_R) != 0) {
 			while (GetAsyncKeyState(VK_R) != 0);
-			category = Categories::Jeffry;
-			stringArray = getStrings();
-			stringIndex = 0;
+			category = "Jeff[r]y";
+			stringArray = getStrings(category);
+			stringIndex = 1;
+			printMenu(stringArray[stringIndex]);
+		}
+		else if (GetAsyncKeyState(VK_J) != 0) {
+			while (GetAsyncKeyState(VK_J) != 0);
+			category = "[J]ean";
+			stringArray = getStrings(category);
+			stringIndex = 1;
+			printMenu(stringArray[stringIndex]);
+		}
+		else if (GetAsyncKeyState(VK_I) != 0) {
+			while (GetAsyncKeyState(VK_I) != 0);
+			category = "L[i]on";
+			stringArray = getStrings(category);
+			stringIndex = 1;
 			printMenu(stringArray[stringIndex]);
 		}
 		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat) {
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
-			if (category == Categories::Defense) {
-				executeCommandString(stringArray[stringIndex], true, 8, 1);
-			}
-			else {
-				executeCommandString(stringArray[stringIndex]);
-			}
+			//if (category == Categories::Defense) {
+			// executeCommandString(stringArray[stringIndex], true, 8, 1);
+			//}
+			//else {
+			executeCommandString(stringArray[stringIndex]);
+			//}
 
 			printMenu(stringArray[stringIndex]);
 		}
-
 
 		Sleep(ONE_FRAME);
 
