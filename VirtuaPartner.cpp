@@ -88,6 +88,8 @@ void liftAllKeys(bool defense = false)
 
 	while (GetAsyncKeyState(VK_D) != 0);
 	while (GetAsyncKeyState(VK_A) != 0);
+	while (GetAsyncKeyState(VK_W) != 0);
+	while (GetAsyncKeyState(VK_S) != 0);
 
 }
 
@@ -361,6 +363,19 @@ void printStrings(const std::vector<std::string> strings) {
 	}
 }
 
+void loadConfigFiles()
+{
+	categories.clear();
+	categories.push_back(readFile("akira.txt"));
+	categories.push_back(readFile("aoi.txt"));
+	categories.push_back(readFile("lion.txt"));
+	categories.push_back(readFile("lau.txt"));
+	categories.push_back(readFile("jeffry.txt"));
+	categories.push_back(readFile("jean.txt"));
+	categories.push_back(readFile("wolf.txt"));
+	categories.push_back(readFile("defense.txt"));
+}
+
 int main()
 {
 	srand(time(NULL));
@@ -388,14 +403,7 @@ int main()
 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
-	categories.push_back(readFile("akira.txt"));
-	categories.push_back(readFile("aoi.txt"));
-	categories.push_back(readFile("lion.txt"));
-	categories.push_back(readFile("lau.txt"));
-	categories.push_back(readFile("jeffry.txt"));
-	categories.push_back(readFile("jean.txt"));
-	categories.push_back(readFile("wolf.txt"));
-	categories.push_back(readFile("defense.txt"));
+	loadConfigFiles();
 
 	category = categories[0][0];
 	stringArray = getStrings(category);
@@ -508,12 +516,12 @@ int main()
 		}
 		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat) {
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
-			//if (category == Categories::Defense) {
-			// executeCommandString(stringArray[stringIndex], true, 8, 1);
-			//}
-			//else {
+			if (category == "[D]efense") {
+			 executeCommandString(stringArray[stringIndex], true, 8, 1);
+			}
+			else {
 			executeCommandString(stringArray[stringIndex]);
-			//}
+			}
 
 			printMenu(stringArray[stringIndex]);
 		}
@@ -524,6 +532,9 @@ int main()
 			return 0;
 			break;
 		}
+
+		loadConfigFiles();
+		stringArray = getStrings(category);
 	}
 
 
