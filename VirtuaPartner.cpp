@@ -299,25 +299,25 @@ int main()
 
 	int stringIndex = 1;
 
-	printMenu(categories, stringArray[stringIndex], leftSide);
+	printMenu(categories, stringArray[stringIndex], leftSide, category);
 
 	while (true) {
 		if (random) {
 			stringIndex = rand() % stringArray.size();
 
-			printMenu(categories, stringArray[stringIndex], leftSide);
+			printMenu(categories, stringArray[stringIndex], leftSide, category);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << stringArray.size() << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			printMenu(categories, stringArray[stringIndex], leftSide);
+			printMenu(categories, stringArray[stringIndex], leftSide, category);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			printMenu(categories, stringArray[stringIndex], leftSide);
+			printMenu(categories, stringArray[stringIndex], leftSide, category);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
