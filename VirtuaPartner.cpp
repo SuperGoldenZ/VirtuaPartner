@@ -11,6 +11,7 @@ VirtuaPartner.cpp
 #include <tchar.h>
 #include <fstream>
 #include <vector>
+#include <filesystem>
 
 #include "keyboard.h"
 #include "ui.h"
@@ -235,7 +236,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	std::cout << std::endl;
 }
 
-std::vector<std::string> readFile(const char* filename)
+std::vector<std::string> readFile(string filename)
 {
 	std::vector<std::string> strings;
 
@@ -255,14 +256,25 @@ std::vector<std::string> readFile(const char* filename)
 void loadConfigFiles()
 {
 	categories.clear();
-	categories.push_back(readFile("akira.txt"));
-	categories.push_back(readFile("aoi.txt"));
-	categories.push_back(readFile("lion.txt"));
-	categories.push_back(readFile("lau.txt"));
-	categories.push_back(readFile("jeffry.txt"));
-	categories.push_back(readFile("jean.txt"));
-	categories.push_back(readFile("wolf.txt"));
-	categories.push_back(readFile("defense.txt"));
+
+	HANDLE hFind = INVALID_HANDLE_VALUE;
+	WIN32_FIND_DATA ffd;
+
+	hFind = FindFirstFile(_T("configs\\*"), &ffd);
+	do
+	{
+		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+		{
+			string configFile;
+			configFile += "configs\\";
+			wstring wFileName(ffd.cFileName);
+			string filename(wFileName.begin(), wFileName.end());
+
+			configFile += filename;
+
+			categories.push_back(readFile(configFile));
+		}
+	} while (FindNextFile(hFind, &ffd) != 0);
 }
 
 int main()
