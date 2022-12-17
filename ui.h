@@ -39,7 +39,9 @@ void printCharacterName(std::string name, bool selected, int numEndline = 0)
 	SetConsoleTextAttribute(hConsole, getColor(false));
 
 	if (numEndline == 0) {
-		std::cout << " ";
+		for (int i = name.length(); i <= 10; i++) {
+			std::cout << " ";
+		}
 	}
 
 	for (int i = 0; i < numEndline; i++) {
@@ -47,22 +49,52 @@ void printCharacterName(std::string name, bool selected, int numEndline = 0)
 	}
 }
 
-void printMenu(std::vector<std::vector<std::string>> categories, std::string str = "", bool leftSide = true, std::string currentCategory="")
+void printMenu(std::vector<std::vector<std::string>> categories, std::string str = "", bool leftSide = true, std::string currentCategory = "")
 {
 	clear_screen();
-	std::cout << "Virtua Partner (alpha 1)" << std::endl;
+	std::cout << "Virtua Partner (alpha 2)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
 	printCharacterName("[2] Right Side", leftSide, 2);
 
+	int currentCategoryIndex = -1;
 	for (int i = 0; i < categories.size(); i++) {
-		printCharacterName(categories[i][0], currentCategory == categories[i][0]);
+		if (categories[i][0] == currentCategory) {
+			currentCategoryIndex = i;
+			break;
+		}
+	}
+
+	if (currentCategoryIndex == -1) {
+		return;
+	}
+
+	int lineNumber = 0;
+	int moveNumber = 1;
+	int i = 0;
+
+	while (i < categories.size() || moveNumber < categories[currentCategoryIndex].size()) {
+		if (i < categories.size()) {
+			printCharacterName(categories[i][0], currentCategory == categories[i][0], 0);
+			i++;
+		}
+		else {
+			for (int j = 0; j <= 10; j++) {
+				std::cout << " ";
+			}
+		}
+
+		if (moveNumber < categories[currentCategoryIndex].size()) {
+			printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
+			moveNumber++;
+		}
+
+		std::cout << std::endl;
 	}
 
 	std::cout << std::endl;
 
-	std::cout << str << std::endl;
 	printCharacterName("[+] Next String", false, false);
 	printCharacterName("[-] Prev String", false, 1);
 	printCharacterName("[1] Play string one time", false, 1);
