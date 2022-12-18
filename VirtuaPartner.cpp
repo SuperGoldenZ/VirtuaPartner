@@ -19,6 +19,7 @@ VirtuaPartner.cpp
 using namespace std;
 
 HWND vfWindow;
+HDC dc;
 
 const byte ONE_FRAME = 16;
 
@@ -28,7 +29,6 @@ std::string category;
 
 //If CPU is on the left side or not
 bool leftSide = false;
-
 
 vector<vector<string>> categories;
 
@@ -52,10 +52,35 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	// List visible windows with a non-empty title
 	if (IsWindowVisible(hWnd) && length != 0 && (windowTitle.find("Virtua Fighter") != std::string::npos)) {
 		vfWindow = hWnd;
+		dc = GetDC(vfWindow);
 		std::cout << hWnd << ": " << windowTitle << std::endl;
 	}
 
 	return TRUE;
+}
+
+int getAdvantageAmount()
+{
+	int x = 331;
+	int y = 596;
+
+	COLORREF color = GetPixel(dc, x, y);
+	RGBTRIPLE rgb;
+
+	rgb.rgbtRed = GetRValue(color);
+	rgb.rgbtGreen = GetGValue(color);
+	rgb.rgbtBlue = GetBValue(color);
+
+	if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
+		cout << "+18!";
+		return 18;
+	}
+	else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
+		cout << "+15!";
+		return 15;
+	}
+
+	return 0;
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
@@ -217,7 +242,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		}
 	}
 
+
 	Sleep(sleepCount * 12);
+
 	liftAllKeys();
 
 	if (defense == true) {
@@ -228,10 +255,14 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
-		Sleep(1250);
+		Sleep(250);
+		Sleep(250);
+		getAdvantageAmount();
+		Sleep(250);
+		Sleep(250);
+		Sleep(250);
 		keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
 	}
-
 
 	std::cout << std::endl;
 }
@@ -246,7 +277,9 @@ std::vector<std::string> readFile(string filename)
 	if (file.is_open()) {
 		while (file.good()) {
 			file >> s;
-			strings.push_back(s);
+			if (s[0] != '#') {
+				strings.push_back(s);
+			}
 		}
 	}
 
@@ -397,5 +430,4 @@ int main()
 
 
 	std::cout << " Done " << std::endl;
-
 }
