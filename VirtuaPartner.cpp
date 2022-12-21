@@ -23,6 +23,10 @@ HDC dc;
 
 const byte ONE_FRAME = 16;
 
+const int WHITE_R = 255;
+const int WHITE_G = 251;
+const int WHITE_B = 255;
+
 int struggleType = 0;
 
 std::string category;
@@ -59,28 +63,101 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	return TRUE;
 }
 
-int getAdvantageAmount()
+bool checkPoint(int x, int y, int r, int g, int b)
 {
-	int x = 331;
-	int y = 596;
-
-	COLORREF color = GetPixel(dc, x, y);
+	const COLORREF color = GetPixel(dc, x, y);
 	RGBTRIPLE rgb;
 
 	rgb.rgbtRed = GetRValue(color);
 	rgb.rgbtGreen = GetGValue(color);
 	rgb.rgbtBlue = GetBValue(color);
 
-	if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
-		cout << "+18!";
-		return 18;
-	}
-	else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
-		cout << "+15!";
-		return 15;
+	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
+}
+
+bool didPkCounter()
+{
+
+	if (!checkPoint(324, 522, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
 	}
 
-	return 0;
+	//Number of hits too lower left corner
+	if (!checkPoint(168, 552, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+
+	return true;
+}
+
+bool didCuffisCounter()
+{
+	//Number of hits 3 lower right up a bit
+	if (!checkPoint(167, 545, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+
+	return true;
+}
+
+bool didKneeCounter()
+{
+	//Check blue COUNTER text U lower right
+	if (!checkPoint(149, 377, 151, 229, 255)) {
+		cout << "\nfailed counter check";
+		return false;
+	}
+
+	//One hit combo 1 middle lower
+	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {
+		cout << "\nfailed 1 check";
+		return false;
+	}
+
+	//Hit 31 3
+	if (!checkPoint(338, 536, WHITE_R, WHITE_G, WHITE_B)) {
+		cout << "\nfailed 3 check";
+		return false;
+	}
+
+	return true;
+}
+
+int getAdvantageAmount()
+{
+	int x = 331;
+	int y = 596;
+
+	for (int x = 291; x <= 331; x++) {
+		for (int y = 594; y <= 597; y++) {
+			COLORREF color = GetPixel(dc, x, y);
+			RGBTRIPLE rgb;
+
+			rgb.rgbtRed = GetRValue(color);
+			rgb.rgbtGreen = GetGValue(color);
+			rgb.rgbtBlue = GetBValue(color);
+
+			if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
+				return 18;
+			}
+			else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
+				return 15;
+			}
+			else if ((int)rgb.rgbtRed == 120 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 120) {
+				return 10;
+			}
+			else if ((int)rgb.rgbtRed == 170 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 255) {
+				return 12;
+			}
+			else if ((int)rgb.rgbtRed == 67 && (int)rgb.rgbtGreen == 98 && (int)rgb.rgbtBlue == 100) {
+				return 13;
+			}
+		}
+	}
+
+	return -1;
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
@@ -247,6 +324,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 
 	liftAllKeys();
 
+	int advantageAmount = -1;
 	if (defense == true) {
 		Sleep(500);
 		keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
@@ -255,14 +333,60 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
+		advantageAmount = getAdvantageAmount();
 		Sleep(250);
 		Sleep(250);
-		getAdvantageAmount();
+		if (advantageAmount == -1) {
+			advantageAmount = getAdvantageAmount();
+		}
 		Sleep(250);
 		Sleep(250);
 		Sleep(250);
+		if (advantageAmount == -1) {
+			advantageAmount = getAdvantageAmount();
+		}
+
+		switch (advantageAmount) {
+		case 12:
+			cout << "\n\tchecking PK counter - ";
+			if (didPkCounter()) {
+				cout << "good !";
+			}
+			else {
+				cout << "bad";
+			}
+			break;
+		case 15:
+			//Add delay since cuffis takes longer to execute
+			Sleep(250);
+			cout << "\n\tchecking cuffis counter - ";
+			if (didCuffisCounter()) {
+				cout << "good !";
+			}
+			else {
+				cout << "bad";
+			}
+			break;
+		case 18:
+			cout << "\n\tchecking knee counter - ";
+			if (didKneeCounter()) {
+				cout << "good !";
+			}
+			else {
+				cout << "bad";
+			}
+			break;
+		default:
+			cout << "\n\tunknown advantage" << advantageAmount;
+		}
+
+		Sleep(1000);
+
 		keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
 	}
+
+	keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
+	while (GetAsyncKeyState(KEYS['G']) != 0);
 
 	std::cout << std::endl;
 }
@@ -277,7 +401,7 @@ std::vector<std::string> readFile(string filename)
 	if (file.is_open()) {
 		while (file.good()) {
 			file >> s;
-			if (s[0] != '#') {
+			if (s[0] != '#' && !s.empty()) {
 				strings.push_back(s);
 			}
 		}
