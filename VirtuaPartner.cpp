@@ -16,6 +16,9 @@ VirtuaPartner.cpp
 #include "keyboard.h"
 #include "ui.h"
 
+#pragma comment(lib, "winmm.lib")
+
+
 using namespace std;
 
 HWND vfWindow;
@@ -158,6 +161,32 @@ int getAdvantageAmount()
 	}
 
 	return -1;
+}
+
+void playSuccessSound()
+{
+	mciSendString(_T("play success_02.wav"), NULL, 0, NULL);
+	system("color a1");
+}
+
+void playFailureSound()
+{
+	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
+	system("color c0");
+}
+
+void setDefaultConsoleText(int fontSize = 18)
+{
+	CONSOLE_FONT_INFOEX cfi;
+	cfi.cbSize = sizeof(cfi);
+	cfi.nFont = 0;
+	cfi.dwFontSize.X = 0; // Width of each character in the font
+	cfi.dwFontSize.Y = fontSize; // Height
+	cfi.FontFamily = FF_DONTCARE;
+	cfi.FontWeight = FW_NORMAL;
+
+	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
+	system("color 0F");
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
@@ -346,42 +375,51 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			advantageAmount = getAdvantageAmount();
 		}
 
+		bool maxPunishment = false;
+		bool guaranteedDamage = true;
+
 		switch (advantageAmount) {
 		case 12:
-			cout << "\n\tchecking PK counter - ";
+			cout << "\n\n\n\n\n\n\tchecking PK counter - ";
 			if (didPkCounter()) {
-				cout << "good !";
-			}
-			else {
-				cout << "bad";
+				maxPunishment = true;
 			}
 			break;
 		case 15:
 			//Add delay since cuffis takes longer to execute
 			Sleep(250);
-			cout << "\n\tchecking cuffis counter - ";
+			cout << "\n\n\n\n\n\n\tchecking cuffis counter - ";
 			if (didCuffisCounter()) {
-				cout << "good !";
-			}
-			else {
-				cout << "bad";
+				maxPunishment = true;
 			}
 			break;
 		case 18:
-			cout << "\n\tchecking knee counter - ";
+			cout << "\n\n\n\n\n\n\tchecking knee counter - ";
 			if (didKneeCounter()) {
-				cout << "good !";
-			}
-			else {
-				cout << "bad";
+				maxPunishment = true;
 			}
 			break;
 		default:
+			guaranteedDamage = false;
 			cout << "\n\tunknown advantage" << advantageAmount;
 		}
 
-		Sleep(1000);
+		if (guaranteedDamage && maxPunishment) {
+			clear_screen();
+			setDefaultConsoleText(36);
+			playSuccessSound();
+			cout << "MAX PUNISH!";
+		}
+		else if (guaranteedDamage) {
+			clear_screen();
+			setDefaultConsoleText(36);
+			playFailureSound();
+			cout << "Missed Punish";
+		}
 
+		Sleep(1000);
+		system("color 0F");
+		setDefaultConsoleText();
 		keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
 	}
 
@@ -440,6 +478,8 @@ int main()
 	EnumWindows(focusVfWindow, NULL);
 
 	int waitIndex = 0;
+	setDefaultConsoleText();
+
 	while (!vfWindow) {
 		clear_screen();
 		std::cout << "Searching for \"Virtua Fighter\" window. Please start game in a window containing \"Virtua Fighter\" text" << std::endl;
@@ -469,6 +509,7 @@ int main()
 	int stringIndex = 1;
 
 	printMenu(categories, stringArray[stringIndex], leftSide, category);
+
 
 	while (true) {
 		if (random) {
