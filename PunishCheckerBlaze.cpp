@@ -7,10 +7,11 @@
 
 #include "PunishCheckerBlaze.h"
 
-PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow) {
-    _virtuaFighterWindow = virtuaFighterWindow;    
-	dc = GetDC(virtuaFighterWindow);	
+PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow) {
+	_virtuaFighterWindow = virtuaFighterWindow;
+	dc = GetDC(virtuaFighterWindow);
 	frameAdvantage = -1;
+	this->recoversLow = recoversLow;
 };
 
 bool PunishCheckerBlaze::didPkCounter()
@@ -29,6 +30,9 @@ bool PunishCheckerBlaze::didPkCounter()
 	return true;
 }
 
+/**
+* @todo fix bug where PPP will also count as positive for Blaze counter
+*/
 bool PunishCheckerBlaze::didCuffisCounter()
 {
 	//Number of hits 3 lower right up a bit
@@ -43,17 +47,17 @@ bool PunishCheckerBlaze::didCuffisCounter()
 bool PunishCheckerBlaze::didKneeCounter()
 {
 	//Check blue COUNTER text U lower right
-	if (!checkPoint(149, 377, 151, 229, 255)) {		
+	if (!checkPoint(149, 377, 151, 229, 255)) {
 		return false;
 	}
 
 	//One hit combo 1 middle lower
-	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {		
+	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
 	//Hit 31 3
-	if (!checkPoint(338, 536, WHITE_R, WHITE_G, WHITE_B)) {		
+	if (!checkPoint(338, 536, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
@@ -86,38 +90,46 @@ void PunishCheckerBlaze::giveFeedback() {
 	judgePunishmentThread.join();
 }
 
+/*
+* @todo need to implement this later
+*/
+bool PunishCheckerBlaze::didElbowCounter()
+{
+	return false;
+}
+
 void PunishCheckerBlaze::judgePunishment()
 {
 	bool maxPunishment = false;
 	bool guaranteedDamage = true;
 
-	for (int i = 0; i < 10; i++) {
-		switch (frameAdvantage) {
-		case 12:
-			if (didPkCounter()) {
-				maxPunishment = true;
-			}
-			break;
-		case 15:
+	switch (frameAdvantage) {
+	case 12:
+		if (didPkCounter()) {
+			maxPunishment = true;
+		}
+		break;
+	case 15:
+		if (!recoversLow) {
 			//Add delay since cuffis takes longer to execute
-			Sleep(250);
+			std::this_thread::sleep_for(std::chrono::milliseconds(1250));
 			if (didCuffisCounter()) {
 				maxPunishment = true;
 			}
-			break;
-		case 18:
-			if (didKneeCounter()) {
+		}
+		else {
+			if (didElbowCounter()) {
 				maxPunishment = true;
 			}
-			break;
-		default:
-			guaranteedDamage = false;
 		}
-		if (maxPunishment) {
-			break;					
+		break;
+	case 18:
+		if (didKneeCounter()) {
+			maxPunishment = true;
 		}
-		std::cout << "=";
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		break;
+	default:
+		guaranteedDamage = false;
 	}
 
 	if (guaranteedDamage && maxPunishment) {
@@ -132,7 +144,6 @@ void PunishCheckerBlaze::judgePunishment()
 		playFailureSound();
 		std::cout << "Missed Punish";
 	}
-
 }
 
 void PunishCheckerBlaze::playSuccessSound()
@@ -182,9 +193,9 @@ void PunishCheckerBlaze::getAdvantageAmount()
 					frameAdvantage = 13;
 					return;
 				}
-			}		
+			}
 		}
 		std::cout << ".";
 		std::this_thread::sleep_for(std::chrono::milliseconds(150));
-	}	
+	}
 }
