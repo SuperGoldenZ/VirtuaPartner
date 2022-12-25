@@ -55,13 +55,13 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 
 	// List visible windows with a non-empty title
 	if (IsWindowVisible(hWnd) && length != 0 && (windowTitle.find("Virtua Fighter") != std::string::npos)) {
-		vfWindow = hWnd;		
+		vfWindow = hWnd;
 		std::cout << hWnd << ": " << windowTitle << std::endl;
 	}
 
 	return TRUE;
 }
-	
+
 void setDefaultConsoleText(int fontSize = 18)
 {
 	CONSOLE_FONT_INFOEX cfi;
@@ -78,7 +78,7 @@ void setDefaultConsoleText(int fontSize = 18)
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
 	bool executeNext = false;
-	liftAllKeys();
+	liftAllKeys(false);
 
 	Sleep(sleepCount * 6);
 
@@ -87,8 +87,15 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		std::cout << " Holding Guard (";
 	}
 
+	//Will loop in case of performing defense manuver
+	//In case CPU is on offense, loopCount will always be 1
 	for (size_t loop = 0; loop < loopCount; loop++) {
 		for (size_t i = 0; i < str.size(); i++) {
+
+			//Stop processing if get to end of line comment
+			if (str[i] == '#') {
+				break;
+			}
 			if (i <= str.size() - 1 && str[i] == '!') {
 				std::cout << "!";
 				Sleep(3);
@@ -238,7 +245,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 
 	Sleep(sleepCount * 12);
 
-	liftAllKeys();
+	liftAllKeys(false);
 
 	int advantageAmount = -1;
 	if (defense == true) {
@@ -249,9 +256,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
-		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow);
+		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos);
 		punishChecker.giveFeedback();
-		
+
 		Sleep(1000);
 		system("color 0F");
 		setDefaultConsoleText();
@@ -274,6 +281,7 @@ std::vector<std::string> readFile(string filename)
 	if (file.is_open()) {
 		while (file.good()) {
 			file >> s;
+
 			if (s[0] != '#' && !s.empty()) {
 				strings.push_back(s);
 			}
@@ -327,7 +335,7 @@ int main()
 	bool random = false;
 
 	vector<string> stringArray;
-	
+
 	loadConfigFiles();
 
 	category = categories[0][0];
