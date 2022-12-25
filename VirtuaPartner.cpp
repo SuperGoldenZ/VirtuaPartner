@@ -348,10 +348,12 @@ int main()
 
 	while (true) {
 		if (random) {
-			stringIndex = rand() % stringArray.size();
-
+			stringIndex = (rand() % stringArray.size());
+			if (stringIndex == 0) {
+				stringIndex = 1;
+			}
 			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
-			std::cout << std::endl << "Random string #" << stringIndex << " / " << stringArray.size() << std::endl;
+			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size()-1) << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
