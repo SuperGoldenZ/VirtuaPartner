@@ -22,7 +22,7 @@ const byte VK_1 = 0x31;
 const byte VK_2 = 0x32;
 const byte VK_Z = 0x5A;
 
-void liftAllKeys(bool defense = false)
+void liftAllKeys(bool defense)
 {
 	keybd_event(KEYS['P'], 0, KEYEVENTF_KEYUP, 0);
 	keybd_event(KEYS['K'], 0, KEYEVENTF_KEYUP, 0);
