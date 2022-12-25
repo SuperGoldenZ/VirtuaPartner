@@ -12,23 +12,19 @@ VirtuaPartner.cpp
 #include <fstream>
 #include <vector>
 #include <filesystem>
+#include <thread>
 
 #include "keyboard.h"
-#include "ui.h"
+#include "UserInterface.h"
+#include "PunishCheckerBlaze.h"
 
 #pragma comment(lib, "winmm.lib")
-
 
 using namespace std;
 
 HWND vfWindow;
-HDC dc;
 
 const byte ONE_FRAME = 16;
-
-const int WHITE_R = 255;
-const int WHITE_G = 251;
-const int WHITE_B = 255;
 
 int struggleType = 0;
 
@@ -38,6 +34,7 @@ std::string category;
 bool leftSide = false;
 
 vector<vector<string>> categories;
+UserInterface ui;
 
 vector<string> getStrings(string category) {
 
@@ -58,123 +55,13 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 
 	// List visible windows with a non-empty title
 	if (IsWindowVisible(hWnd) && length != 0 && (windowTitle.find("Virtua Fighter") != std::string::npos)) {
-		vfWindow = hWnd;
-		dc = GetDC(vfWindow);
+		vfWindow = hWnd;		
 		std::cout << hWnd << ": " << windowTitle << std::endl;
 	}
 
 	return TRUE;
 }
-
-bool checkPoint(int x, int y, int r, int g, int b)
-{
-	const COLORREF color = GetPixel(dc, x, y);
-	RGBTRIPLE rgb;
-
-	rgb.rgbtRed = GetRValue(color);
-	rgb.rgbtGreen = GetGValue(color);
-	rgb.rgbtBlue = GetBValue(color);
-
-	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
-}
-
-bool didPkCounter()
-{
-
-	if (!checkPoint(324, 522, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	//Number of hits too lower left corner
-	if (!checkPoint(168, 552, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-
-	return true;
-}
-
-bool didCuffisCounter()
-{
-	//Number of hits 3 lower right up a bit
-	if (!checkPoint(167, 545, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-
-	return true;
-}
-
-bool didKneeCounter()
-{
-	//Check blue COUNTER text U lower right
-	if (!checkPoint(149, 377, 151, 229, 255)) {
-		cout << "\nfailed counter check";
-		return false;
-	}
-
-	//One hit combo 1 middle lower
-	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {
-		cout << "\nfailed 1 check";
-		return false;
-	}
-
-	//Hit 31 3
-	if (!checkPoint(338, 536, WHITE_R, WHITE_G, WHITE_B)) {
-		cout << "\nfailed 3 check";
-		return false;
-	}
-
-	return true;
-}
-
-int getAdvantageAmount()
-{
-	int x = 331;
-	int y = 596;
-
-	for (int x = 291; x <= 331; x++) {
-		for (int y = 594; y <= 597; y++) {
-			COLORREF color = GetPixel(dc, x, y);
-			RGBTRIPLE rgb;
-
-			rgb.rgbtRed = GetRValue(color);
-			rgb.rgbtGreen = GetGValue(color);
-			rgb.rgbtBlue = GetBValue(color);
-
-			if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
-				return 18;
-			}
-			else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
-				return 15;
-			}
-			else if ((int)rgb.rgbtRed == 120 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 120) {
-				return 10;
-			}
-			else if ((int)rgb.rgbtRed == 170 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 255) {
-				return 12;
-			}
-			else if ((int)rgb.rgbtRed == 67 && (int)rgb.rgbtGreen == 98 && (int)rgb.rgbtBlue == 100) {
-				return 13;
-			}
-		}
-	}
-
-	return -1;
-}
-
-void playSuccessSound()
-{
-	mciSendString(_T("play success_02.wav"), NULL, 0, NULL);
-	system("color a1");
-}
-
-void playFailureSound()
-{
-	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
-	system("color c0");
-}
-
+	
 void setDefaultConsoleText(int fontSize = 18)
 {
 	CONSOLE_FONT_INFOEX cfi;
@@ -362,61 +249,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
-		advantageAmount = getAdvantageAmount();
-		Sleep(250);
-		Sleep(250);
-		if (advantageAmount == -1) {
-			advantageAmount = getAdvantageAmount();
-		}
-		Sleep(250);
-		Sleep(250);
-		Sleep(250);
-		if (advantageAmount == -1) {
-			advantageAmount = getAdvantageAmount();
-		}
-
-		bool maxPunishment = false;
-		bool guaranteedDamage = true;
-
-		switch (advantageAmount) {
-		case 12:
-			cout << "\n\n\n\n\n\n\tchecking PK counter - ";
-			if (didPkCounter()) {
-				maxPunishment = true;
-			}
-			break;
-		case 15:
-			//Add delay since cuffis takes longer to execute
-			Sleep(250);
-			cout << "\n\n\n\n\n\n\tchecking cuffis counter - ";
-			if (didCuffisCounter()) {
-				maxPunishment = true;
-			}
-			break;
-		case 18:
-			cout << "\n\n\n\n\n\n\tchecking knee counter - ";
-			if (didKneeCounter()) {
-				maxPunishment = true;
-			}
-			break;
-		default:
-			guaranteedDamage = false;
-			cout << "\n\tunknown advantage" << advantageAmount;
-		}
-
-		if (guaranteedDamage && maxPunishment) {
-			clear_screen();
-			setDefaultConsoleText(36);
-			playSuccessSound();
-			cout << "MAX PUNISH!";
-		}
-		else if (guaranteedDamage) {
-			clear_screen();
-			setDefaultConsoleText(36);
-			playFailureSound();
-			cout << "Missed Punish";
-		}
-
+		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow);
+		punishChecker.giveFeedback();
+		
 		Sleep(1000);
 		system("color 0F");
 		setDefaultConsoleText();
@@ -481,13 +316,7 @@ int main()
 	setDefaultConsoleText();
 
 	while (!vfWindow) {
-		clear_screen();
-		std::cout << "Searching for \"Virtua Fighter\" window. Please start game in a window containing \"Virtua Fighter\" text" << std::endl;
-		std::cout << WAIT_CHARACTERS[waitIndex++] << std::endl;
-
-		if (waitIndex == WAIT_CHARACTERS.size()) {
-			waitIndex = 0;
-		}
+		ui.showWaitingScreen();
 
 		Sleep(250);
 		EnumWindows(focusVfWindow, NULL);
@@ -498,9 +327,7 @@ int main()
 	bool random = false;
 
 	vector<string> stringArray;
-
-	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-
+	
 	loadConfigFiles();
 
 	category = categories[0][0];
@@ -508,26 +335,26 @@ int main()
 
 	int stringIndex = 1;
 
-	printMenu(categories, stringArray[stringIndex], leftSide, category);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 
 
 	while (true) {
 		if (random) {
 			stringIndex = rand() % stringArray.size();
 
-			printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << stringArray.size() << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -548,13 +375,13 @@ int main()
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				printMenu(categories, stringArray[++stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				printMenu(categories, stringArray[--stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category);
 			}
 		}
 
@@ -565,7 +392,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				printMenu(categories, stringArray[stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 				break;
 			}
 		}
@@ -579,7 +406,7 @@ int main()
 				executeCommandString(stringArray[stringIndex]);
 			}
 
-			printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
 		}
 
 		Sleep(ONE_FRAME);
