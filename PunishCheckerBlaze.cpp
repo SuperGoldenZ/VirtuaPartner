@@ -95,13 +95,48 @@ void PunishCheckerBlaze::giveFeedback() {
 */
 bool PunishCheckerBlaze::didElbowCounter()
 {
+	if (!checkPoint(330, 473, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (!checkPoint(332, 535, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (!checkPoint(146, 551, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(320, 543, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	/*
+	if (!checkPoint(332, 472, WHITE_R, WHITE_G, WHITE_B)) {
 	return false;
+	}
+
+	if (!checkPoint(375, 460, WHITE_R, WHITE_G, WHITE_B)) {
+	return false;
+	}
+
+	if (!checkPoint(149, 551, WHITE_R, WHITE_G, WHITE_B)) {
+	return false;
+	}
+
+	if (!checkPoint(376, 538, WHITE_R, WHITE_G, WHITE_B)) {
+	return false;
+	}*/
+
+	return true;
 }
 
 void PunishCheckerBlaze::judgePunishment()
 {
 	bool maxPunishment = false;
 	bool guaranteedDamage = true;
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	switch (frameAdvantage) {
 	case 12:
@@ -112,7 +147,7 @@ void PunishCheckerBlaze::judgePunishment()
 	case 15:
 		if (!recoversLow) {
 			//Add delay since cuffis takes longer to execute
-			std::this_thread::sleep_for(std::chrono::milliseconds(1250));
+			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 			if (didCuffisCounter()) {
 				maxPunishment = true;
 			}
