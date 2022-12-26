@@ -276,14 +276,11 @@ std::vector<std::string> readFile(string filename)
 	std::vector<std::string> strings;
 
 	std::ifstream file(filename);
-	std::string s;
 
 	if (file.is_open()) {
-		while (file.good()) {
-			file >> s;
-
-			if (s[0] != '#' && !s.empty()) {
-				strings.push_back(s);
+		for (std::string line; getline(file, line);) {
+			if (line[0] != '#' && !line.empty()) {
+				strings.push_back(line);
 			}
 		}
 	}
@@ -353,7 +350,7 @@ int main()
 				stringIndex = 1;
 			}
 			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
-			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size()-1) << std::endl;
+			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
