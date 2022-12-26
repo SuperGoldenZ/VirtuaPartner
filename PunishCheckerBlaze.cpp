@@ -61,6 +61,26 @@ bool PunishCheckerBlaze::didKneeCounter()
 		return false;
 	}
 
+	//Hit 31 3
+	if (checkPoint(362, 474, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(168, 531, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(146, 549, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	//Hit 31 3
+	if (!checkPoint(366, 553, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+
+
 	return true;
 }
 
