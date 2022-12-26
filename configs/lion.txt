@@ -1,25 +1,45 @@
 L[i]on
-PPPK
-PPP2+K
-PPP7+K
-P4+PP
-4+PKP
-44+PK+G
-2_3+PP+K
-3346+P
-3+PPPK
-3+PPP2+K
-3+PPP7+K
-3+KPP
-9+K
-7+K
-3+P+K
+####################################
+# Back turned
+####################################
+44+P552+K
+
+####################################
+# Jumping
+####################################
+9+G5K #recoverslow
+
+####################################
+# Toro Teihozen
+####################################
+2+G__554+P+K+G5PP52+K #recoverslow
+4+P+K+GPPK55P
+
+####################################
+# Basic standing combos
+####################################
+PPP+K
+6+PP
 6+K+G
-2+K+G
-9+K+GP
-K+G55PPP
-K+G5K
-K+G5K+GK
-9+G5K
-44+P52+K
-44+P58+K+G
+3+PP
+66+K5K
+4+KP
+46+P+KPP
+
+####################################
+# Lion's many punishable low attacks
+####################################
+2+G__551+K+G
+
+####################################
+# Many recover low
+####################################
+2+G__551+K #recoverslow
+2+G__552+K+G #recoverslow
+2+G__559+P+K+GK #recoverslow
+2+G__552+P+K #recoverslow
+2+G__551+P+K #recoverslow
+2+G__5543+P #recoverslow
+2+G__5541236+P #recoverslow
+2+G__551+PP #recoverslow
+2+G__552+KK #recoverslow
