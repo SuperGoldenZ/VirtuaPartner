@@ -256,7 +256,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
-		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos);
+		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
 		punishChecker.giveFeedback();
 
 		Sleep(1000);
