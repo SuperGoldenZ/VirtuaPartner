@@ -1,4 +1,4 @@
-Virtua Partner
+﻿Virtua Partner
 ==============
 
 Progmatic Windows keyboard inputs to make sparring partner in Virtua Fighter.
@@ -14,6 +14,21 @@ Progmatic Windows keyboard inputs to make sparring partner in Virtua Fighter.
 - Trigger keyboard inputs progmatically to act as a sparring partner in Virtua Fighter 5 Final Tuned
 
 - Detects when you block a move with guaranteed punishment and gives feedback on if you punish or not
+
+## Configuration Syntax
+
+Virtua Partner uses text files in domain specific language to represent CPU movements.
+
+The following hashtags can be used:
+
+```
+#recoverslow
+#↑ used when a move recovers low and uses different punish from moves that recover standing
+
+#hitslow
+#↑ used when a standing move hits low and character can punish with from crouching move
+```
+
 
 ## Limitations
 
