@@ -1,6 +1,5 @@
 #include <windows.h>
 #include <chrono>
-#include <thread>
 #include <tchar.h>
 #include <stdio.h>
 #include <iostream>
@@ -104,15 +103,13 @@ bool PunishCheckerBlaze::checkPoint(int x, int y, int r, int g, int b)
 void PunishCheckerBlaze::giveFeedback() {
 	frameAdvantage = -1;
 
-	std::thread getAdvantageThread([this] {this->getAdvantageAmount(); });
-	getAdvantageThread.join();
+	getAdvantageAmount();
 
 	if (frameAdvantage == -1) {
 		return;
 	}
 
-	std::thread judgePunishmentThread([this] {this->judgePunishment(); });
-	judgePunishmentThread.join();
+	judgePunishment();
 }
 
 /*
@@ -162,7 +159,8 @@ void PunishCheckerBlaze::judgePunishment()
 	bool guaranteedDamage = true;
 	bool cpuKnockdown = false;
 
-	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	Sleep(1000);
+
 
 	switch (frameAdvantage) {
 	case 12:
@@ -173,7 +171,8 @@ void PunishCheckerBlaze::judgePunishment()
 	case 15:
 		if (!recoversLow) {
 			//Add delay since cuffis takes longer to execute
-			std::this_thread::sleep_for(std::chrono::milliseconds(250));
+			Sleep(250);
+
 			if (didCuffisCounter()) {
 				maxPunishment = true;
 				cpuKnockdown = true;
@@ -204,7 +203,7 @@ void PunishCheckerBlaze::judgePunishment()
 
 		//Wait for the CPU to get back up if they were knocked down
 		if (cpuKnockdown) {
-			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+			Sleep(1500);
 		}
 	}
 	else if (guaranteedDamage) {
@@ -265,6 +264,6 @@ void PunishCheckerBlaze::getAdvantageAmount()
 			}
 		}
 		std::cout << ".";
-		std::this_thread::sleep_for(std::chrono::milliseconds(150));
+		Sleep(150);
 	}
 }
