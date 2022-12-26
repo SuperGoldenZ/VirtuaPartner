@@ -1,28 +1,40 @@
-#include <vector>
-#include <string>
+#include <iostream>
 
-const std::string WAIT_CHARACTERS = "|\\-/|\\-/";
-HANDLE hConsole;
+#include <windows.h>
+#include <stdio.h>
 
-void clear_screen(char fill = ' ') {
+#include "UserInterface.h"
+UserInterface::UserInterface()
+{
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+}
+
+void UserInterface::clear_screen() {
+	const char FILL = ' ';
+
 	COORD tl = { 0,0 };
 	CONSOLE_SCREEN_BUFFER_INFO s;
 	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleScreenBufferInfo(console, &s);
 	DWORD written, cells = s.dwSize.X * s.dwSize.Y;
-	FillConsoleOutputCharacter(console, fill, cells, tl, &written);
+	FillConsoleOutputCharacter(console, FILL, cells, tl, &written);
 	FillConsoleOutputAttribute(console, s.wAttributes, cells, tl, &written);
 	SetConsoleCursorPosition(console, tl);
 }
 
-int getColor(bool selected)
+int UserInterface::getColor(bool selected)
 {
 	if (selected) return 14;
 
 	return 7;
 }
 
-void printCharacterName(std::string name, bool selected, int numEndline = 0)
+void UserInterface::printCharacterName(std::string name, bool selected)
+{
+	printCharacterName(name, selected, 0);
+}
+
+void UserInterface::printCharacterName(std::string name, bool selected, int numEndline)
 {
 	for (int i = 0; i < name.size(); i++) {
 		if (i > 0 && name[i - 1] == '[') {
@@ -49,7 +61,7 @@ void printCharacterName(std::string name, bool selected, int numEndline = 0)
 	}
 }
 
-void printMenu(std::vector<std::vector<std::string>> categories, std::string str = "", bool leftSide = true, std::string currentCategory = "")
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory)
 {
 	clear_screen();
 	std::cout << "Virtua Partner (alpha 2)" << std::endl;
@@ -105,8 +117,19 @@ void printMenu(std::vector<std::vector<std::string>> categories, std::string str
 	std::cout << "? ";
 }
 
-void printStrings(const std::vector<std::string> strings) {
+void UserInterface::printStrings(const std::vector<std::string> strings) {
 	for (int i = 0; i < strings.size(); i++) {
 		std::cout << strings[i] << std::endl;
+	}
+}
+
+void UserInterface::showWaitingScreen()
+{
+	clear_screen();
+	std::cout << "Searching for \"Virtua Fighter\" window. Please start game in a window containing \"Virtua Fighter\" text" << std::endl;
+	std::cout << WAIT_CHARACTERS[waitIndex++] << std::endl;
+
+	if (waitIndex == WAIT_CHARACTERS.size()) {
+		waitIndex = 0;
 	}
 }
