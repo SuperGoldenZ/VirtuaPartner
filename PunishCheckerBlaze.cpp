@@ -135,6 +135,7 @@ void PunishCheckerBlaze::judgePunishment()
 {
 	bool maxPunishment = false;
 	bool guaranteedDamage = true;
+	bool cpuKnockdown = false;
 
 	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
@@ -150,17 +151,20 @@ void PunishCheckerBlaze::judgePunishment()
 			std::this_thread::sleep_for(std::chrono::milliseconds(250));
 			if (didCuffisCounter()) {
 				maxPunishment = true;
+				cpuKnockdown = true;
 			}
 		}
 		else {
 			if (didElbowCounter()) {
 				maxPunishment = true;
+				cpuKnockdown = true;
 			}
 		}
 		break;
 	case 18:
 		if (didKneeCounter()) {
 			maxPunishment = true;
+			cpuKnockdown = true;
 		}
 		break;
 	default:
@@ -172,6 +176,11 @@ void PunishCheckerBlaze::judgePunishment()
 		//setDefaultConsoleText(36);
 		playSuccessSound();
 		std::cout << "MAX PUNISH!";
+
+		//Wait for the CPU to get back up if they were knocked down
+		if (cpuKnockdown) {
+			std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+		}
 	}
 	else if (guaranteedDamage) {
 		//clear_screen();
