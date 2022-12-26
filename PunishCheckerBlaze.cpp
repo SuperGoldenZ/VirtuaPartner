@@ -40,6 +40,11 @@ bool PunishCheckerBlaze::didCuffisCounter()
 		return false;
 	}
 
+	//Prevent false positive with PPP punish
+	if (checkPoint(330, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
 
 	return true;
 }
