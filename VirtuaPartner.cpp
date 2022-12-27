@@ -280,8 +280,12 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		std::cout << " )";
 	}
 	else {
-		keybd_event(KEYS['G'], 0, 0, 0);
-		std::cout << " G...";
+		// Don't press guard if throw counterable and checking punish because computer will try to reverse nitaku
+		// and hit if you are not fast enough
+		if (str.find("#throwcounterable") == std::string::npos || !punishCheck) {
+			keybd_event(KEYS['G'], 0, 0, 0);
+			std::cout << " G...";
+		}
 
 		if (punishCheck) {
 			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
