@@ -1,12 +1,18 @@
 [J]ean
-PP52+K
+#################
+# Standing basics
+#################
 6+K
 4+KK5P
-4+KK5K
-1+K
 66+P+K
-6+K
 236+P+K
 2+K+G
-1+K+G
 9+K+G
+
+###########
+Low Attacks
+###########
+PP52+K #hitslow
+2+G__5554+KK5K #hitslow
+1+K #recoverslow
+1+K+G #hitslow
