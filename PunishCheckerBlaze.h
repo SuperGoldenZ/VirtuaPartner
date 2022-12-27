@@ -18,6 +18,7 @@ private:
 
 	bool recoversLow;
 	bool hitsLow;
+	bool didThrowCounter();
 	bool didPkCounter();
 	bool didCuffisCounter();
 	bool didKneeCounter();

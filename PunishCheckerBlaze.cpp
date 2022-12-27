@@ -181,6 +181,24 @@ bool PunishCheckerBlaze::didElbowCounter()
 	return true;
 }
 
+bool PunishCheckerBlaze::didThrowCounter()
+{
+	//Check for +10 green advantage (no action taken while)
+	if (checkPoint(293, 595, 120, 251, 120)) {
+		return false;
+	}
+
+	if (checkPoint(330,600, 120, 251, 120)) {
+		return false;
+	}
+
+	if (checkPoint(330, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	return true;
+}
+
 void PunishCheckerBlaze::judgePunishment()
 {
 	maxPunishment = false;
@@ -191,6 +209,11 @@ void PunishCheckerBlaze::judgePunishment()
 
 
 	switch (frameAdvantage) {
+	case 10:
+		if (didThrowCounter()) {
+			maxPunishment = true;
+		}
+		break;
 	case 12:
 		if (didPkCounter()) {
 			maxPunishment = true;
