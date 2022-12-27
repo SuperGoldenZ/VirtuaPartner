@@ -6,11 +6,12 @@
 
 #include "PunishCheckerBlaze.h"
 
-PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow) {
+PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) {
 	_virtuaFighterWindow = virtuaFighterWindow;
 	dc = GetDC(virtuaFighterWindow);
 	frameAdvantage = -1;
 	this->recoversLow = recoversLow;
+	this->hitsLow = hitsLow;
 };
 
 bool PunishCheckerBlaze::didPkCounter()
@@ -44,6 +45,19 @@ bool PunishCheckerBlaze::didCuffisCounter()
 		return false;
 	}
 
+
+	return true;
+}
+
+bool PunishCheckerBlaze::didShadowHammerCounter()
+{
+	if (!checkPoint(331, 477, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(329, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
 
 	return true;
 }
@@ -169,6 +183,13 @@ void PunishCheckerBlaze::judgePunishment()
 		}
 		break;
 	case 15:
+		if (hitsLow) {
+			std::cout << "\nchecking shadow hammer\n";
+			if (didShadowHammerCounter()) {
+				maxPunishment = true;
+				cpuKnockdown = true;
+			}
+		} else
 		if (!recoversLow) {
 			//Add delay since cuffis takes longer to execute
 			Sleep(250);

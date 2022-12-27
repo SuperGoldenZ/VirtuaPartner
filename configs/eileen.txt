@@ -2,8 +2,14 @@
 333+P+K5P
 6+P+KP5P
 9+K
-2+K
 6+PP52+K
 3+PP
-4+PPK
+4+PP5K
 P53+PK
+
+###########
+#Low Attacks
+###########
+2+G__552+K #recoverslow
+2+G__552+K+G #recoverslow
+2+G__1+K #recoverslow

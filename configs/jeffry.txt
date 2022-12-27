@@ -1,4 +1,5 @@
 Jeff[r]y
+1+P+K5K
 66+G+K55P+GP+G
 66+G+K5556+P
 KPP55P+GP+G
@@ -13,8 +14,11 @@ PKP
 KP5K
 6+K
 2+KP
-1+K
-1+P+K5K
-2+K+G
 G+K+PPP
-9+G5P
+
+########################
+# Punishable low attacks
+########################
+9+G5P #recoverslow
+2+G__5551+K #recoverslow
+2+G__5552+K+G #hitslow

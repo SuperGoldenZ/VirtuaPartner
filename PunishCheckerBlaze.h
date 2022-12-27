@@ -13,17 +13,19 @@ private:
 
 	int frameAdvantage;
 	bool recoversLow;
+	bool hitsLow;
 	bool didPkCounter();
 	bool didCuffisCounter();
 	bool didKneeCounter();
 	bool didElbowCounter();
+	bool didShadowHammerCounter();
 	bool checkPoint(int x, int y, int r, int g, int b);
 	void playSuccessSound();
 	void playFailureSound();
 	void getAdvantageAmount();
 	void judgePunishment();
 public:
-	PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow);
+	PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);
 	void giveFeedback();
 };
 
