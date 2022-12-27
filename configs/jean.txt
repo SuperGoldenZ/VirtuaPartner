@@ -9,9 +9,9 @@
 2+K+G
 9+K+G
 
-###########
-Low Attacks
-###########
+############
+#Low Attacks
+############
 PP52+K #hitslow
 2+G__5554+KK5K #hitslow
 1+K #recoverslow
