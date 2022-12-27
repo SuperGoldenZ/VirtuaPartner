@@ -3,6 +3,7 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <iostream>
+#include <thread>
 
 #include "PunishCheckerBlaze.h"
 
@@ -188,11 +189,23 @@ bool PunishCheckerBlaze::didThrowCounter()
 		return false;
 	}
 
-	if (checkPoint(330,600, 120, 251, 120)) {
+	if (checkPoint(330, 600, 120, 251, 120)) {
+		return false;
+	}
+
+	if (checkPoint(333, 482, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
 	if (checkPoint(330, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(161, 540, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(123, 367, 186, 162, 120)) {
 		return false;
 	}
 
@@ -204,9 +217,15 @@ void PunishCheckerBlaze::judgePunishment()
 	maxPunishment = false;
 	guaranteedDamage = true;
 	cpuKnockdown = false;
+	std::thread punchThread;
 
-	Sleep(1000);
-
+	if (frameAdvantage == 10) {
+		punchThread = std::thread([this] {this->makeOpponentPunch(); });
+		Sleep(575);
+	}
+	else {
+		Sleep(1000);
+	}
 
 	switch (frameAdvantage) {
 	case 10:
@@ -253,6 +272,10 @@ void PunishCheckerBlaze::judgePunishment()
 	default:
 		guaranteedDamage = false;
 	}
+
+	if (frameAdvantage == 10) {
+		punchThread.join();
+	}
 }
 
 void PunishCheckerBlaze::playSuccessSound()
@@ -263,6 +286,22 @@ void PunishCheckerBlaze::playSuccessSound()
 void PunishCheckerBlaze::playFailureSound()
 {
 	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
+}
+
+/*
+* Make opponent try to punch out of throw counterable moves
+* Should do async as not to disturb guaranteed punish advantage
+* amount check after execution string
+*/
+void PunishCheckerBlaze::makeOpponentPunch()
+{
+	for (int i = 0; i < 6; i++) {
+		//@todo don't hardcode punch
+		keybd_event(0x50, 0, 0, 0);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		keybd_event(0x50, 0, KEYEVENTF_KEYUP, 0);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 }
 
 void PunishCheckerBlaze::getAdvantageAmount()
