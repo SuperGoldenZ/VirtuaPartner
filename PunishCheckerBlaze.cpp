@@ -114,16 +114,30 @@ bool PunishCheckerBlaze::checkPoint(int x, int y, int r, int g, int b)
 	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
 }
 
-void PunishCheckerBlaze::giveFeedback() {
+/**
+* Returns -1 if not found situation for guaranteed punish
+* Returns 0 if guaranteed punish situation but not actually punished
+* Returns 1 if guaranteed punish situation and punished successfully
+*/
+byte PunishCheckerBlaze::giveFeedback() {
 	frameAdvantage = -1;
 
 	getAdvantageAmount();
 
 	if (frameAdvantage == -1) {
-		return;
+		return -1;
 	}
 
 	judgePunishment();
+	if (!guaranteedDamage) {
+		return -1;
+	}
+
+	if (!maxPunishment) {
+		return 0;
+	}
+
+	return 1;
 }
 
 /*
@@ -169,9 +183,9 @@ bool PunishCheckerBlaze::didElbowCounter()
 
 void PunishCheckerBlaze::judgePunishment()
 {
-	bool maxPunishment = false;
-	bool guaranteedDamage = true;
-	bool cpuKnockdown = false;
+	maxPunishment = false;
+	guaranteedDamage = true;
+	cpuKnockdown = false;
 
 	Sleep(1000);
 
@@ -189,22 +203,23 @@ void PunishCheckerBlaze::judgePunishment()
 				maxPunishment = true;
 				cpuKnockdown = true;
 			}
-		} else
-		if (!recoversLow) {
-			//Add delay since cuffis takes longer to execute
-			Sleep(250);
+		}
+		else
+			if (!recoversLow) {
+				//Add delay since cuffis takes longer to execute
+				Sleep(250);
 
-			if (didCuffisCounter()) {
-				maxPunishment = true;
-				cpuKnockdown = true;
+				if (didCuffisCounter()) {
+					maxPunishment = true;
+					cpuKnockdown = true;
+				}
 			}
-		}
-		else {
-			if (didElbowCounter()) {
-				maxPunishment = true;
-				cpuKnockdown = true;
+			else {
+				if (didElbowCounter()) {
+					maxPunishment = true;
+					cpuKnockdown = true;
+				}
 			}
-		}
 		break;
 	case 18:
 		if (didKneeCounter()) {
@@ -215,36 +230,16 @@ void PunishCheckerBlaze::judgePunishment()
 	default:
 		guaranteedDamage = false;
 	}
-
-	if (guaranteedDamage && maxPunishment) {
-		//clear_screen();
-		//setDefaultConsoleText(36);
-		playSuccessSound();
-		std::cout << "MAX PUNISH!";
-
-		//Wait for the CPU to get back up if they were knocked down
-		if (cpuKnockdown) {
-			Sleep(1500);
-		}
-	}
-	else if (guaranteedDamage) {
-		//clear_screen();
-		//setDefaultConsoleText(36);
-		playFailureSound();
-		std::cout << "Missed Punish";
-	}
 }
 
 void PunishCheckerBlaze::playSuccessSound()
 {
 	mciSendString(_T("play success_02.wav"), NULL, 0, NULL);
-	system("color a1");
 }
 
 void PunishCheckerBlaze::playFailureSound()
 {
 	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
-	system("color c0");
 }
 
 void PunishCheckerBlaze::getAdvantageAmount()

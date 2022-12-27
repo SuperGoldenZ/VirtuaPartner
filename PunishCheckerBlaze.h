@@ -12,6 +12,10 @@ private:
 	HDC dc;
 
 	int frameAdvantage;
+	bool maxPunishment = false;
+	bool guaranteedDamage = true;
+	bool cpuKnockdown = false;
+
 	bool recoversLow;
 	bool hitsLow;
 	bool didPkCounter();
@@ -20,13 +24,13 @@ private:
 	bool didElbowCounter();
 	bool didShadowHammerCounter();
 	bool checkPoint(int x, int y, int r, int g, int b);
-	void playSuccessSound();
-	void playFailureSound();
 	void getAdvantageAmount();
 	void judgePunishment();
 public:
 	PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);
-	void giveFeedback();
+	byte giveFeedback();
+	void playSuccessSound();
+	void playFailureSound();
 };
 
 #endif

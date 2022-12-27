@@ -95,6 +95,11 @@ void setDefaultConsoleText(int fontSize = 18)
 
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 	system("color 0F");
+
+	HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r); //stores the console's current dimensions
+	MoveWindow(console, r.left, r.top, 800, 725, TRUE); // 800 width, 100 height
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
@@ -280,7 +285,25 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 
 		if (punishCheck) {
 			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
-			punishChecker.giveFeedback();
+			byte result = punishChecker.giveFeedback();
+			if (result == 0) {
+				ui.clear_screen();
+				setDefaultConsoleText(82);
+				//Red background
+				system("color c0");
+				cout << "Missed\npunish";
+				punishChecker.playFailureSound();
+				Sleep(500);
+			}
+			else if (result == 1) {
+				ui.clear_screen();
+				setDefaultConsoleText(82);
+				//Green background
+				system("color a1");
+				cout << "MAX\nPUNISH!";
+				punishChecker.playSuccessSound();
+				Sleep(500);
+			}
 		}
 
 		Sleep(1000);
