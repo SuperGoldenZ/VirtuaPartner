@@ -33,6 +33,9 @@ std::string category;
 //If CPU is on the left side or not
 bool leftSide = false;
 
+//Whether to give feedback on guaranteed punish damage or not
+bool punishCheck = true;
+
 vector<vector<string>> categories;
 UserInterface ui;
 
@@ -274,8 +277,11 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		keybd_event(KEYS['G'], 0, 0, 0);
 		std::cout << " G...";
-		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
-		punishChecker.giveFeedback();
+
+		if (punishCheck) {
+			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+			punishChecker.giveFeedback();
+		}
 
 		Sleep(1000);
 		system("color 0F");
@@ -358,7 +364,7 @@ int main()
 
 	int stringIndex = 1;
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 
 
 	while (true) {
@@ -367,19 +373,25 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
+		}
+
+		if (GetAsyncKeyState(KEYS['U']) != 0) {
+			while (GetAsyncKeyState(KEYS['U']) != 0);
+			punishCheck = !punishCheck;
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -400,13 +412,13 @@ int main()
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck);
 			}
 		}
 
@@ -417,7 +429,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 				break;
 			}
 		}
@@ -431,7 +443,7 @@ int main()
 				executeCommandString(stringArray[stringIndex]);
 			}
 
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 
 		Sleep(ONE_FRAME);

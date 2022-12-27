@@ -16,7 +16,7 @@ public:
 	void clear_screen();
 	void printCharacterName(std::string name, bool selected);
 	void printCharacterName(std::string name, bool selected, int numEndline = 0);
-	void printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory);
+	void printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck);
 	void printStrings(const std::vector<std::string> strings);
 	void showWaitingScreen();
 };

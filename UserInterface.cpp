@@ -61,14 +61,15 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory)
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck)
 {
 	clear_screen();
 	std::cout << "Virtua Partner (alpha 2)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
-	printCharacterName("[2] Right Side", leftSide, 2);
+	printCharacterName(" [2] Right Side", leftSide, 1);
+	printCharacterName("P[u]nish Check", punishCheck, 2);
 
 	int currentCategoryIndex = -1;
 	for (int i = 0; i < categories.size(); i++) {
