@@ -46,17 +46,35 @@ vector<string> getStrings(string category) {
 
 	return categories[0];
 }
-static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
+
+bool isVirtuaFighterGameWindow(HWND hWnd)
+{
 	int length = GetWindowTextLength(hWnd);
 	char* buffer = new char[length + 1];
 	GetWindowTextA(hWnd, buffer, length + 1);
 	std::string windowTitle(buffer);
 	delete[] buffer;
 
-	// List visible windows with a non-empty title
-	if (IsWindowVisible(hWnd) && length != 0 && (windowTitle.find("Virtua Fighter") != std::string::npos)) {
+	if (length == 0) {
+		return false;
+	}
+
+	if (windowTitle.find("Virtua Fighter 5 Final Showdown") == std::string::npos) {
+		return false;
+	}
+
+	// Prevent false positives (though limit to emulator like rpc3s & Vulkan)
+	if (windowTitle.find("Vulkan") == std::string::npos) {
+		return false;
+	}
+
+	return true;
+}
+
+static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
+	// Search visible Windows for one running Virtua Fighter
+	if (IsWindowVisible(hWnd) && isVirtuaFighterGameWindow(hWnd)) {
 		vfWindow = hWnd;
-		std::cout << hWnd << ": " << windowTitle << std::endl;
 	}
 
 	return TRUE;
