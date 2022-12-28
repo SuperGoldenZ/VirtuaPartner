@@ -16,6 +16,7 @@ VirtuaPartner.cpp
 
 #include "keyboard.h"
 #include "UserInterface.h"
+#include "PunishChecker.h"
 #include "PunishCheckerBlaze.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -295,8 +296,22 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				setDefaultConsoleText(82);
 				//Red background
 				system("color c0");
-				cout << "Missed\npunish";
-				punishChecker.playFailureSound();
+				switch (punishChecker.advantageClass) {
+				case PunishChecker::AdvantageClass::THROW:
+					cout << "Missed\nthrow\npunish";
+					break;
+				case PunishChecker::AdvantageClass::PUNCH:
+					cout << "Missed\npunch\npunish";
+					break;
+				case PunishChecker::AdvantageClass::KNEE:
+					cout << "Missed\nknee\npunish";
+					break;
+				case PunishChecker::AdvantageClass::ELBOW:
+					cout << "Missed\nelbow\npunish";
+					break;
+				}
+
+				PunishChecker::playFailureSound();
 				Sleep(500);
 			}
 			else if (result == 1) {
@@ -305,7 +320,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				//Green background
 				system("color a1");
 				cout << "MAX\nPUNISH!";
-				punishChecker.playSuccessSound();
+				PunishChecker::playSuccessSound();
 				Sleep(500);
 			}
 		}

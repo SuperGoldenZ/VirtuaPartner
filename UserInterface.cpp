@@ -127,7 +127,7 @@ void UserInterface::printStrings(const std::vector<std::string> strings) {
 void UserInterface::showWaitingScreen()
 {
 	clear_screen();
-	std::cout << "Searching for \"Virtua Fighter\" window. Please start game in a window containing \"Virtua Fighter\" text" << std::endl;
+	std::cout << "Searching for \"Virtua Fighter\" window.\nPlease start game in a window containing \"Virtua Fighter\" and \"Vulkan\" text" << std::endl;
 	std::cout << WAIT_CHARACTERS[waitIndex++] << std::endl;
 
 	if (waitIndex == WAIT_CHARACTERS.size()) {

@@ -13,6 +13,7 @@ PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLo
 	frameAdvantage = -1;
 	this->recoversLow = recoversLow;
 	this->hitsLow = hitsLow;
+	advantageClass = AdvantageClass::NONE;
 };
 
 bool PunishCheckerBlaze::didPkCounter()
@@ -56,7 +57,15 @@ bool PunishCheckerBlaze::didShadowHammerCounter()
 		return false;
 	}
 
+	if (!checkPoint(323, 552, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
 	if (checkPoint(329, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(364, 545, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
@@ -248,12 +257,19 @@ void PunishCheckerBlaze::judgePunishment()
 		}
 		else
 			if (!recoversLow) {
-				//Add delay since cuffis takes longer to execute
-				Sleep(250);
-
-				if (didCuffisCounter()) {
+				//Check shadow hammer first with faster execution
+				if (didShadowHammerCounter()) {
 					maxPunishment = true;
 					cpuKnockdown = true;
+				}
+				else {
+					//Add delay since cuffis takes longer to execute
+					Sleep(250);
+
+					if (didCuffisCounter()) {
+						maxPunishment = true;
+						cpuKnockdown = true;
+					}
 				}
 			}
 			else {
@@ -278,16 +294,6 @@ void PunishCheckerBlaze::judgePunishment()
 	}
 }
 
-void PunishCheckerBlaze::playSuccessSound()
-{
-	mciSendString(_T("play success_02.wav"), NULL, 0, NULL);
-}
-
-void PunishCheckerBlaze::playFailureSound()
-{
-	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
-}
-
 /*
 * Make opponent try to punch out of throw counterable moves
 * Should do async as not to disturb guaranteed punish advantage
@@ -301,47 +307,5 @@ void PunishCheckerBlaze::makeOpponentPunch()
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 		keybd_event(0x50, 0, KEYEVENTF_KEYUP, 0);
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	}
-}
-
-void PunishCheckerBlaze::getAdvantageAmount()
-{
-	for (int i = 0; i < 5; i++) {
-		int x = 331;
-		int y = 596;
-
-		for (int x = 291; x <= 331; x++) {
-			for (int y = 594; y <= 597; y++) {
-				COLORREF color = GetPixel(dc, x, y);
-				RGBTRIPLE rgb;
-
-				rgb.rgbtRed = GetRValue(color);
-				rgb.rgbtGreen = GetGValue(color);
-				rgb.rgbtBlue = GetBValue(color);
-
-				if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
-					frameAdvantage = 18;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
-					frameAdvantage = 15;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 120 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 120) {
-					frameAdvantage = 10;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 170 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 255) {
-					frameAdvantage = 12;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 67 && (int)rgb.rgbtGreen == 98 && (int)rgb.rgbtBlue == 100) {
-					frameAdvantage = 13;
-					return;
-				}
-			}
-		}
-		std::cout << ".";
-		Sleep(150);
 	}
 }
