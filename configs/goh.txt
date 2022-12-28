@@ -3,11 +3,12 @@
 2+G__552+K+G #hitslow
 2+G__551+K #hitslow
 9+G5K #hitslow
-33+P
-4+K
+33+P #throwcounterable
+4+K #throwcounterable
 3+KP
 46P+KP6+P
-3+P+K
+3+P+K #throwcounterable
 1+P+K
 4+K+G
 2+G__552+K #recoverslow
+66P+G #throwcounterable

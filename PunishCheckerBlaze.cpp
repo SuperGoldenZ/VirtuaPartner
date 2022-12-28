@@ -3,6 +3,7 @@
 #include <tchar.h>
 #include <stdio.h>
 #include <iostream>
+#include <thread>
 
 #include "PunishCheckerBlaze.h"
 
@@ -12,6 +13,7 @@ PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLo
 	frameAdvantage = -1;
 	this->recoversLow = recoversLow;
 	this->hitsLow = hitsLow;
+	advantageClass = AdvantageClass::NONE;
 };
 
 bool PunishCheckerBlaze::didPkCounter()
@@ -55,7 +57,15 @@ bool PunishCheckerBlaze::didShadowHammerCounter()
 		return false;
 	}
 
+	if (!checkPoint(323, 552, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
 	if (checkPoint(329, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(364, 545, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
@@ -114,16 +124,30 @@ bool PunishCheckerBlaze::checkPoint(int x, int y, int r, int g, int b)
 	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
 }
 
-void PunishCheckerBlaze::giveFeedback() {
+/**
+* Returns -1 if not found situation for guaranteed punish
+* Returns 0 if guaranteed punish situation but not actually punished
+* Returns 1 if guaranteed punish situation and punished successfully
+*/
+byte PunishCheckerBlaze::giveFeedback() {
 	frameAdvantage = -1;
 
 	getAdvantageAmount();
 
 	if (frameAdvantage == -1) {
-		return;
+		return -1;
 	}
 
 	judgePunishment();
+	if (!guaranteedDamage) {
+		return -1;
+	}
+
+	if (!maxPunishment) {
+		return 0;
+	}
+
+	return 1;
 }
 
 /*
@@ -167,16 +191,57 @@ bool PunishCheckerBlaze::didElbowCounter()
 	return true;
 }
 
+bool PunishCheckerBlaze::didThrowCounter()
+{
+	//Check for +10 green advantage (no action taken while)
+	if (checkPoint(293, 595, 120, 251, 120)) {
+		return false;
+	}
+
+	if (checkPoint(330, 600, 120, 251, 120)) {
+		return false;
+	}
+
+	if (checkPoint(333, 482, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(330, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(161, 540, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	if (checkPoint(123, 367, 186, 162, 120)) {
+		return false;
+	}
+
+	return true;
+}
+
 void PunishCheckerBlaze::judgePunishment()
 {
-	bool maxPunishment = false;
-	bool guaranteedDamage = true;
-	bool cpuKnockdown = false;
+	maxPunishment = false;
+	guaranteedDamage = true;
+	cpuKnockdown = false;
+	std::thread punchThread;
 
-	Sleep(1000);
-
+	if (frameAdvantage == 10) {
+		punchThread = std::thread([this] {this->makeOpponentPunch(); });
+		Sleep(575);
+	}
+	else {
+		Sleep(1000);
+	}
 
 	switch (frameAdvantage) {
+	case 10:
+		if (didThrowCounter()) {
+			maxPunishment = true;
+		}
+		break;
 	case 12:
 		if (didPkCounter()) {
 			maxPunishment = true;
@@ -189,22 +254,30 @@ void PunishCheckerBlaze::judgePunishment()
 				maxPunishment = true;
 				cpuKnockdown = true;
 			}
-		} else
-		if (!recoversLow) {
-			//Add delay since cuffis takes longer to execute
-			Sleep(250);
+		}
+		else
+			if (!recoversLow) {
+				//Check shadow hammer first with faster execution
+				if (didShadowHammerCounter()) {
+					maxPunishment = true;
+					cpuKnockdown = true;
+				}
+				else {
+					//Add delay since cuffis takes longer to execute
+					Sleep(250);
 
-			if (didCuffisCounter()) {
-				maxPunishment = true;
-				cpuKnockdown = true;
+					if (didCuffisCounter()) {
+						maxPunishment = true;
+						cpuKnockdown = true;
+					}
+				}
 			}
-		}
-		else {
-			if (didElbowCounter()) {
-				maxPunishment = true;
-				cpuKnockdown = true;
+			else {
+				if (didElbowCounter()) {
+					maxPunishment = true;
+					cpuKnockdown = true;
+				}
 			}
-		}
 		break;
 	case 18:
 		if (didKneeCounter()) {
@@ -216,75 +289,23 @@ void PunishCheckerBlaze::judgePunishment()
 		guaranteedDamage = false;
 	}
 
-	if (guaranteedDamage && maxPunishment) {
-		//clear_screen();
-		//setDefaultConsoleText(36);
-		playSuccessSound();
-		std::cout << "MAX PUNISH!";
-
-		//Wait for the CPU to get back up if they were knocked down
-		if (cpuKnockdown) {
-			Sleep(1500);
-		}
-	}
-	else if (guaranteedDamage) {
-		//clear_screen();
-		//setDefaultConsoleText(36);
-		playFailureSound();
-		std::cout << "Missed Punish";
+	if (frameAdvantage == 10) {
+		punchThread.join();
 	}
 }
 
-void PunishCheckerBlaze::playSuccessSound()
+/*
+* Make opponent try to punch out of throw counterable moves
+* Should do async as not to disturb guaranteed punish advantage
+* amount check after execution string
+*/
+void PunishCheckerBlaze::makeOpponentPunch()
 {
-	mciSendString(_T("play success_02.wav"), NULL, 0, NULL);
-	system("color a1");
-}
-
-void PunishCheckerBlaze::playFailureSound()
-{
-	mciSendString(_T("play failed_01.wav"), NULL, 0, NULL);
-	system("color c0");
-}
-
-void PunishCheckerBlaze::getAdvantageAmount()
-{
-	for (int i = 0; i < 5; i++) {
-		int x = 331;
-		int y = 596;
-
-		for (int x = 291; x <= 331; x++) {
-			for (int y = 594; y <= 597; y++) {
-				COLORREF color = GetPixel(dc, x, y);
-				RGBTRIPLE rgb;
-
-				rgb.rgbtRed = GetRValue(color);
-				rgb.rgbtGreen = GetGValue(color);
-				rgb.rgbtBlue = GetBValue(color);
-
-				if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 177 && (int)rgb.rgbtBlue == 0) {
-					frameAdvantage = 18;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 255 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 0) {
-					frameAdvantage = 15;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 120 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 120) {
-					frameAdvantage = 10;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 170 && (int)rgb.rgbtGreen == 251 && (int)rgb.rgbtBlue == 255) {
-					frameAdvantage = 12;
-					return;
-				}
-				else if ((int)rgb.rgbtRed == 67 && (int)rgb.rgbtGreen == 98 && (int)rgb.rgbtBlue == 100) {
-					frameAdvantage = 13;
-					return;
-				}
-			}
-		}
-		std::cout << ".";
-		Sleep(150);
+	for (int i = 0; i < 6; i++) {
+		//@todo don't hardcode punch
+		keybd_event(0x50, 0, 0, 0);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		keybd_event(0x50, 0, KEYEVENTF_KEYUP, 0);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }

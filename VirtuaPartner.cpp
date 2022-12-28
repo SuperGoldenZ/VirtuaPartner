@@ -16,6 +16,7 @@ VirtuaPartner.cpp
 
 #include "keyboard.h"
 #include "UserInterface.h"
+#include "PunishChecker.h"
 #include "PunishCheckerBlaze.h"
 
 #pragma comment(lib, "winmm.lib")
@@ -32,6 +33,9 @@ std::string category;
 
 //If CPU is on the left side or not
 bool leftSide = false;
+
+//Whether to give feedback on guaranteed punish damage or not
+bool punishCheck = true;
 
 vector<vector<string>> categories;
 UserInterface ui;
@@ -92,6 +96,11 @@ void setDefaultConsoleText(int fontSize = 18)
 
 	SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
 	system("color 0F");
+
+	HWND console = GetConsoleWindow();
+	RECT r;
+	GetWindowRect(console, &r); //stores the console's current dimensions
+	MoveWindow(console, r.left, r.top, 800, 725, TRUE); // 800 width, 100 height
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
@@ -272,10 +281,49 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		std::cout << " )";
 	}
 	else {
-		keybd_event(KEYS['G'], 0, 0, 0);
-		std::cout << " G...";
-		PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
-		punishChecker.giveFeedback();
+		// Don't press guard if throw counterable and checking punish because computer will try to reverse nitaku
+		// and hit if you are not fast enough
+		if (str.find("#throwcounterable") == std::string::npos || !punishCheck) {
+			keybd_event(KEYS['G'], 0, 0, 0);
+			std::cout << " G...";
+		}
+
+		if (punishCheck) {
+			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+			byte result = punishChecker.giveFeedback();
+			if (result == 0) {
+				ui.clear_screen();
+				setDefaultConsoleText(82);
+				//Red background
+				system("color c0");
+				switch (punishChecker.advantageClass) {
+				case PunishChecker::AdvantageClass::THROW:
+					cout << "Missed\nthrow\npunish";
+					break;
+				case PunishChecker::AdvantageClass::PUNCH:
+					cout << "Missed\npunch\npunish";
+					break;
+				case PunishChecker::AdvantageClass::KNEE:
+					cout << "Missed\nknee\npunish";
+					break;
+				case PunishChecker::AdvantageClass::ELBOW:
+					cout << "Missed\nelbow\npunish";
+					break;
+				}
+
+				PunishChecker::playFailureSound();
+				Sleep(500);
+			}
+			else if (result == 1) {
+				ui.clear_screen();
+				setDefaultConsoleText(82);
+				//Green background
+				system("color a1");
+				cout << "MAX\nPUNISH!";
+				PunishChecker::playSuccessSound();
+				Sleep(500);
+			}
+		}
 
 		Sleep(1000);
 		system("color 0F");
@@ -358,7 +406,7 @@ int main()
 
 	int stringIndex = 1;
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 
 
 	while (true) {
@@ -367,19 +415,25 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
+		}
+
+		if (GetAsyncKeyState(KEYS['U']) != 0) {
+			while (GetAsyncKeyState(KEYS['U']) != 0);
+			punishCheck = !punishCheck;
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -400,13 +454,13 @@ int main()
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck);
 			}
 		}
 
@@ -417,7 +471,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 				break;
 			}
 		}
@@ -431,7 +485,7 @@ int main()
 				executeCommandString(stringArray[stringIndex]);
 			}
 
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
 		}
 
 		Sleep(ONE_FRAME);
