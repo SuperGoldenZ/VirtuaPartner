@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+#include "PunishStats.h"
+
 class UserInterface
 {
 private:
@@ -15,8 +17,9 @@ public:
 	UserInterface();
 	void clear_screen();
 	void printCharacterName(std::string name, bool selected);
-	void printCharacterName(std::string name, bool selected, int numEndline = 0);
-	void printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck);
+	void printCharacterName(std::string name, bool selected, int numEndline);
+	void printCharacterName(std::string name, bool selected, int numEndline, int widthToPrint);
+	void printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats);
 	void printStrings(const std::vector<std::string> strings);
 	void showWaitingScreen();
 };
