@@ -4,10 +4,10 @@ PP2+P5P_
 3+P+K5P_
 PP2+P5P5
 2__3+P
-6+KP
+6+KP #throwcounterable
 6+KK
 66+K
-6+P+KP5
+6+P+KP5 #throwcounterable
 64+P+KP5
 44+P+K5
 P+K+G_6K
