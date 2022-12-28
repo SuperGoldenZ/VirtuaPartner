@@ -13,7 +13,7 @@ L[i]on
 # Toro Teihozen
 ####################################
 2+G__554+P+K+G5PP52+K #recoverslow
-4+P+K+GPPK55P
+4+P+K+GPPK55P #throwcounterable
 
 ####################################
 # Basic standing combos
@@ -21,7 +21,7 @@ L[i]on
 PPP+K
 6+PP
 6+K+G
-3+PP
+3+PP #throwcounterable
 66+K5K
 4+KP
 46+P+KPP
