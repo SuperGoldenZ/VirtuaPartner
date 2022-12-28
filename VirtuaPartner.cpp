@@ -100,7 +100,7 @@ void setDefaultConsoleText(int fontSize = 18)
 	HWND console = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(console, &r); //stores the console's current dimensions
-	MoveWindow(console, r.left, r.top, 800, 725, TRUE); // 800 width, 100 height
+	MoveWindow(console, r.left, r.top, 800, 750, TRUE); // 800 width, 100 height
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {

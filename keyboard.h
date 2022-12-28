@@ -16,7 +16,8 @@ std::map<char, byte> KEYS = {
 	{'S', 0x53},
 	{'Z', 0x5A},
 	{'E', 0x45},
-	{'U', 0x55}
+	{'U', 0x55},
+	{'F', 0x46}
 };
 
 const byte VK_1 = 0x31;
