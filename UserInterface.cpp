@@ -96,7 +96,7 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings)
 {
 	clear_screen();
-	std::cout << "Virtua Partner (alpha 3)" << std::endl;
+	std::cout << "Virtua Partner (alpha 4)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
