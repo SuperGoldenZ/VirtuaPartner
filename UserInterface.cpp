@@ -93,10 +93,10 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats)
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings)
 {
 	clear_screen();
-	std::cout << "Virtua Partner (alpha 3)" << std::endl;
+	std::cout << "Virtua Partner (alpha 4)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
@@ -135,6 +135,12 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 			std::string statsIndex = categories[currentCategoryIndex][0] + categories[currentCategoryIndex][moveNumber];
 
 			if (punishCheck) {
+				if (selectedStrings[statsIndex]) {
+					std::cout << "*";
+				}
+				else {
+					std::cout << " ";
+				}
 				printCharacterName(
 					categories[currentCategoryIndex][moveNumber],
 					str == categories[currentCategoryIndex][moveNumber],
@@ -154,11 +160,18 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 
 	std::cout << std::endl;
 
+	std::cout << "NumPad Controls:" << std::endl;
+
 	printCharacterName("[+] Next String", false, false);
 	printCharacterName("[-] Prev String", false, 1);
-	printCharacterName("[1] Play string one time", false, 1);
-	printCharacterName("[0] Start repeat", false, 1);
-	printCharacterName("[2] Start random repeat", false, 1);
+	printCharacterName("[1] Play string one time (current selected move)", false, 1);
+	printCharacterName("[0] Start repeat (current selected move only)", false, 1);
+	printCharacterName("[2] Start random repeat (all)", false, 1);
+	std::cout << std::endl;
+	printCharacterName("[*] Favorite or unfavorite selected move", false, 1);
+	printCharacterName("[/] Execute one of favorite moves randomly", false, 1);
+	printCharacterName("[.] Start repeat (of favorite moves only)", false, 1);
+	std::cout << std::endl;
 	printCharacterName("[3] Stop repeat", false, 1);
 
 	std::cout << "? ";

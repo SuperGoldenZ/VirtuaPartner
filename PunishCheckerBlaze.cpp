@@ -74,11 +74,6 @@ bool PunishCheckerBlaze::didShadowHammerCounter()
 
 bool PunishCheckerBlaze::didKneeCounter()
 {
-	//Check blue COUNTER text U lower right
-	if (!checkPoint(149, 377, 151, 229, 255)) {
-		return false;
-	}
-
 	//One hit combo 1 middle lower
 	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
