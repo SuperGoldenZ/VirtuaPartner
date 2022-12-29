@@ -1,5 +1,6 @@
-﻿Virtua Partner
+Virtua Partner
 ==============
+![Virtua Partner Screenshot](https://raw.githubusercontent.com/SuperGoldenZ/VirtuaPartner/master/screenshot.jpg "Virtua Partner Screenshot")
 
 Progmatic Windows keyboard inputs to make sparring partner in Virtua Fighter.
 
