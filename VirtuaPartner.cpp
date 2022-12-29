@@ -43,6 +43,7 @@ vector<vector<string>> categories;
 UserInterface ui;
 
 std::map<string, PunishStats> punishStats;
+std::map<string, bool> selectedStrings;
 
 vector<string> getStrings(string category) {
 
@@ -104,7 +105,7 @@ void setDefaultConsoleText(int fontSize = 18)
 	HWND console = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(console, &r); //stores the console's current dimensions
-	MoveWindow(console, r.left, r.top, 800, 750, TRUE); // 800 width, 100 height
+	MoveWindow(console, r.left, r.top, 800, 800, TRUE); // 800 width, 100 height
 }
 
 void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME, string statsIndex = "") {
@@ -355,6 +356,7 @@ std::vector<std::string> readFile(string filename)
 			if (line[0] != '#' && !line.empty()) {
 				if (!firstLine.empty() && punishStats.find(firstLine + line) == punishStats.end()) {
 					punishStats[firstLine + line] = PunishStats();
+					selectedStrings[firstLine + line] = false;
 				}
 				strings.push_back(line);
 			}
@@ -440,6 +442,27 @@ void readStats()
 	}
 }
 
+int getRandomStarredMove(vector<string> stringArray)
+{
+	bool found = false;
+	int tempStringIndex;
+
+	//This is very hacky way not to get into infinite loop now if no strings selected
+	for (int i = 0; i < 1000; i++) {
+		tempStringIndex = (rand() % stringArray.size());
+		if (tempStringIndex == 0) {
+			tempStringIndex = 1;
+		}
+		if (selectedStrings[stringArray[0] + stringArray[tempStringIndex]]) {
+			return tempStringIndex;
+		}
+	}
+
+	if (!found) {
+		return -1;
+	}
+}
+
 int main()
 {
 	srand(time(NULL));
@@ -458,6 +481,7 @@ int main()
 	bool randomMode = false;
 	bool repeat = false;
 	bool random = false;
+	bool randomSelectedOnly = false;
 
 	vector<string> stringArray;
 
@@ -470,7 +494,7 @@ int main()
 
 	readStats();
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 
 
 	while (true) {
@@ -479,25 +503,37 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
+		}
+		else if (randomSelectedOnly) {
+			int tempStringIndex = getRandomStarredMove(stringArray);
+
+			if (tempStringIndex == -1) {
+				repeat = false;
+				randomSelectedOnly = false;
+			}
+			else {
+				stringIndex = tempStringIndex;
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			}
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -513,18 +549,24 @@ int main()
 			while (GetAsyncKeyState(VK_NUMPAD3) != 0);
 			repeat = false;
 			random = false;
+			randomSelectedOnly = false;
 		}
 
-		if (GetAsyncKeyState(VK_ADD) != 0) {
+		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
+			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
+			selectedStrings[stringArray[0] + stringArray[stringIndex]] = !selectedStrings[stringArray[0] + stringArray[stringIndex]];
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+		}
+		else if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 			}
 		}
 
@@ -535,13 +577,33 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 				break;
 			}
 		}
 
-		if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat) {
+		if (GetAsyncKeyState(VK_DECIMAL) != 0) {
+			while (GetAsyncKeyState(VK_DECIMAL) != 0);
+			repeat = true;
+			randomSelectedOnly = true;
+		}
+		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
+			if (GetAsyncKeyState(VK_DIVIDE)) {
+				int tempStringIndex = getRandomStarredMove(stringArray);
+
+				if (tempStringIndex == -1) {
+					repeat = false;
+					randomSelectedOnly = false;
+					continue;
+				}
+				else {
+					stringIndex = tempStringIndex;
+					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				}
+			}
+
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
+			while (GetAsyncKeyState(VK_DIVIDE) != 0);
 			if (category == "[D]efense") {
 				executeCommandString(stringArray[stringIndex], true, 8, 1);
 			}
@@ -550,7 +612,7 @@ int main()
 			}
 
 			saveStats();
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
 		}
 
 		Sleep(ONE_FRAME);
