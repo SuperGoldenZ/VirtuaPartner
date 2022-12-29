@@ -2,8 +2,13 @@
 
 #include <windows.h>
 #include <stdio.h>
+#include <map>
+#include <string>
+#include <tchar.h>
 
 #include "UserInterface.h"
+#include "PunishStats.h"
+
 UserInterface::UserInterface()
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -31,7 +36,7 @@ int UserInterface::getColor(bool selected)
 
 void UserInterface::printCharacterName(std::string name, bool selected)
 {
-	printCharacterName(name, selected, 0);
+	printCharacterName(name, selected, 0, 10);
 }
 
 void UserInterface::printCharacterName(std::string name, bool selected, int numEndline)
@@ -61,10 +66,37 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck)
+void UserInterface::printCharacterName(std::string name, bool selected, int numEndline, int widthToPrint)
+{
+	for (int i = 0; i < name.size(); i++) {
+		if (i > 0 && name[i - 1] == '[') {
+			SetConsoleTextAttribute(hConsole, 15);
+		}
+		else {
+			SetConsoleTextAttribute(hConsole, getColor(selected));
+		}
+		std::cout << name[i];
+	}
+
+
+	//Set to default non selected color
+	SetConsoleTextAttribute(hConsole, getColor(false));
+
+	if (numEndline == 0) {
+		for (int i = name.length(); i <= widthToPrint; i++) {
+			std::cout << " ";
+		}
+	}
+
+	for (int i = 0; i < numEndline; i++) {
+		std::cout << std::endl;
+	}
+}
+
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats)
 {
 	clear_screen();
-	std::cout << "Virtua Partner (alpha 2)" << std::endl;
+	std::cout << "Virtua Partner (alpha 3)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	printCharacterName("[1] Left Side", !leftSide, 0);
@@ -98,8 +130,22 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 			}
 		}
 
+		// Print moves on the right side
 		if (moveNumber < categories[currentCategoryIndex].size()) {
-			printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
+			std::string statsIndex = categories[currentCategoryIndex][0] + categories[currentCategoryIndex][moveNumber];
+
+			if (punishCheck) {
+				printCharacterName(
+					categories[currentCategoryIndex][moveNumber],
+					str == categories[currentCategoryIndex][moveNumber],
+					0,
+					35);
+				std::cout << punishStats[statsIndex].toString();
+			}
+			else {
+				printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
+			}
+
 			moveNumber++;
 		}
 

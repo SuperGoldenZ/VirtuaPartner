@@ -13,9 +13,11 @@ VirtuaPartner.cpp
 #include <vector>
 #include <filesystem>
 #include <thread>
+#include <sstream>
 
 #include "keyboard.h"
 #include "UserInterface.h"
+#include "PunishStats.h"
 #include "PunishChecker.h"
 #include "PunishCheckerBlaze.h"
 
@@ -39,6 +41,8 @@ bool punishCheck = true;
 
 vector<vector<string>> categories;
 UserInterface ui;
+
+std::map<string, PunishStats> punishStats;
 
 vector<string> getStrings(string category) {
 
@@ -103,7 +107,7 @@ void setDefaultConsoleText(int fontSize = 18)
 	MoveWindow(console, r.left, r.top, 800, 750, TRUE); // 800 width, 100 height
 }
 
-void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME) {
+void executeCommandString(std::string str, bool defense = false, size_t loopCount = 1, int sleepCount = ONE_FRAME, string statsIndex = "") {
 	bool executeNext = false;
 	liftAllKeys(false);
 
@@ -311,6 +315,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 					break;
 				}
 
+				punishStats[statsIndex].failureCount++;
 				PunishChecker::playFailureSound();
 				Sleep(500);
 			}
@@ -320,6 +325,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				//Green background
 				system("color a1");
 				cout << "MAX\nPUNISH!";
+				punishStats[statsIndex].punishCount++;
 				PunishChecker::playSuccessSound();
 				Sleep(500);
 			}
@@ -342,11 +348,19 @@ std::vector<std::string> readFile(string filename)
 	std::vector<std::string> strings;
 
 	std::ifstream file(filename);
+	std::string firstLine;
 
 	if (file.is_open()) {
 		for (std::string line; getline(file, line);) {
 			if (line[0] != '#' && !line.empty()) {
+				if (!firstLine.empty() && punishStats.find(firstLine + line) == punishStats.end()) {
+					punishStats[firstLine + line] = PunishStats();
+				}
 				strings.push_back(line);
+			}
+
+			if (firstLine.empty()) {
+				firstLine = line;
 			}
 		}
 	}
@@ -372,10 +386,58 @@ void loadConfigFiles()
 			string filename(wFileName.begin(), wFileName.end());
 
 			configFile += filename;
-
 			categories.push_back(readFile(configFile));
 		}
 	} while (FindNextFile(hFind, &ffd) != 0);
+}
+
+void saveStats()
+{
+	ofstream outfile;
+	outfile.open("stats.csv", ios::out | ios::trunc);
+
+	for (auto const& x : punishStats)
+	{
+		outfile << x.first << "," << punishStats[x.first].punishCount << "," << punishStats[x.first].failureCount << endl;
+	}
+	outfile.close();
+}
+
+void readStats()
+{
+	std::vector<std::string> strings;
+
+	std::ifstream file("stats.csv");
+	if (!file.good()) {
+		return;
+	}
+
+	std::string firstLine;
+
+	if (file.is_open()) {
+		for (std::string line; getline(file, line);) {
+			std::stringstream ss(line);
+			string key = "";
+			int i = 0;
+			PunishStats stats;
+
+			for (std::string field; getline(ss, field, ','); ) {
+				switch (i) {
+				case 0:
+					key = field;
+					break;
+				case 1:
+					stats.punishCount = std::stoi(field);
+					break;
+				case 2:
+					stats.failureCount = std::stoi(field);
+					break;
+				}
+				i++;
+			}
+			punishStats[key] = stats;
+		}
+	}
 }
 
 int main()
@@ -406,7 +468,9 @@ int main()
 
 	int stringIndex = 1;
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+	readStats();
+
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 
 
 	while (true) {
@@ -415,25 +479,25 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -454,13 +518,13 @@ int main()
 		if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats);
 			}
 		}
 
@@ -471,7 +535,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 				break;
 			}
 		}
@@ -482,10 +546,11 @@ int main()
 				executeCommandString(stringArray[stringIndex], true, 8, 1);
 			}
 			else {
-				executeCommandString(stringArray[stringIndex]);
+				executeCommandString(stringArray[stringIndex], false, 1, ONE_FRAME, stringArray[0] + stringArray[stringIndex]);
 			}
 
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck);
+			saveStats();
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats);
 		}
 
 		Sleep(ONE_FRAME);
