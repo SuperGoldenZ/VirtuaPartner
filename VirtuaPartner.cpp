@@ -84,9 +84,14 @@ static BOOL CALLBACK focusVfWindow(HWND hWnd, LPARAM lparam) {
 	// Search visible Windows for one running Virtua Fighter
 	if (IsWindowVisible(hWnd) && isVirtuaFighterGameWindow(hWnd)) {
 		vfWindow = hWnd;
+		RECT rect;
+		if (GetWindowRect(hWnd, &rect))
+		{
+			SetWindowPos(hWnd, NULL, rect.left, rect.top, 1296, 759, SWP_NOZORDER);
+		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 void setDefaultConsoleText(int fontSize = 18)
