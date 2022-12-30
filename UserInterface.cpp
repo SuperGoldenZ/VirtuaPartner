@@ -109,10 +109,10 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	printCharacterName("[2] Right Side", leftSide, 1);
 
 	if (punishCheck) {
-		printCharacterName("Play char:   El Blaze", false, 0 ,38);
+		printCharacterName("Player char: El Blaze", false, 0 ,38);
 	}
 	else {
-		printCharacterName("Play char:   Any", false, 0, 38);
+		printCharacterName("Player char: Any", false, 0, 38);
 	}
 	printCharacterName("P[u]nish Check", punishCheck, 2);
 
