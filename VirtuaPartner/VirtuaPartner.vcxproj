@@ -76,6 +76,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -147,17 +148,39 @@
     <ClCompile Include="VirtuaPartner.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="configs\akira.txt" />
-    <Text Include="configs\aoi.txt" />
-    <Text Include="configs\blaze.txt" />
+    <Text Include="configs\akira.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\aoi.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\blaze.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
     <Text Include="configs\defense.txt" />
-    <Text Include="configs\eileen.txt" />
-    <Text Include="configs\goh.txt" />
-    <Text Include="configs\jean.txt" />
-    <Text Include="configs\jeffry.txt" />
-    <Text Include="configs\lau.txt" />
-    <Text Include="configs\lion.txt" />
-    <Text Include="configs\wolf.txt" />
+    <Text Include="configs\eileen.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\goh.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\jean.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\jeffry.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\lau.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\lion.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\wolf.txt">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard.h" />
@@ -167,7 +190,17 @@
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="README.md" />
+    <None Include="..\README.md">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="failed_01.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
+    <Media Include="success_02.wav">
+      <DeploymentContent>true</DeploymentContent>
+    </Media>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
