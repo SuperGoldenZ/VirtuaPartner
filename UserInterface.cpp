@@ -96,12 +96,26 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings)
 {
 	clear_screen();
-	std::cout << "Virtua Partner (alpha 4)" << std::endl;
+	SetConsoleTextAttribute(hConsole, 11);
+	std::cout << "Virtua ";
+	SetConsoleTextAttribute(hConsole, 12);
+	std::cout << "Partner ";
+	SetConsoleTextAttribute(hConsole, 7);
+	std::cout << "(alpha 4)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
-	printCharacterName("[1] Left Side", !leftSide, 0);
-	printCharacterName(" [2] Right Side", leftSide, 1);
+	std::cout << "Player side: ";
+	printCharacterName("[1] Left Side", !leftSide, 0, 25);
+	printCharacterName("[2] Right Side", leftSide, 1);
+
+	if (punishCheck) {
+		printCharacterName("Player char: El Blaze", false, 0 ,38);
+	}
+	else {
+		printCharacterName("Player char: Any", false, 0, 38);
+	}
 	printCharacterName("P[u]nish Check", punishCheck, 2);
+
 
 	int currentCategoryIndex = -1;
 	for (int i = 0; i < categories.size(); i++) {
@@ -118,7 +132,8 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	int lineNumber = 0;
 	int moveNumber = 1;
 	int i = 0;
-
+	SetConsoleTextAttribute(hConsole, 112);
+	std::cout << "CPU Char:   Commands:                                     " << std::endl;
 	while (i < categories.size() || moveNumber < categories[currentCategoryIndex].size()) {
 		if (i < categories.size()) {
 			printCharacterName(categories[i][0], currentCategory == categories[i][0], 0);
@@ -149,6 +164,7 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 				std::cout << punishStats[statsIndex].toString();
 			}
 			else {
+				std::cout << " ";
 				printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
 			}
 
@@ -160,20 +176,25 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 
 	std::cout << std::endl;
 
-	std::cout << "NumPad Controls:" << std::endl;
+	SetConsoleTextAttribute(hConsole, 112);
+	std::cout << "NumPad Controls:                                         " << std::endl;
 
-	printCharacterName("[+] Next String", false, false);
+	printCharacterName("[+] Next String", false, 0, 35);
 	printCharacterName("[-] Prev String", false, 1);
-	printCharacterName("[1] Play string one time (current selected move)", false, 1);
-	printCharacterName("[0] Start repeat (current selected move only)", false, 1);
-	printCharacterName("[2] Start random repeat (all)", false, 1);
-	std::cout << std::endl;
-	printCharacterName("[*] Favorite or unfavorite selected move", false, 1);
-	printCharacterName("[/] Execute one of favorite moves randomly", false, 1);
-	printCharacterName("[.] Start repeat (of favorite moves only)", false, 1);
-	std::cout << std::endl;
-	printCharacterName("[3] Stop repeat", false, 1);
 
+	printCharacterName("", false, 0, 35);
+	printCharacterName("[*] Toggle favorite", false, 1);
+
+	printCharacterName("[1] Play selected", false, 0, 35);
+	printCharacterName("[/] Play favorite (random)", false, 1);
+
+	printCharacterName("[0] Start repeat (cur selected)", false, 0, 35);
+	printCharacterName("[.] Start repeat (favorites)", false, 1);
+
+	printCharacterName("[2] Start repeat (all)", false, 0, 35);
+	printCharacterName("[3] Stop repeat", false, 0, 35);
+
+	std::cout << std::endl;
 	std::cout << "? ";
 }
 
