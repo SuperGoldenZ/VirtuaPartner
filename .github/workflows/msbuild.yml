@@ -41,7 +41,10 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         path: |
-          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\*
+          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\VirtuaFighter.exe
+          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\README.md
+          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\LICENSE
+          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\configs\*.txt
           !D:\a\VirtuaPartner\VirtuaPartner\x64\Release\*.pdb
         name: VirtuaPartner
         retention-days: 1

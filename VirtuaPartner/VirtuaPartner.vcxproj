@@ -190,6 +190,9 @@
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\LICENSE">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="..\README.md">
       <DeploymentContent>true</DeploymentContent>
     </None>
