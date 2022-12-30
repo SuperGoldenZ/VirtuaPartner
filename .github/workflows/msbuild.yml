@@ -40,6 +40,8 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        path: D:\a\VirtuaPartner\VirtuaPartner\x64\Release\
-        name: VirtuaPartner.exe
-        retention-days: 30
+        path: |
+          D:\a\VirtuaPartner\VirtuaPartner\x64\Release\*
+          !D:\a\VirtuaPartner\VirtuaPartner\x64\Release\*.pdb
+        name: VirtuaPartner
+        retention-days: 1
