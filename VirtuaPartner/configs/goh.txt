@@ -1,4 +1,5 @@
 [G]oh
+4+K+P_____ #fullcharge
 2+G__558+K+G #hitslow
 2+G__552+K+G #hitslow
 2+G__551+K #hitslow
