@@ -1,5 +1,19 @@
 [J]ean
 #################
+# Charge moves
+#################
+K______ #fullcharge
+K___P+K #charge
+33+PK_____ #fullcharge
+33+PK___P+K #charge
+4+PP___   #fullcharge
+4+PP__P+K #charge
+PKP____  #fullcharge
+PKP__P+K #charge
+PPP____  #fullcharge
+PPP__P+K #charge
+
+#################
 # Standing basics
 #################
 6+K

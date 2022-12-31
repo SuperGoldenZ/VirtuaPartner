@@ -10,11 +10,11 @@ PP56+PK
 2+G___56+PP52+K
 6+PK
 3+PPP+K
+3+PPP+K_____ #fullcharge
 KK
 6+K
 3+KP52+K5K
 9+KK
-2+G___51+K #recoverslow
 P+K
 1+P+KP5P
 46+K+G
@@ -38,5 +38,5 @@ P+K
 4+P52+K #hitslow
 2+G___51+K #recoverslow
 2+G___5K+G5K #recoverslow
-1+K+G
+2+G___51+K+G
 9+G5K #recoverslow
