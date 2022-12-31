@@ -10,6 +10,7 @@ PP56+PK
 2+G___56+PP52+K
 6+PK
 3+PPP+K
+3+PPP+K_____ #fullcharge
 KK
 6+K
 3+KP52+K5K
