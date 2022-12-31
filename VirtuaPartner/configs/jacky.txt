@@ -1,0 +1,42 @@
+Ja[c]ky
+#################
+# Standing basics
+#################
+PP56+PPP
+2+G___5PP56+PP52+K #hitslow
+PP56+PK
+
+6+PPP
+2+G___56+PP52+K
+6+PK
+3+PPP+K
+KK
+6+K
+3+KP52+K5K
+9+KK
+2+G___51+K #recoverslow
+P+K
+1+P+KP5P
+46+K+G
+2+K+GKKK5K
+
+############
+#Side shuffle
+############
+2+G___54+P+K+G52+KKK
+4+P+K+G5P+KP
+
+############
+# Back turned
+############
+44+P5552+K #recoverslow
+
+
+############
+#Low Attacks
+############
+4+P52+K #hitslow
+2+G___51+K #recoverslow
+2+G___5K+G5K #recoverslow
+1+K+G
+9+G5K #recoverslow
