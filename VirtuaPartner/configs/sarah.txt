@@ -1,0 +1,58 @@
+[S]arah
+############
+# Back turned
+############
+44+P552+K
+44+P551+K
+44+P55P+KK
+
+
+############
+# Flamingo
+############
+4+KG5P2+K
+4+KG5KKKK
+4+KG56+K5K
+4+KG57+K
+#4+KG58+P+K555  #cannot actually throw punish
+#4+KG52+P+K555  #cannot actually throw punish
+4+KG56+K+G
+4+KG52+K+G
+
+
+
+############
+# Forward slide
+############
+6+P+K+G552+K
+6+P+K+G5PPK
+
+############
+# Back slide
+############
+6+P+K+G5452+K
+6+P+K+G545K+G
+
+#################
+# Standing basics
+#################
+9+K+GPP55K
+1+K
+9+K
+7+K
+2+P+KK
+2+G__KK
+2+G__K55K
+KK
+4+PK554+K
+6+PK
+PPPK
+PPP7+K
+
+############
+# Low Attacks
+############
+2+G__52+K
+2+G__52+K+G
+2+G__53+K+G
+9+G5K #recoverslow

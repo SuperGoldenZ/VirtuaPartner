@@ -79,11 +79,11 @@
     <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-	  <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-	  <LinkIncremental>false</LinkIncremental>
-	  <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
+    <LinkIncremental>false</LinkIncremental>
+    <CopyLocalDeploymentContent>true</CopyLocalDeploymentContent>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -166,6 +166,9 @@
     <Text Include="configs\goh.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\jacky.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
     <Text Include="configs\jean.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
@@ -176,6 +179,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\lion.txt">
+      <DeploymentContent>true</DeploymentContent>
+    </Text>
+    <Text Include="configs\sarah.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\wolf.txt">
