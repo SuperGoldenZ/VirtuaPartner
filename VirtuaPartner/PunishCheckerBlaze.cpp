@@ -107,18 +107,6 @@ bool PunishCheckerBlaze::didKneeCounter()
 	return true;
 }
 
-bool PunishCheckerBlaze::checkPoint(int x, int y, int r, int g, int b)
-{
-	const COLORREF color = GetPixel(dc, x, y);
-	RGBTRIPLE rgb;
-
-	rgb.rgbtRed = GetRValue(color);
-	rgb.rgbtGreen = GetGValue(color);
-	rgb.rgbtBlue = GetBValue(color);
-
-	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
-}
-
 /**
 * Returns -1 if not found situation for guaranteed punish
 * Returns 0 if guaranteed punish situation but not actually punished
