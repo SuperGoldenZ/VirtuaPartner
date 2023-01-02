@@ -20,6 +20,7 @@ VirtuaPartner.cpp
 #include "PunishStats.h"
 #include "PunishChecker.h"
 #include "PunishCheckerBlaze.h"
+#include "PunishCheckerShun.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -32,6 +33,9 @@ const byte ONE_FRAME = 16;
 int struggleType = 0;
 
 std::string category;
+
+std::string player1Character;
+std::string player1CharacterOld;
 
 //If CPU is on the left side or not
 bool leftSide = false;
@@ -449,7 +453,6 @@ void readStats()
 
 int getRandomStarredMove(vector<string> stringArray)
 {
-	bool found = false;
 	int tempStringIndex;
 
 	//This is very hacky way not to get into infinite loop now if no strings selected
@@ -463,9 +466,19 @@ int getRandomStarredMove(vector<string> stringArray)
 		}
 	}
 
-	if (!found) {
-		return -1;
+
+	return -1;
+}
+
+bool updateSelectedPlayers()
+{
+	player1Character = PunishChecker::getSelectedPlayer1(vfWindow);
+	if (player1Character != player1CharacterOld) {
+		player1CharacterOld = player1Character;
+		return true;
 	}
+
+	return false;
 }
 
 int main()
@@ -494,12 +507,13 @@ int main()
 
 	category = categories[0][0];
 	stringArray = getStrings(category);
+	//std::thread updateSelectedPlayersThread([&] { updateSelectedPlayers(); });
 
 	int stringIndex = 1;
 
 	readStats();
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 
 
 	while (true) {
@@ -508,7 +522,7 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
@@ -520,25 +534,25 @@ int main()
 			}
 			else {
 				stringIndex = tempStringIndex;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -560,18 +574,18 @@ int main()
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
 			selectedStrings[stringArray[0] + stringArray[stringIndex]] = !selectedStrings[stringArray[0] + stringArray[stringIndex]];
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		else if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 
@@ -582,7 +596,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 				break;
 			}
 		}
@@ -603,7 +617,7 @@ int main()
 				}
 				else {
 					stringIndex = tempStringIndex;
-					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 				}
 			}
 
@@ -617,10 +631,14 @@ int main()
 			}
 
 			saveStats();
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 
 		Sleep(ONE_FRAME);
+
+		if (updateSelectedPlayers()) {
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+		}
 
 		if (GetAsyncKeyState(VK_ESCAPE) != 0) {
 			return 0;
