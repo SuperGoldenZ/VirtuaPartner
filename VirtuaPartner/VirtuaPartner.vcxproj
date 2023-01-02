@@ -22,7 +22,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{1e59ce03-2964-4942-a54e-cc845c451141}</ProjectGuid>
-    <RootNamespace>ConsoleApplication1</RootNamespace>
+    <RootNamespace>VirtuaPartner</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>VirtuaPartner</ProjectName>
   </PropertyGroup>
@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="PunishChecker.cpp" />
     <ClCompile Include="PunishCheckerBlaze.cpp" />
+    <ClCompile Include="PunishCheckerShun.cpp" />
     <ClCompile Include="PunishStats.cpp" />
     <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="VirtuaPartner.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="PunishChecker.h" />
     <ClInclude Include="PunishCheckerBlaze.h" />
+    <ClInclude Include="PunishCheckerShun.h" />
     <ClInclude Include="PunishStats.h" />
     <ClInclude Include="UserInterface.h" />
   </ItemGroup>
