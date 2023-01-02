@@ -1,7 +1,34 @@
 #include <windows.h>
 #include <tchar.h>
+#include <string>
 
 #include "PunishChecker.h"
+#include "MciApi.h"
+
+bool PunishChecker::checkPoint(HWND virtuaFighterWindow, int x, int y, int r, int g, int b)
+{
+	HDC dc = GetDC(virtuaFighterWindow);
+	const COLORREF color = GetPixel(dc, x, y);
+	RGBTRIPLE rgb;
+
+	rgb.rgbtRed = GetRValue(color);
+	rgb.rgbtGreen = GetGValue(color);
+	rgb.rgbtBlue = GetBValue(color);
+
+	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
+}
+
+bool PunishChecker::checkPoint(int x, int y, int r, int g, int b)
+{
+	const COLORREF color = GetPixel(dc, x, y);
+	RGBTRIPLE rgb;
+
+	rgb.rgbtRed = GetRValue(color);
+	rgb.rgbtGreen = GetGValue(color);
+	rgb.rgbtBlue = GetBValue(color);
+
+	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
+}
 
 void PunishChecker::playSuccessSound()
 {
@@ -59,4 +86,25 @@ void PunishChecker::getAdvantageAmount()
 		}
 		Sleep(150);
 	}
+}
+
+std::string PunishChecker::getSelectedPlayer1(HWND vfWindow)
+{
+	if (!PunishChecker::checkPoint(vfWindow, 635, 74, 255, 232, 171)) {
+		return "Unknown";
+	}
+
+	if (PunishChecker::checkPoint(vfWindow, 1120, 609, 255, 0, 0)) {
+		return "Bla[z]e";
+	}
+
+	if (PunishChecker::checkPoint(vfWindow, 839, 609, 255, 0, 0)) {
+		return "S[h]un";
+	}
+
+	if (PunishChecker::checkPoint(vfWindow, 280, 608, 255, 0, 0)) {
+		return "[E]ileen";
+	}
+
+	return "Unknown";
 }
