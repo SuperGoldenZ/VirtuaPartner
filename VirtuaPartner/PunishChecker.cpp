@@ -15,7 +15,9 @@ bool PunishChecker::checkPoint(HWND virtuaFighterWindow, int x, int y, int r, in
 	rgb.rgbtGreen = GetGValue(color);
 	rgb.rgbtBlue = GetBValue(color);
 
-	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
+	return abs(r - (int)rgb.rgbtRed) <= 45 &&
+		abs(g - (int)rgb.rgbtGreen) <= 45 &&
+		abs(b - (int)rgb.rgbtBlue) <= 45;
 }
 
 bool PunishChecker::checkPoint(int x, int y, int r, int g, int b)
