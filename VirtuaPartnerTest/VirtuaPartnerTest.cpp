@@ -10,9 +10,8 @@
 #include <stdlib.h>
 #include <iostream>
 
-
 #pragma comment (lib, "Gdiplus.lib")
-
+#pragma comment(lib, "WinMM.lib")
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
