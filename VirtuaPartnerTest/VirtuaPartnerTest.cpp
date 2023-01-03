@@ -2,8 +2,6 @@
 #include "CppUnitTest.h"
 #include "../VirtuaPartner/PunishChecker.h"
 #include "../VirtuaPartner/PunishChecker.cpp"
-#include "../VirtuaPartner/PunishCheckerShun.h"
-#include "../VirtuaPartner/PunishCheckerShun.cpp"
 #include <windows.h>
 #include <objidl.h>
 #include <gdiplus.h>
@@ -33,7 +31,7 @@ namespace VirtuaPartnerTest
 
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	bool createTestWindow()
+	std::string createTestWindow()
 	{
 		ULONG_PTR token;
 		Gdiplus::GdiplusStartupInput input = { 0 };
@@ -48,7 +46,7 @@ namespace VirtuaPartnerTest
 		RegisterClass(&wc); //register wc
 		// Create the window.
 
-		bool result = false;
+		std::string result = "";
 
 		vfWindow = CreateWindowEx(
 			0, // Optional window styles.
@@ -67,7 +65,7 @@ namespace VirtuaPartnerTest
 
 		if (vfWindow != NULL)
 		{
-			ShowWindow(vfWindow, SW_NORMAL);			
+			ShowWindow(vfWindow, SW_NORMAL);
 
 			RECT rect;
 			if (GetWindowRect(vfWindow, &rect))
@@ -79,31 +77,33 @@ namespace VirtuaPartnerTest
 			Logger::WriteMessage("Starting loop");
 			int i = 0;
 
-			Sleep(500);
+			Sleep(250);
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
 				if (i++ == 10) {
 					Logger::WriteMessage(" check shoon in loop loop");
-					PunishCheckerShun shun(vfWindow, false, false);
-					result = (shun.isPlayer1());
+					SendMessage(vfWindow, WM_PAINT, NULL, NULL);
+					Sleep(250);
+					result = PunishChecker::getSelectedPlayer1(vfWindow);
+					Sleep(250);
 					SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
+					Sleep(250);
 					break;
 				}
 
-				
+
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
-
-
 		}
 		else {
 			std::cout << "Window not made";
 		}
-		
+
 		Logger::WriteMessage("Shutting down");
-		
+
 		Gdiplus::GdiplusShutdown(token);
+		Sleep(250);
 		return result;
 	}
 
@@ -113,18 +113,18 @@ namespace VirtuaPartnerTest
 	{
 		switch (uMsg)
 		{
-			case WM_DESTROY:
-				PostQuitMessage(0);
-				return 0;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
 
-			case WM_PAINT:
-			{
-				PAINTSTRUCT ps;
-				HDC hdc = BeginPaint(hwnd, &ps);				
-				DrawPlayer1ShunImage(hdc);
-				EndPaint(hwnd, &ps);
-				return 0;
-			}
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hdc = BeginPaint(hwnd, &ps);
+			DrawPlayer1ShunImage(hdc);
+			EndPaint(hwnd, &ps);
+			return 0;
+		}
 		}
 
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
@@ -133,22 +133,33 @@ namespace VirtuaPartnerTest
 	TEST_CLASS(VirtuaPartnerTest)
 	{
 	public:
-		TEST_METHOD(TestIsPlayer1ShunPositive)
-		{			
-			filename = _T("data\\shun_left_side.jpg");
-			Assert::IsTrue(createTestWindow());						
-		}
-
-		TEST_METHOD(TestIsPlayer1ShunNegative)
-		{			
-			filename = _T("data\\all_black.jpg");
-			Assert::IsFalse(createTestWindow());
-		}
-
-		TEST_METHOD(GetSelectedPlayerOne)
+		TEST_METHOD(TestPlayer1Unknown1)
 		{
-			PunishChecker checker();
+			filename = _T("data\\shun_left_side.gif");
+			std::string result = createTestWindow();
+			std::wstring widestr = std::wstring(result.begin(), result.end());
 
+			Assert::AreEqual("Unknown", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer1Unknown2)
+		{
+			filename = _T("data\\all_black.jpg");
+
+			std::string result = createTestWindow();
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("Unknown", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer1Shun)
+		{
+			filename = _T("data\\character_select_shun_left.gif");
+
+			std::string result = createTestWindow();
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("S[h]un", result.c_str());
 		}
 	};
 }
