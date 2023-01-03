@@ -173,7 +173,10 @@
     <Image Include="data\all_black.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
-    <Image Include="data\shun_left_side.jpg">
+    <Image Include="data\character_select_shun_left.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\shun_left_side.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
   </ItemGroup>
