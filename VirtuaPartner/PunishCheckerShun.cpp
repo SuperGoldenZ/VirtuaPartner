@@ -7,13 +7,9 @@
 
 #include "PunishCheckerShun.h"
 
-PunishCheckerShun::PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) {
-	_virtuaFighterWindow = virtuaFighterWindow;
-	dc = GetDC(virtuaFighterWindow);
-	frameAdvantage = -1;
+PunishCheckerShun::PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) : PunishChecker(virtuaFighterWindow) {
 	this->recoversLow = recoversLow;
 	this->hitsLow = hitsLow;
-	advantageClass = AdvantageClass::NONE;
 };
 
 bool PunishCheckerShun::didPkCounter()

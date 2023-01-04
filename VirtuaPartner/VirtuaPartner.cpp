@@ -18,7 +18,7 @@ VirtuaPartner.cpp
 #include "keyboard.h"
 #include "UserInterface.h"
 #include "PunishStats.h"
-#include "PunishChecker.h"
+#include "WindowPixelChecker.h"
 #include "PunishCheckerBlaze.h"
 #include "PunishCheckerShun.h"
 
@@ -35,7 +35,6 @@ int struggleType = 0;
 std::string category;
 
 std::string player1Character;
-std::string player1CharacterOld;
 
 //If CPU is on the left side or not
 bool leftSide = false;
@@ -470,11 +469,11 @@ int getRandomStarredMove(vector<string> stringArray)
 	return -1;
 }
 
-bool updateSelectedPlayers()
+bool updateSelectedPlayers(WindowPixelChecker checker)
 {
-	player1Character = PunishChecker::getSelectedPlayer1(vfWindow);
-	if (player1Character != player1CharacterOld) {
-		player1CharacterOld = player1Character;
+	std::string newPlayer1Character = checker.getSelectedPlayer1();
+	if (player1Character != newPlayer1Character && newPlayer1Character != "Unknown") {
+		player1Character = newPlayer1Character;
 		return true;
 	}
 
@@ -507,7 +506,6 @@ int main()
 
 	category = categories[0][0];
 	stringArray = getStrings(category);
-	//std::thread updateSelectedPlayersThread([&] { updateSelectedPlayers(); });
 
 	int stringIndex = 1;
 
@@ -515,6 +513,7 @@ int main()
 
 	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 
+	const WindowPixelChecker vfChecker(vfWindow);
 
 	while (true) {
 		if (random) {
@@ -636,7 +635,7 @@ int main()
 
 		Sleep(ONE_FRAME);
 
-		if (updateSelectedPlayers()) {
+		if (updateSelectedPlayers(vfChecker)) {
 			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 
