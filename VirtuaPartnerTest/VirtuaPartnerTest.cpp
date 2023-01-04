@@ -2,6 +2,10 @@
 #include "CppUnitTest.h"
 #include "../VirtuaPartner/WindowPixelChecker.h"
 #include "../VirtuaPartner/WindowPixelChecker.cpp"
+#include "../VirtuaPartner/PunishChecker.h"
+#include "../VirtuaPartner/PunishChecker.cpp"
+#include "../VirtuaPartner/PunishCheckerShun.h"
+#include "../VirtuaPartner/PunishCheckerShun.cpp"
 #include <windows.h>
 #include <objidl.h>
 #include <gdiplus.h>
@@ -50,7 +54,7 @@ namespace VirtuaPartnerTest
 		vfWindow = CreateWindowEx(
 			0, // Optional window styles.
 			CLASS_NAME, // Window class
-			L"Learn to Program Windows", // Window text
+			L"Virtua Partner Unit Test Window", // Window text
 			WS_OVERLAPPEDWINDOW, // Window style
 
 			// Size and position
@@ -80,20 +84,84 @@ namespace VirtuaPartnerTest
 			Sleep(250);
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
-				if (i++ == 10) {
-					Logger::WriteMessage(" check shoon in loop loop");
-					SendMessage(vfWindow, WM_PAINT, NULL, NULL);
-					Sleep(250);
-					result = checker.getSelectedPlayer1();
-					Sleep(250);
-					SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
-					Sleep(250);
-					break;
-				}
+				Logger::WriteMessage(" check shoon in loop loop");
+				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
+				Sleep(250);
+				result = checker.getSelectedPlayer1();
+				Sleep(250);
+				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
+				Sleep(250);
+			}
+		}
+		else {
+			std::cout << "Window not made";
+		}
 
+		Logger::WriteMessage("Shutting down");
 
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+		Gdiplus::GdiplusShutdown(token);
+		Sleep(250);
+		return result;
+	}
+
+	int checkFrameAdvantage()
+	{
+		ULONG_PTR token;
+		Gdiplus::GdiplusStartupInput input = { 0 };
+		input.GdiplusVersion = 1;
+		Gdiplus::GdiplusStartup(&token, &input, NULL);
+
+		const wchar_t CLASS_NAME[] = L"Sample Window Class";
+		WNDCLASS wc = {};
+		wc.lpfnWndProc = &WindowProc; //attach this callback procedure
+		// wc.hInstance = hInstance; //handle to application instance
+		wc.lpszClassName = CLASS_NAME;
+		RegisterClass(&wc); //register wc
+		// Create the window.
+
+		int result = -1;
+
+		vfWindow = CreateWindowEx(
+			0, // Optional window styles.
+			CLASS_NAME, // Window class
+			L"Virtua Partner Unit Test Window", // Window text
+			WS_OVERLAPPEDWINDOW, // Window style
+
+			// Size and position
+			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+
+			NULL, // Parent window
+			NULL, // Menu
+			NULL, // hInstance, // Instance handle
+			NULL // Additional application data
+		);
+
+		if (vfWindow != NULL)
+		{
+			ShowWindow(vfWindow, SW_NORMAL);
+
+			RECT rect;
+			if (GetWindowRect(vfWindow, &rect))
+			{
+				SetWindowPos(vfWindow, NULL, rect.left, rect.top, 1296, 759, SWP_NOZORDER);
+			}
+
+			MSG msg;
+			Logger::WriteMessage("Starting loop");
+			int i = 0;
+			PunishCheckerShun checker(vfWindow, false, false);
+
+			Sleep(250);
+			while (GetMessage(&msg, NULL, 0, 0) > 0)
+			{
+				Logger::WriteMessage(" check shoon in loop loop");
+				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
+				Sleep(250);
+				checker.getAdvantageAmount();
+				result = checker.frameAdvantage;
+				Sleep(250);
+				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
+				Sleep(250);
 			}
 		}
 		else {
@@ -170,6 +238,87 @@ namespace VirtuaPartnerTest
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("[J]ean", result.c_str());
+		}
+
+		TEST_METHOD(Test10FrameAdvantage)
+		{
+			filename = _T("data\\10_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(10, result);
+		}
+
+		TEST_METHOD(Test12FrameAdvantage)
+		{
+			filename = _T("data\\12_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(12, result);
+		}
+
+		TEST_METHOD(Test13FrameAdvantage)
+		{
+			filename = _T("data\\13_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(13, result);
+		}
+
+		TEST_METHOD(Test14FrameAdvantage)
+		{
+			filename = _T("data\\14_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(14, result);
+		}
+
+		TEST_METHOD(Test15FrameAdvantage)
+		{
+			filename = _T("data\\15_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(15, result);
+		}
+
+		TEST_METHOD(Test16FrameAdvantage)
+		{
+			filename = _T("data\\16_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(16, result);
+		}
+
+		TEST_METHOD(Test17FrameAdvantage)
+		{
+			filename = _T("data\\17_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(17, result);
+		}
+
+		TEST_METHOD(Test18FrameAdvantage)
+		{
+			filename = _T("data\\18_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(18, result);
+		}
+
+		TEST_METHOD(Test19FrameAdvantage)
+		{
+			filename = _T("data\\19_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(19, result);
 		}
 	};
 }
