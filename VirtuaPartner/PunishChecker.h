@@ -3,28 +3,21 @@
 
 #include <windows.h>
 #include <string>
+#include "WindowPixelChecker.h"
 
 #pragma once
-class PunishChecker
+class PunishChecker : public WindowPixelChecker
 {
 public:
+	PunishChecker(HWND vfWindow);
 	enum class AdvantageClass { NONE, THROW, PUNCH, ELBOW, KNEE };
 	AdvantageClass advantageClass;
 
-	bool checkPoint(int x, int y, int r, int g, int b);
-	static bool checkPoint(HWND virtuaFighterWindow, int x, int y, int r, int g, int b);
 	virtual byte giveFeedback() = 0 {};
 	static void playSuccessSound();
 	static void playFailureSound();
-	static std::string getSelectedPlayer1(HWND virtuaFighterWindow);
 
 protected:
-	const int WHITE_R = 255;
-	const int WHITE_G = 251;
-	const int WHITE_B = 255;
-	HDC dc;
-	HWND _virtuaFighterWindow;
-
 	int frameAdvantage;
 	bool maxPunishment = false;
 	bool guaranteedDamage = true;

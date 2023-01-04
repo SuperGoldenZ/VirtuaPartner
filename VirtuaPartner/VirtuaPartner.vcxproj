@@ -148,6 +148,7 @@
     <ClCompile Include="PunishStats.cpp" />
     <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="VirtuaPartner.cpp" />
+    <ClCompile Include="WindowPixelChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="configs\akira.txt">
@@ -197,6 +198,7 @@
     <ClInclude Include="PunishCheckerShun.h" />
     <ClInclude Include="PunishStats.h" />
     <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="WindowPixelChecker.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">
