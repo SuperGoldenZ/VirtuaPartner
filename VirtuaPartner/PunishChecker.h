@@ -16,16 +16,15 @@ public:
 	virtual byte giveFeedback() = 0 {};
 	static void playSuccessSound();
 	static void playFailureSound();
+	int frameAdvantage;
+	void getAdvantageAmount();
 
 protected:
-	int frameAdvantage;
 	bool maxPunishment = false;
 	bool guaranteedDamage = true;
 	bool cpuKnockdown = false;
 	bool recoversLow;
 	bool hitsLow;
-
-	void getAdvantageAmount();
 };
 
 #endif

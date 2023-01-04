@@ -5,7 +5,9 @@
 #include <iostream>
 #include <thread>
 
+#include "PunishChecker.h"
 #include "PunishCheckerShun.h"
+
 
 PunishCheckerShun::PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) : PunishChecker(virtuaFighterWindow) {
 	this->recoversLow = recoversLow;
