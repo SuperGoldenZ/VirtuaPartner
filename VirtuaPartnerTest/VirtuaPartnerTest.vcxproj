@@ -170,6 +170,39 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="data\10_frame_advantage.gif">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </Image>
+    <Image Include="data\11_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\12_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\13_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\14_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\15_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\16_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\17_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\18_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\19_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\23_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\all_black.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
