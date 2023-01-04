@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
-#include "../VirtuaPartner/PunishChecker.h"
-#include "../VirtuaPartner/PunishChecker.cpp"
+#include "../VirtuaPartner/WindowPixelChecker.h"
+#include "../VirtuaPartner/WindowPixelChecker.cpp"
 #include <windows.h>
 #include <objidl.h>
 #include <gdiplus.h>
@@ -75,6 +75,7 @@ namespace VirtuaPartnerTest
 			MSG msg;
 			Logger::WriteMessage("Starting loop");
 			int i = 0;
+			WindowPixelChecker checker(vfWindow);
 
 			Sleep(250);
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
@@ -83,7 +84,7 @@ namespace VirtuaPartnerTest
 					Logger::WriteMessage(" check shoon in loop loop");
 					SendMessage(vfWindow, WM_PAINT, NULL, NULL);
 					Sleep(250);
-					result = PunishChecker::getSelectedPlayer1(vfWindow);
+					result = checker.getSelectedPlayer1();
 					Sleep(250);
 					SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
 					Sleep(250);
@@ -159,6 +160,16 @@ namespace VirtuaPartnerTest
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("S[h]un", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer1Jean)
+		{
+			filename = _T("data\\character_select_jean_left.gif");
+
+			std::string result = createTestWindow();
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("[J]ean", result.c_str());
 		}
 	};
 }
