@@ -81,16 +81,15 @@ namespace VirtuaPartnerTest
 			int i = 0;
 			WindowPixelChecker checker(vfWindow);
 
-			Sleep(250);
+
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
 				Logger::WriteMessage(" check shoon in loop loop");
 				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
-				Sleep(250);
+
 				result = checker.getSelectedPlayer1();
-				Sleep(250);
+
 				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
-				Sleep(250);
 			}
 		}
 		else {
@@ -100,7 +99,7 @@ namespace VirtuaPartnerTest
 		Logger::WriteMessage("Shutting down");
 
 		Gdiplus::GdiplusShutdown(token);
-		Sleep(250);
+
 		return result;
 	}
 
@@ -151,17 +150,16 @@ namespace VirtuaPartnerTest
 			int i = 0;
 			PunishCheckerShun checker(vfWindow, false, false);
 
-			Sleep(250);
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
 				Logger::WriteMessage(" check shoon in loop loop");
 				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
-				Sleep(250);
+
 				checker.getAdvantageAmount();
 				result = checker.frameAdvantage;
-				Sleep(250);
+
 				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
-				Sleep(250);
+
 			}
 		}
 		else {
@@ -171,7 +169,6 @@ namespace VirtuaPartnerTest
 		Logger::WriteMessage("Shutting down");
 
 		Gdiplus::GdiplusShutdown(token);
-		Sleep(250);
 		return result;
 	}
 
