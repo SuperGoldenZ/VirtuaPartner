@@ -224,7 +224,7 @@ namespace VirtuaPartnerTest
 			std::string result = createTestWindow();
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
-			Assert::AreEqual("S[h]un", result.c_str());
+			Assert::AreEqual("Shun", result.c_str());
 		}
 
 		TEST_METHOD(TestPlayer1Jean)
@@ -234,7 +234,7 @@ namespace VirtuaPartnerTest
 			std::string result = createTestWindow();
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
-			Assert::AreEqual("[J]ean", result.c_str());
+			Assert::AreEqual("Jean", result.c_str());
 		}
 
 		TEST_METHOD(Test10FrameAdvantage)
