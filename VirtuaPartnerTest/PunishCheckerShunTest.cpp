@@ -129,13 +129,28 @@ namespace PunishCheckerShunTest
 	TEST_CLASS(PunishCheckerShunTest)
 	{
 	public:
-		TEST_METHOD(TestPlayer1Unknown1)
+		TEST_METHOD(TestPlayer1Shun14FramePunish)
 		{
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			frameAdvantage = 14;			
-
 			bool result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result);
+
+			filename = _T("data\\shun_15_frame_1pk_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result);
+		}
+
+		TEST_METHOD(TestPlayer1Shun15FramePunishStanding)
+		{
+			filename = _T("data\\shun_15_frame_1pk_counter_0_drinks.gif");
+			frameAdvantage = 15;
+			bool result = testShunPunishWithWindow();
+			Assert::AreEqual(true, result);
+
+			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result);
 		}
 	};
 }
