@@ -202,6 +202,39 @@ bool PunishCheckerShun::didThrowCounter()
 	return true;
 }
 
+bool PunishCheckerShun::did14FrameCounter()
+{
+	if (!checkPoint(166, 377, 255, 229, 151)) {
+		return false;
+	}
+
+	if (!checkPoint(158, 538, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(356, 478, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(356, 478, 255, 255, 255)) {
+		return false;
+	}
+
+	if (checkPoint(371, 459, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(318, 545, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(377, 545, 255, 255, 255)) {
+		return false;
+	}
+
+	return true;
+}
+
 void PunishCheckerShun::judgePunishment()
 {
 	maxPunishment = false;
@@ -228,6 +261,12 @@ void PunishCheckerShun::judgePunishment()
 			maxPunishment = true;
 		}
 		break;
+	case 14:
+		if (did14FrameCounter()) {
+			maxPunishment = true;
+		}
+		break;
+
 	case 15:
 		if (hitsLow) {
 			std::cout << "\nchecking shadow hammer\n";
