@@ -164,6 +164,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="PunishCheckerShunTest.cpp" />
     <ClCompile Include="VirtuaPartnerTest.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +211,9 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="data\character_select_shun_left.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\shun_14_frame_1p_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="data\shun_left_side.gif">
