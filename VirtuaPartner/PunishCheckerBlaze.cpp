@@ -227,8 +227,8 @@ void PunishCheckerBlaze::judgePunishment()
 		}
 		break;
 	case 15:
+	case 16:
 		if (hitsLow) {
-			std::cout << "\nchecking shadow hammer\n";
 			if (didShadowHammerCounter()) {
 				maxPunishment = true;
 				cpuKnockdown = true;
