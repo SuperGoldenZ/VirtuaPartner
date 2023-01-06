@@ -26,6 +26,7 @@ namespace PunishCheckerShunTest
 	WCHAR* filename;
 	int frameAdvantage;
 	bool maxDamage = false;
+	bool recoversLow = false;
 
 	void DrawPlayer1ShunImage(HDC hdc)
 	{
@@ -81,13 +82,13 @@ namespace PunishCheckerShunTest
 			MSG msg;
 			Logger::WriteMessage("Starting loop");
 			int i = 0;
-			PunishCheckerShun checker(vfWindow, false, false);
+			PunishCheckerShun checker(vfWindow, recoversLow, recoversLow);
 			checker.frameAdvantage = frameAdvantage;
 
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
 				Logger::WriteMessage(" check shoon in loop loop");
-				SendMessage(vfWindow, WM_PAINT, NULL, NULL);				
+				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
 				checker.judgePunishment();
 				result = checker.maxPunishment;
 				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
@@ -132,7 +133,8 @@ namespace PunishCheckerShunTest
 		TEST_METHOD(TestPlayer1Shun14FramePunish)
 		{
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
-			frameAdvantage = 14;			
+			frameAdvantage = 14;
+			recoversLow = false;
 			bool result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result);
 
@@ -145,8 +147,30 @@ namespace PunishCheckerShunTest
 		{
 			filename = _T("data\\shun_15_frame_1pk_counter_0_drinks.gif");
 			frameAdvantage = 15;
+			recoversLow = false;
 			bool result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result);
+
+			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result);
+		}
+
+		TEST_METHOD(TestPlayer1Shun15FramePunishDucking)
+		{
+			frameAdvantage = 15;
+			recoversLow = true;
+
+			bool result;
+
+			filename = _T("data\\shun_15_frame_6pp_crouch_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(true, result);
+
+			filename = _T("data\\shun_15_frame_1pk_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result);
+
 
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
