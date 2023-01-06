@@ -9,10 +9,9 @@ private:
 	bool didThrowCounter();
 	bool didPkCounter();
 	bool didCuffisCounter();
-	bool didKneeCounter();
-	bool didElbowCounter();
-	bool didShadowHammerCounter();
+	bool didKneeCounter();		
 	bool did14FrameCounter();
+	bool did15FrameCounter();
 	void makeOpponentPunch();
 public:
 	PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);

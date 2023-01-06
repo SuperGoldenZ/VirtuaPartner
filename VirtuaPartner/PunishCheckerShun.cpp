@@ -49,27 +49,6 @@ bool PunishCheckerShun::didCuffisCounter()
 	return true;
 }
 
-bool PunishCheckerShun::didShadowHammerCounter()
-{
-	if (!checkPoint(331, 477, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (!checkPoint(323, 552, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (checkPoint(329, 597, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (checkPoint(364, 545, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	return true;
-}
-
 bool PunishCheckerShun::didKneeCounter()
 {
 	//One hit combo 1 middle lower
@@ -231,6 +210,24 @@ bool PunishCheckerShun::did14FrameCounter()
 	return true;
 }
 
+bool PunishCheckerShun::did15FrameCounter()
+{
+	if (!checkPoint(131, 354, 151, 229, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(374, 461, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(357, 532, 255, 255, 255)) {
+		return false;
+	}
+
+
+	return true;
+}
+
 void PunishCheckerShun::judgePunishment()
 {
 	maxPunishment = false;
@@ -264,6 +261,11 @@ void PunishCheckerShun::judgePunishment()
 		break;
 
 	case 15:
+		if (did15FrameCounter()) {
+			maxPunishment = true;
+		}
+		break;
+		/*
 		if (hitsLow) {
 			std::cout << "\nchecking shadow hammer\n";
 			if (didShadowHammerCounter()) {
@@ -294,7 +296,7 @@ void PunishCheckerShun::judgePunishment()
 					cpuKnockdown = true;
 				}
 			}
-		break;
+		break;*/
 	case 18:
 		if (didKneeCounter()) {
 			maxPunishment = true;
