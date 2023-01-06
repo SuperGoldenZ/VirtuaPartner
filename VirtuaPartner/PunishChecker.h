@@ -18,9 +18,9 @@ public:
 	static void playFailureSound();
 	int frameAdvantage;
 	void getAdvantageAmount();
+	bool maxPunishment = false;
 
 protected:
-	bool maxPunishment = false;
 	bool guaranteedDamage = true;
 	bool cpuKnockdown = false;
 	bool recoversLow;
