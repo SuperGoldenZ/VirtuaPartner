@@ -302,14 +302,31 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		}
 
 		if (punishCheck) {
-			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
-			byte result = punishChecker.giveFeedback();
+			byte result = -1;
+			PunishChecker::AdvantageClass advantageClass;
+
+			if (player1Character == "Shun") {
+				PunishCheckerShun shun = PunishCheckerShun(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = shun.giveFeedback();
+				advantageClass = shun.advantageClass;
+			}
+			else if (player1Character == "Blaze") {
+				PunishCheckerBlaze blaze = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = blaze.giveFeedback();
+				advantageClass = blaze.advantageClass;
+			}
+			else {
+				PunishCheckerBlaze blaze = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = blaze.giveFeedback();
+				advantageClass = blaze.advantageClass;
+			}
+
 			if (result == 0) {
 				ui.clear_screen();
 				setDefaultConsoleText(82);
 				//Red background
 				system("color c0");
-				switch (punishChecker.advantageClass) {
+				switch (advantageClass) {
 				case PunishChecker::AdvantageClass::THROW:
 					cout << "Missed\nthrow\npunish";
 					break;
@@ -337,6 +354,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				punishStats[statsIndex].punishCount++;
 				PunishChecker::playSuccessSound();
 				Sleep(500);
+			}
+			else {
+				cout << "Unknown result?? " << result;
 			}
 		}
 
