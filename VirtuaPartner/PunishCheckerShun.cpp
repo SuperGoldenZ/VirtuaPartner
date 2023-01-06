@@ -204,7 +204,7 @@ bool PunishCheckerShun::didThrowCounter()
 
 bool PunishCheckerShun::did14FrameCounter()
 {
-	if (!checkPoint(166, 377, 255, 229, 151)) {
+	if (!checkPoint(131, 354, 151, 229, 255)) {
 		return false;
 	}
 
@@ -217,10 +217,6 @@ bool PunishCheckerShun::did14FrameCounter()
 	}
 
 	if (!checkPoint(356, 478, 255, 255, 255)) {
-		return false;
-	}
-
-	if (checkPoint(371, 459, 255, 255, 255)) {
 		return false;
 	}
 
