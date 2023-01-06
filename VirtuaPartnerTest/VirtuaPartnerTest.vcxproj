@@ -216,6 +216,12 @@
     <Image Include="data\shun_14_frame_1p_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\shun_15_frame_1pk_counter_0_drinks.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\shun_15_frame_6pp_crouch_counter_0_drinks.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\shun_left_side.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
