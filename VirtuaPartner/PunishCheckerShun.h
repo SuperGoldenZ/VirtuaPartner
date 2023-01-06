@@ -11,7 +11,7 @@ private:
 	bool didCuffisCounter();
 	bool didKneeCounter();		
 	bool did14FrameCounter();
-	bool did15FrameCounter();
+	bool did15FrameCounter(bool isStanding);
 	void makeOpponentPunch();
 public:
 	PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);

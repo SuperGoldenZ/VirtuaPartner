@@ -174,15 +174,34 @@ bool PunishCheckerShun::did14FrameCounter()
 	return true;
 }
 
-bool PunishCheckerShun::did15FrameCounter()
+bool PunishCheckerShun::did15FrameCounter(bool isStanding)
 {
-	if (!checkPoint(131, 354, 151, 229, 255)) {
-		return false;
+	if (isStanding) {
+		if (!checkPoint(131, 354, 151, 229, 255)) {
+			return false;
+		}
+
+		if (!checkPoint(362, 488, 255, 255, 255)) {
+			return false;
+		}
+
+		return true;
 	}
 
-	if (!checkPoint(362, 488, 255, 255, 255)) {
-		return false;
+
+	for (int x = 148; x <= 170; x++) {
+		for (int y = 554; y <= 600; y++) {
+			if (checkPoint(x, y, 255, 255, 255)) {
+				return true;
+			}
+		}
 	}
+
+
+	/*
+	if (!checkPoint(341, 546, 255, 255, 255)) {
+	return false;
+	}*/
 
 	return true;
 }
@@ -220,42 +239,10 @@ void PunishCheckerShun::judgePunishment()
 		break;
 
 	case 15:
-		if (did15FrameCounter()) {
+		if (did15FrameCounter(!recoversLow)) {
 			maxPunishment = true;
 		}
 		break;
-		/*
-		if (hitsLow) {
-			std::cout << "\nchecking shadow hammer\n";
-			if (didShadowHammerCounter()) {
-				maxPunishment = true;
-				cpuKnockdown = true;
-			}
-		}
-		else
-			if (!recoversLow) {
-				//Check shadow hammer first with faster execution
-				if (didShadowHammerCounter()) {
-					maxPunishment = true;
-					cpuKnockdown = true;
-				}
-				else {
-					//Add delay since cuffis takes longer to execute
-					Sleep(250);
-
-					if (didCuffisCounter()) {
-						maxPunishment = true;
-						cpuKnockdown = true;
-					}
-				}
-			}
-			else {
-				if (didElbowCounter()) {
-					maxPunishment = true;
-					cpuKnockdown = true;
-				}
-			}
-		break;*/
 	case 18:
 		if (didKneeCounter()) {
 			maxPunishment = true;
