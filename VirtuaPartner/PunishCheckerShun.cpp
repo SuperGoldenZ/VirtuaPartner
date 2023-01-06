@@ -110,47 +110,6 @@ byte PunishCheckerShun::giveFeedback() {
 	return 1;
 }
 
-/*
-* @todo need to implement this later
-*/
-bool PunishCheckerShun::didElbowCounter()
-{
-	if (!checkPoint(330, 473, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (!checkPoint(332, 535, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (!checkPoint(146, 551, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (checkPoint(320, 543, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	/*
-	if (!checkPoint(332, 472, WHITE_R, WHITE_G, WHITE_B)) {
-	return false;
-	}
-
-	if (!checkPoint(375, 460, WHITE_R, WHITE_G, WHITE_B)) {
-	return false;
-	}
-
-	if (!checkPoint(149, 551, WHITE_R, WHITE_G, WHITE_B)) {
-	return false;
-	}
-
-	if (!checkPoint(376, 538, WHITE_R, WHITE_G, WHITE_B)) {
-	return false;
-	}*/
-
-	return true;
-}
-
 bool PunishCheckerShun::didThrowCounter()
 {
 	//Check for +10 green advantage (no action taken while)
@@ -203,7 +162,12 @@ bool PunishCheckerShun::did14FrameCounter()
 		return false;
 	}
 
+
 	if (!checkPoint(377, 545, 255, 255, 255)) {
+		return false;
+	}
+
+	if (checkPoint(362, 490, 255, 255, 255)) {
 		return false;
 	}
 
@@ -216,14 +180,9 @@ bool PunishCheckerShun::did15FrameCounter()
 		return false;
 	}
 
-	if (!checkPoint(374, 461, 255, 255, 255)) {
+	if (!checkPoint(362, 488, 255, 255, 255)) {
 		return false;
 	}
-
-	if (!checkPoint(357, 532, 255, 255, 255)) {
-		return false;
-	}
-
 
 	return true;
 }
