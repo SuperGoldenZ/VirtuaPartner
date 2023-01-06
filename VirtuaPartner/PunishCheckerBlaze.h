@@ -12,11 +12,12 @@ private:
 	bool didKneeCounter();
 	bool didElbowCounter();
 	bool didShadowHammerCounter();
-	void judgePunishment();
 	void makeOpponentPunch();
+
 public:
 	PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);
 	virtual byte giveFeedback();
+	void judgePunishment();
 };
 
 #endif
