@@ -45,41 +45,25 @@ bool PunishCheckerShun::didCuffisCounter()
 		return false;
 	}
 
-
 	return true;
 }
 
-bool PunishCheckerShun::didKneeCounter()
+bool PunishCheckerShun::did18FrameCounter()
 {
-	//One hit combo 1 middle lower
-	if (!checkPoint(160, 550, WHITE_R, WHITE_G, WHITE_B)) {
+	// Check for 8K+G
+	//Prevent false positive with PPP punish
+	if (checkPoint(361, 472, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
-	//Hit 31 3
-	if (!checkPoint(338, 536, WHITE_R, WHITE_G, WHITE_B)) {
+	if (!checkPoint(356, 531, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
 
-	//Hit 31 3
-	if (checkPoint(362, 474, WHITE_R, WHITE_G, WHITE_B)) {
+	//Prevent false positive with PPP punish
+	if (checkPoint(356, 477, WHITE_R, WHITE_G, WHITE_B)) {
 		return false;
 	}
-
-	if (checkPoint(168, 531, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	if (checkPoint(146, 549, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-	//Hit 31 3
-	if (!checkPoint(366, 553, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
-	}
-
-
 
 	return true;
 }
@@ -254,7 +238,7 @@ void PunishCheckerShun::judgePunishment()
 		}
 		break;
 	case 18:
-		if (didKneeCounter()) {
+		if (did18FrameCounter()) {
 			maxPunishment = true;
 			cpuKnockdown = true;
 		}
