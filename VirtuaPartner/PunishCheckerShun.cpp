@@ -48,6 +48,20 @@ bool PunishCheckerShun::didCuffisCounter()
 	return true;
 }
 
+bool PunishCheckerShun::did16FrameCounter()
+{
+	// Check for yellow advantage
+	if (!checkPoint(294, 597, 255, 251, 0)) {
+		return false;
+	}
+
+	if (!checkPoint(148, 553, WHITE_R, WHITE_G, WHITE_B)) {
+		return false;
+	}
+
+	return true;
+}
+
 bool PunishCheckerShun::did17FrameCounter()
 {
 	// It's same punishable moves as 18 frame counter
@@ -240,6 +254,11 @@ void PunishCheckerShun::judgePunishment()
 
 	case 15:
 		if (did15FrameCounter(!recoversLow)) {
+			maxPunishment = true;
+		}
+		break;
+	case 16:
+		if (did16FrameCounter()) {
 			maxPunishment = true;
 		}
 		break;
