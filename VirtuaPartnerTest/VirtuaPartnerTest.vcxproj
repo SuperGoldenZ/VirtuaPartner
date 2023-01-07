@@ -231,6 +231,9 @@
     <Image Include="data\shun_18_frame_8kg_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\shun_18_frame_suiryu_counter_10_drinks.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\shun_19_frame_66k_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
