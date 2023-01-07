@@ -198,6 +198,14 @@ bool PunishCheckerShun::did19FrameCounter()
 		return false;
 	}
 
+	if (checkPoint(363, 538, 255, 255, 255)) {
+		return false;
+	}
+
+	if (!checkPoint(339, 545, 255, 255, 255)) {
+		return false;
+	}
+
 	return true;
 }
 
