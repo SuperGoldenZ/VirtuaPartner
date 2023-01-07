@@ -50,16 +50,38 @@ bool PunishCheckerShun::didCuffisCounter()
 
 bool PunishCheckerShun::did16FrameCounter()
 {
+	bool muleKick = true;
 	// Check for yellow advantage
 	if (!checkPoint(294, 597, 255, 251, 0)) {
-		return false;
+		muleKick = false;
 	}
 
 	if (!checkPoint(148, 553, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
+		muleKick = false;
 	}
 
-	return true;
+	bool chowan = true;
+	if (!checkPoint(160, 533, WHITE_R, WHITE_G, WHITE_B)) {
+		chowan = false;
+	}
+
+	if (!checkPoint(160, 533, WHITE_R, WHITE_G, WHITE_B)) {
+		chowan = false;
+	}
+
+	if (!checkPoint(320, 552, WHITE_R, WHITE_G, WHITE_B)) {
+		chowan = false;
+	}
+
+	if (!checkPoint(356, 481, WHITE_R, WHITE_G, WHITE_B)) {
+		chowan = false;
+	}
+
+	if (checkPoint(322, 597, WHITE_R, WHITE_G, WHITE_B)) {
+		chowan = false;
+	}
+
+	return muleKick || chowan;
 }
 
 bool PunishCheckerShun::did17FrameCounter()
