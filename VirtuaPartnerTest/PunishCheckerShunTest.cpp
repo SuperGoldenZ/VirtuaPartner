@@ -206,6 +206,10 @@ namespace PunishCheckerShunTest
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("16 frame punish counted as max"));
 
+			filename = _T("data\\shun_16_frame_chowan_counter_6_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("16 frame punish did not count as max for 16 frames"));
+
 			filename = _T("data\\shun_15_frame_6pp_crouch_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("15 frame punish counted as max for 19 frames"));
@@ -225,6 +229,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\shun_18_frame_8kg_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result, _T("18 frame punish did not count as max for 18 frames"));
+
+			filename = _T("data\\shun_16_frame_chowan_counter_6_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("16 frame punish did not count as max for 16 frames"));
 
 			filename = _T("data\\shun_16_frame_46pk_punish_standing.gif");
 			result = testShunPunishWithWindow();
@@ -247,6 +255,10 @@ namespace PunishCheckerShunTest
 			bool result;
 
 			filename = _T("data\\shun_16_frame_46pk_punish_standing.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(true, result, _T("16 frame punish did not count as max for 16 frames"));
+
+			filename = _T("data\\shun_16_frame_chowan_counter_6_drinks.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result, _T("16 frame punish did not count as max for 16 frames"));
 
