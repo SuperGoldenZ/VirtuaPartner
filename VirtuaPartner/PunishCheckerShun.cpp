@@ -48,6 +48,12 @@ bool PunishCheckerShun::didCuffisCounter()
 	return true;
 }
 
+bool PunishCheckerShun::did17FrameCounter()
+{
+	// It's same punishable moves as 18 frame counter
+	return did18FrameCounter();
+}
+
 bool PunishCheckerShun::did18FrameCounter()
 {
 	// Check for 8K+G
@@ -235,6 +241,12 @@ void PunishCheckerShun::judgePunishment()
 	case 15:
 		if (did15FrameCounter(!recoversLow)) {
 			maxPunishment = true;
+		}
+		break;
+	case 17:
+		if (did17FrameCounter()) {
+			maxPunishment = true;
+			cpuKnockdown = true;
 		}
 		break;
 	case 18:
