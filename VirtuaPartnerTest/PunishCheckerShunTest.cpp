@@ -32,7 +32,9 @@ namespace PunishCheckerShunTest
 	{
 		Gdiplus::Graphics graphics(hdc);
 		Gdiplus::Image* image = Gdiplus::Image::FromFile(filename);
-		graphics.DrawImage(image, 0, 0, 1282, 721);
+		//graphics.DrawImage(image, 0, 0, 1282, 721);
+		graphics.DrawImage(image, 0, 0, image->GetWidth(), image->GetHeight());
+		//
 	}
 
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -87,6 +89,7 @@ namespace PunishCheckerShunTest
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
 				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
+				Sleep(250);
 				checker.judgePunishment();
 				result = checker.maxPunishment;
 				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
@@ -145,7 +148,7 @@ namespace PunishCheckerShunTest
 			frameAdvantage = 15;
 			recoversLow = false;
 			bool result = testShunPunishWithWindow();
-			Assert::AreEqual(true, result);
+			Assert::AreEqual(true, result, _T("15 frame counter did not count as expected"));
 
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
@@ -166,6 +169,27 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("14 frame counted as max punish for 15 frame move"));
+		}
+
+		TEST_METHOD(TestPlayer1Shun19FramePunish)
+		{
+			frameAdvantage = 19;
+			recoversLow = false;
+
+			bool result;
+
+			filename = _T("data\\shun_19_frame_66k_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(true, result, _T("19 frame punish did not count as max for 19 frames"));
+
+			/*
+			filename = _T("data\\shun_15_frame_6pp_crouch_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("15 frame punish counted as max for 19 frames"));
+
+			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("14 frame counted as max punish for 19 frame move"));*/
 		}
 	};
 }
