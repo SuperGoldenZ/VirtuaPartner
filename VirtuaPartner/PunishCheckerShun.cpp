@@ -188,20 +188,9 @@ bool PunishCheckerShun::did15FrameCounter(bool isStanding)
 		return true;
 	}
 
-
-	for (int x = 148; x <= 170; x++) {
-		for (int y = 554; y <= 600; y++) {
-			if (checkPoint(x, y, 255, 255, 255)) {
-				return true;
-			}
-		}
+	if (!checkPoint(149, 525, 255, 251, 255)) {
+		return false;
 	}
-
-
-	/*
-	if (!checkPoint(341, 546, 255, 255, 255)) {
-	return false;
-	}*/
 
 	return true;
 }
