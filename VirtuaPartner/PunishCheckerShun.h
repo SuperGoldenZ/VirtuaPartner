@@ -14,6 +14,7 @@ private:
 	// One such is Eileen P3+PK
 	bool did14FrameCounter();
 	bool did15FrameCounter(bool isStanding);
+	bool did16FrameCounter();
 	bool did17FrameCounter();
 	bool did18FrameCounter();
 	bool did19FrameCounter();
