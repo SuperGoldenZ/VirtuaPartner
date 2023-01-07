@@ -213,6 +213,9 @@
     <Image Include="data\character_select_shun_left.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\p_minor_counter.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\shun_14_frame_1p_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
