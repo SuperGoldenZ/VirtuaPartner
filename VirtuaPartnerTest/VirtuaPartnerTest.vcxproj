@@ -222,6 +222,9 @@
     <Image Include="data\shun_15_frame_6pp_crouch_counter_0_drinks.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\shun_16_frame_chowan_counter_6_drinks.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\shun_16_frame_46pk_punish_standing.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
