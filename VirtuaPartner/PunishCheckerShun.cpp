@@ -50,14 +50,14 @@ bool PunishCheckerShun::didCuffisCounter()
 
 bool PunishCheckerShun::did16FrameCounter()
 {
-	bool muleKick = true;
+	bool eyePoke = true;
 	// Check for yellow advantage
 	if (!checkPoint(294, 597, 255, 251, 0)) {
-		muleKick = false;
+		eyePoke = false;
 	}
 
 	if (!checkPoint(148, 553, WHITE_R, WHITE_G, WHITE_B)) {
-		muleKick = false;
+		eyePoke = false;
 	}
 
 	bool chowan = true;
@@ -81,7 +81,7 @@ bool PunishCheckerShun::did16FrameCounter()
 		chowan = false;
 	}
 
-	return muleKick || chowan;
+	return eyePoke || chowan;
 }
 
 bool PunishCheckerShun::did17FrameCounter()
@@ -92,22 +92,53 @@ bool PunishCheckerShun::did17FrameCounter()
 
 bool PunishCheckerShun::did18FrameCounter()
 {
+	bool muleKick = true;
+
 	// Check for 8K+G
 	//Prevent false positive with PPP punish
 	if (checkPoint(361, 472, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
+		muleKick = false;
 	}
 
 	if (!checkPoint(356, 531, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
+		muleKick = false;
 	}
 
+	// Check for yellow advantage, water dragon won't have because it launches
+	if (checkPoint(294, 597, 255, 251, 0)) {
+		muleKick = false;
+	}
+
+	bool waterDragon = true;
 	//Prevent false positive with PPP punish
-	if (checkPoint(356, 477, WHITE_R, WHITE_G, WHITE_B)) {
-		return false;
+	if (!checkPoint(374, 479, WHITE_R, WHITE_G, WHITE_B)) {
+		waterDragon = false;
 	}
 
-	return true;
+	if (!checkPoint(337, 547, WHITE_R, WHITE_G, WHITE_B)) {
+		waterDragon = false;
+	}
+
+	if (!checkPoint(354, 540, WHITE_R, WHITE_G, WHITE_B)) {
+		waterDragon = false;
+	}
+
+	if (!checkPoint(374, 459, WHITE_R, WHITE_G, WHITE_B)) {
+		waterDragon = false;
+		muleKick = false;
+	}
+
+	if (checkPoint(368, 535, WHITE_R, WHITE_G, WHITE_B)) {
+		waterDragon = false;
+	}
+
+	// Check for yellow advantage, water dragon won't have because it launches
+	if (checkPoint(294, 597, 255, 251, 0)) {
+		waterDragon = false;
+		muleKick = false;
+	}
+
+	return muleKick || waterDragon;
 }
 
 /**
