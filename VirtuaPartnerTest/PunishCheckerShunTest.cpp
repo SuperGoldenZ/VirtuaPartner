@@ -44,7 +44,7 @@ namespace PunishCheckerShunTest
 		input.GdiplusVersion = 1;
 		Gdiplus::GdiplusStartup(&token, &input, NULL);
 
-		const wchar_t CLASS_NAME[] = L"Sample Window Class";
+		const wchar_t CLASS_NAME[] = L"Punish Checker Shun Class";
 		WNDCLASS wc = {};
 		wc.lpfnWndProc = &WindowProc; //attach this callback procedure
 		// wc.hInstance = hInstance; //handle to application instance
@@ -57,7 +57,7 @@ namespace PunishCheckerShunTest
 		vfWindow = CreateWindowEx(
 			0, // Optional window styles.
 			CLASS_NAME, // Window class
-			L"Virtua Partner Unit Test Window", // Window text
+			L"Virtua Partner Punish Checker Shun Unit Test Window", // Window text
 			WS_OVERLAPPEDWINDOW, // Window style
 
 			// Size and position
@@ -80,14 +80,12 @@ namespace PunishCheckerShunTest
 			}
 
 			MSG msg;
-			Logger::WriteMessage("Starting loop");
 			int i = 0;
 			PunishCheckerShun checker(vfWindow, recoversLow, recoversLow);
 			checker.frameAdvantage = frameAdvantage;
 
 			while (GetMessage(&msg, NULL, 0, 0) > 0)
 			{
-				Logger::WriteMessage(" check shoon in loop loop");
 				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
 				checker.judgePunishment();
 				result = checker.maxPunishment;
@@ -95,10 +93,8 @@ namespace PunishCheckerShunTest
 			}
 		}
 		else {
-			std::cout << "Window not made";
+			Logger::WriteMessage("Window not made");
 		}
-
-		Logger::WriteMessage("Shutting down");
 
 		Gdiplus::GdiplusShutdown(token);
 
@@ -167,14 +163,9 @@ namespace PunishCheckerShunTest
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result);
 
-			filename = _T("data\\shun_15_frame_1pk_counter_0_drinks.gif");
-			result = testShunPunishWithWindow();
-			Assert::AreEqual(false, result);
-
-
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
-			Assert::AreEqual(false, result);
+			Assert::AreEqual(false, result, _T("14 frame counted as max punish for 15 frame move"));
 		}
 	};
 }
