@@ -15,6 +15,7 @@ private:
 	// One such is Eileen P3+PK
 	bool did14FrameCounter();
 	bool did15FrameCounter(bool isStanding);
+	bool did19FrameCounter();
 	void makeOpponentPunch();
 public:
 	PunishCheckerShun(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow);

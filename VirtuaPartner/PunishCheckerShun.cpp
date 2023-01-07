@@ -142,6 +142,7 @@ bool PunishCheckerShun::didThrowCounter()
 
 bool PunishCheckerShun::did14FrameCounter()
 {
+	// Check for blue counter text
 	if (!checkPoint(131, 354, 151, 229, 255)) {
 		return false;
 	}
@@ -177,10 +178,6 @@ bool PunishCheckerShun::did14FrameCounter()
 bool PunishCheckerShun::did15FrameCounter(bool isStanding)
 {
 	if (isStanding) {
-		if (!checkPoint(131, 354, 151, 229, 255)) {
-			return false;
-		}
-
 		if (!checkPoint(362, 488, 255, 255, 255)) {
 			return false;
 		}
@@ -189,6 +186,15 @@ bool PunishCheckerShun::did15FrameCounter(bool isStanding)
 	}
 
 	if (!checkPoint(149, 525, 255, 251, 255)) {
+		return false;
+	}
+
+	return true;
+}
+
+bool PunishCheckerShun::did19FrameCounter()
+{
+	if (!checkPoint(321, 524, 255, 255, 255)) {
 		return false;
 	}
 
@@ -208,6 +214,13 @@ void PunishCheckerShun::judgePunishment()
 	}
 	else {
 		Sleep(1000);
+	}
+
+	if (frameAdvantage >= 19) {
+		if (did19FrameCounter()) {
+			maxPunishment = true;
+		}
+		return;
 	}
 
 	switch (frameAdvantage) {
