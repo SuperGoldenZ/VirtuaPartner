@@ -182,14 +182,13 @@ namespace PunishCheckerShunTest
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(true, result, _T("19 frame punish did not count as max for 19 frames"));
 
-			/*
 			filename = _T("data\\shun_15_frame_6pp_crouch_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("15 frame punish counted as max for 19 frames"));
 
 			filename = _T("data\\shun_14_frame_1p_counter_0_drinks.gif");
 			result = testShunPunishWithWindow();
-			Assert::AreEqual(false, result, _T("14 frame counted as max punish for 19 frame move"));*/
+			Assert::AreEqual(false, result, _T("14 frame counted as max punish for 19 frame move"));
 		}
 	};
 }
