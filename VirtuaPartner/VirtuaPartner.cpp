@@ -18,8 +18,9 @@ VirtuaPartner.cpp
 #include "keyboard.h"
 #include "UserInterface.h"
 #include "PunishStats.h"
-#include "PunishChecker.h"
+#include "WindowPixelChecker.h"
 #include "PunishCheckerBlaze.h"
+#include "PunishCheckerShun.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -32,6 +33,8 @@ const byte ONE_FRAME = 16;
 int struggleType = 0;
 
 std::string category;
+
+std::string player1Character;
 
 //If CPU is on the left side or not
 bool leftSide = false;
@@ -299,14 +302,31 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		}
 
 		if (punishCheck) {
-			PunishCheckerBlaze punishChecker = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
-			byte result = punishChecker.giveFeedback();
+			byte result = -1;
+			PunishChecker::AdvantageClass advantageClass;
+
+			if (player1Character == "Shun") {
+				PunishCheckerShun shun = PunishCheckerShun(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = shun.giveFeedback();
+				advantageClass = shun.advantageClass;
+			}
+			else if (player1Character == "Blaze") {
+				PunishCheckerBlaze blaze = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = blaze.giveFeedback();
+				advantageClass = blaze.advantageClass;
+			}
+			else {
+				PunishCheckerBlaze blaze = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
+				result = blaze.giveFeedback();
+				advantageClass = blaze.advantageClass;
+			}
+
 			if (result == 0) {
 				ui.clear_screen();
 				setDefaultConsoleText(82);
 				//Red background
 				system("color c0");
-				switch (punishChecker.advantageClass) {
+				switch (advantageClass) {
 				case PunishChecker::AdvantageClass::THROW:
 					cout << "Missed\nthrow\npunish";
 					break;
@@ -334,6 +354,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				punishStats[statsIndex].punishCount++;
 				PunishChecker::playSuccessSound();
 				Sleep(500);
+			}
+			else {
+				cout << "Unknown result?? " << result;
 			}
 		}
 
@@ -449,7 +472,6 @@ void readStats()
 
 int getRandomStarredMove(vector<string> stringArray)
 {
-	bool found = false;
 	int tempStringIndex;
 
 	//This is very hacky way not to get into infinite loop now if no strings selected
@@ -463,9 +485,19 @@ int getRandomStarredMove(vector<string> stringArray)
 		}
 	}
 
-	if (!found) {
-		return -1;
+
+	return -1;
+}
+
+bool updateSelectedPlayers(WindowPixelChecker checker)
+{
+	std::string newPlayer1Character = checker.getSelectedPlayer1();
+	if (player1Character != newPlayer1Character && newPlayer1Character != "Unknown") {
+		player1Character = newPlayer1Character;
+		return true;
 	}
+
+	return false;
 }
 
 int main()
@@ -499,8 +531,9 @@ int main()
 
 	readStats();
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 
+	const WindowPixelChecker vfChecker(vfWindow);
 
 	while (true) {
 		if (random) {
@@ -508,7 +541,7 @@ int main()
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
@@ -520,25 +553,25 @@ int main()
 			}
 			else {
 				stringIndex = tempStringIndex;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -560,18 +593,18 @@ int main()
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
 			selectedStrings[stringArray[0] + stringArray[stringIndex]] = !selectedStrings[stringArray[0] + stringArray[stringIndex]];
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 		else if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 			}
 		}
 
@@ -582,7 +615,7 @@ int main()
 				category = categories[i][0];
 				stringArray = getStrings(category);
 				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 				break;
 			}
 		}
@@ -603,7 +636,7 @@ int main()
 				}
 				else {
 					stringIndex = tempStringIndex;
-					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 				}
 			}
 
@@ -617,10 +650,14 @@ int main()
 			}
 
 			saveStats();
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
 		}
 
 		Sleep(ONE_FRAME);
+
+		if (updateSelectedPlayers(vfChecker)) {
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+		}
 
 		if (GetAsyncKeyState(VK_ESCAPE) != 0) {
 			return 0;

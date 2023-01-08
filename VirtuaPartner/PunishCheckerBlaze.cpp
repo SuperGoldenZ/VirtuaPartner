@@ -7,13 +7,9 @@
 
 #include "PunishCheckerBlaze.h"
 
-PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) {
-	_virtuaFighterWindow = virtuaFighterWindow;
-	dc = GetDC(virtuaFighterWindow);
-	frameAdvantage = -1;
+PunishCheckerBlaze::PunishCheckerBlaze(HWND virtuaFighterWindow, bool recoversLow, bool hitsLow) : PunishChecker(virtuaFighterWindow) {
 	this->recoversLow = recoversLow;
 	this->hitsLow = hitsLow;
-	advantageClass = AdvantageClass::NONE;
 };
 
 bool PunishCheckerBlaze::didPkCounter()
@@ -105,18 +101,6 @@ bool PunishCheckerBlaze::didKneeCounter()
 
 
 	return true;
-}
-
-bool PunishCheckerBlaze::checkPoint(int x, int y, int r, int g, int b)
-{
-	const COLORREF color = GetPixel(dc, x, y);
-	RGBTRIPLE rgb;
-
-	rgb.rgbtRed = GetRValue(color);
-	rgb.rgbtGreen = GetGValue(color);
-	rgb.rgbtBlue = GetBValue(color);
-
-	return ((int)rgb.rgbtRed == r && (int)rgb.rgbtGreen == g && (int)rgb.rgbtBlue == b);
 }
 
 /**
@@ -243,8 +227,8 @@ void PunishCheckerBlaze::judgePunishment()
 		}
 		break;
 	case 15:
+	case 16:
 		if (hitsLow) {
-			std::cout << "\nchecking shadow hammer\n";
 			if (didShadowHammerCounter()) {
 				maxPunishment = true;
 				cpuKnockdown = true;

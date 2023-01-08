@@ -1,30 +1,30 @@
 #ifndef PUNISH_CHECKER
 #define PUNISH_CHECKER
 
+#include <windows.h>
+#include <string>
+#include "WindowPixelChecker.h"
+
 #pragma once
-class PunishChecker
+class PunishChecker : public WindowPixelChecker
 {
 public:
+	PunishChecker(HWND vfWindow);
 	enum class AdvantageClass { NONE, THROW, PUNCH, ELBOW, KNEE };
 	AdvantageClass advantageClass;
 
 	virtual byte giveFeedback() = 0 {};
 	static void playSuccessSound();
-	static void playFailureSound();	
+	static void playFailureSound();
+	int frameAdvantage;
+	void getAdvantageAmount();
+	bool maxPunishment = false;
 
 protected:
-	const int WHITE_R = 255;
-	const int WHITE_G = 251;
-	const int WHITE_B = 255;
-	void getAdvantageAmount();
-	int frameAdvantage;
-	HDC dc;
-	bool maxPunishment = false;
 	bool guaranteedDamage = true;
 	bool cpuKnockdown = false;
-
 	bool recoversLow;
-	bool hitsLow;	
+	bool hitsLow;
 };
 
 #endif

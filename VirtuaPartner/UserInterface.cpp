@@ -93,7 +93,7 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings)
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings, std::string player1CharacterName)
 {
 	clear_screen();
 	SetConsoleTextAttribute(hConsole, 11);
@@ -109,7 +109,7 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	printCharacterName("[2] Right Side", leftSide, 1);
 
 	if (punishCheck) {
-		printCharacterName("Player char: El Blaze", false, 0 ,38);
+		printCharacterName("Player char: " + player1CharacterName, false, 0 ,38);
 	}
 	else {
 		printCharacterName("Player char: Any", false, 0, 38);
