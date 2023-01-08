@@ -169,6 +169,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
+
+			filename = _T("data\\shun_blocked_mule_kick_17exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun15FramePunishDucking)
