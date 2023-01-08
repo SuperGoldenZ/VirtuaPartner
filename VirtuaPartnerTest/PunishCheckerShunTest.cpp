@@ -144,6 +144,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun15FramePunishStanding)
@@ -161,6 +165,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun15FramePunishDucking)
@@ -181,6 +189,14 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun19FramePunish)
@@ -205,6 +221,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 19 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun18FramePunish)
@@ -241,6 +261,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun17FramePunish)
@@ -277,6 +301,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 
 		TEST_METHOD(TestPlayer1Shun16FramePunish)
@@ -305,6 +333,10 @@ namespace PunishCheckerShunTest
 			filename = _T("data\\p_minor_counter.gif");
 			result = testShunPunishWithWindow();
 			Assert::AreEqual(false, result, _T("P counter counted as max punish for 15 frame counterable move"));
+
+			filename = _T("data\\shun_blocked_mule_kick_19exe.gif");
+			result = testShunPunishWithWindow();
+			Assert::AreEqual(false, result, _T("Blocked mule kick counted as max punish"));
 		}
 	};
 }

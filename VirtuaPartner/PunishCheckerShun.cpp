@@ -243,6 +243,10 @@ bool PunishCheckerShun::did15FrameCounter(bool isStanding)
 			return false;
 		}
 
+		if (checkPoint(284, 595, 120, 251, 120)) {
+			return false;
+		}
+
 		return true;
 	}
 
