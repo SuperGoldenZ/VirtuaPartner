@@ -1,6 +1,26 @@
 Bla[z]e
 
-### Blaze's moves that have guaranteed punish
+### Launchers
+4+P+K	# -6
+8+P+K	# -9
+2__6+P+K	# -8, high
+1+P+K	# -13
+4_1_2_3_6+PP__	# -13, hit Blaze out of roll
+6+K+G	# -15
+
+### Strings
+46+PPK		#hhh
+46+PP__2+K	#hhl
+46+PKK__	#hmm
+KKK__		#hmh
+4+PKP__		#hmh
+4+KPP__		#mhm
+4+KPK__		#mhh
+2+KPP__		#lhh
+2+KPK__		#lhm
+P+KPP__		#hhm
+
+### Blaze's moves that have Guaranteed punish
 9+GP
 6+K+G #VolcanoKnee
 6+PK #ElbowKnee
