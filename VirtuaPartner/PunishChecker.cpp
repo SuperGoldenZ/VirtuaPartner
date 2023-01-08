@@ -98,6 +98,11 @@ void PunishChecker::getAdvantageAmount()
 			return;
 		}
 
+		if (checkPoint(302, 596, 255, 177, 0) && checkPoint(319, 610, 255, 177, 0)) {
+			frameAdvantage = 32;
+			advantageClass = AdvantageClass::KNEE;
+			return;
+		}
 
 		Sleep(150);
 	}

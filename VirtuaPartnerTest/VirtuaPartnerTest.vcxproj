@@ -204,6 +204,9 @@
     <Image Include="data\23_frame_advantage.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\32_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\all_black.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>

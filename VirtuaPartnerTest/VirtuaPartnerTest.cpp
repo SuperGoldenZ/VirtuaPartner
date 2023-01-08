@@ -29,7 +29,7 @@ namespace VirtuaPartnerTest
 	{
 		Gdiplus::Graphics graphics(hdc);
 		Gdiplus::Image* image = Gdiplus::Image::FromFile(filename);
-		graphics.DrawImage(image, 0, 0, 1282, 721);
+		graphics.DrawImage(image, 0, 0, image->GetWidth(), image->GetHeight());
 	}
 
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -316,6 +316,15 @@ namespace VirtuaPartnerTest
 			int result = checkFrameAdvantage();
 
 			Assert::AreEqual(19, result);
+		}
+
+		TEST_METHOD(Test32FrameAdvantage)
+		{
+			filename = _T("data\\32_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(32, result);
 		}
 	};
 }
