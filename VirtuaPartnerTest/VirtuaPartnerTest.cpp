@@ -25,7 +25,7 @@ namespace VirtuaPartnerTest
 	HWND vfWindow;
 	WCHAR* filename;
 
-	void DrawPlayer1ShunImage(HDC hdc)
+	void DrawMockImage(HDC hdc)
 	{
 		Gdiplus::Graphics graphics(hdc);
 		Gdiplus::Image* image = Gdiplus::Image::FromFile(filename);
@@ -34,7 +34,7 @@ namespace VirtuaPartnerTest
 
 	LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	std::string createTestWindow()
+	std::string checkSelectedPlayer(int playerNumber = 1)
 	{
 		ULONG_PTR token;
 		Gdiplus::GdiplusStartupInput input = { 0 };
@@ -87,7 +87,8 @@ namespace VirtuaPartnerTest
 				Logger::WriteMessage(" check shoon in loop loop");
 				SendMessage(vfWindow, WM_PAINT, NULL, NULL);
 
-				result = checker.getSelectedPlayer1();
+
+				result = checker.getSelectedPlayer(playerNumber);
 
 				SendMessage(vfWindow, WM_CLOSE, NULL, NULL);
 			}
@@ -186,7 +187,7 @@ namespace VirtuaPartnerTest
 		{
 			PAINTSTRUCT ps;
 			HDC hdc = BeginPaint(hwnd, &ps);
-			DrawPlayer1ShunImage(hdc);
+			DrawMockImage(hdc);
 			EndPaint(hwnd, &ps);
 			return 0;
 		}
@@ -201,7 +202,7 @@ namespace VirtuaPartnerTest
 		TEST_METHOD(TestPlayer1Unknown1)
 		{
 			filename = _T("data\\shun_left_side.gif");
-			std::string result = createTestWindow();
+			std::string result = checkSelectedPlayer(1);
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("Unknown", result.c_str());
@@ -211,7 +212,7 @@ namespace VirtuaPartnerTest
 		{
 			filename = _T("data\\all_black.jpg");
 
-			std::string result = createTestWindow();
+			std::string result = checkSelectedPlayer(1);
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("Unknown", result.c_str());
@@ -221,7 +222,7 @@ namespace VirtuaPartnerTest
 		{
 			filename = _T("data\\character_select_shun_left.gif");
 
-			std::string result = createTestWindow();
+			std::string result = checkSelectedPlayer(1);
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("Shun", result.c_str());
@@ -231,10 +232,50 @@ namespace VirtuaPartnerTest
 		{
 			filename = _T("data\\character_select_jean_left.gif");
 
-			std::string result = createTestWindow();
+			std::string result = checkSelectedPlayer(1);
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("Jean", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer2Jean)
+		{
+			filename = _T("data\\character_select_jean_right.gif");
+
+			std::string result = checkSelectedPlayer(2);
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("Jean", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer2Pai)
+		{
+			filename = _T("data\\character_select_pai_right.gif");
+
+			std::string result = checkSelectedPlayer(2);
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("Pai", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer1Taka)
+		{
+			filename = _T("data\\character_select_both_taka.gif");
+
+			std::string result = checkSelectedPlayer(1);
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("Taka", result.c_str());
+		}
+
+		TEST_METHOD(TestPlayer2Taka)
+		{
+			filename = _T("data\\character_select_both_taka.gif");
+
+			std::string result = checkSelectedPlayer(2);
+			std::wstring widestr = std::wstring(result.begin(), result.end());
+
+			Assert::AreEqual("Taka", result.c_str());
 		}
 
 		TEST_METHOD(Test10FrameAdvantage)
