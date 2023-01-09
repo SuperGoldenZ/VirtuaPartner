@@ -14,6 +14,7 @@ VirtuaPartner.cpp
 #include <filesystem>
 #include <thread>
 #include <sstream>
+#include <algorithm>
 
 #include "keyboard.h"
 #include "UserInterface.h"
@@ -35,12 +36,15 @@ int struggleType = 0;
 std::string category;
 
 std::string player1Character;
+std::string player2Character = "";
 
 //If CPU is on the left side or not
 bool leftSide = false;
 
 //Whether to give feedback on guaranteed punish damage or not
 bool punishCheck = true;
+
+int playerToSelect = -1;
 
 vector<vector<string>> categories;
 UserInterface ui;
@@ -491,13 +495,39 @@ int getRandomStarredMove(vector<string> stringArray)
 
 bool updateSelectedPlayers(WindowPixelChecker checker)
 {
-	std::string newPlayer1Character = checker.getSelectedPlayer1();
+	std::string newPlayer1Character = checker.getSelectedPlayer(1);
+	bool updated = false;
+
 	if (player1Character != newPlayer1Character && newPlayer1Character != "Unknown") {
 		player1Character = newPlayer1Character;
-		return true;
+		updated = true;
 	}
 
-	return false;
+	std::string newPlayer2Character = checker.getSelectedPlayer(2);
+	if (player2Character != newPlayer2Character && newPlayer2Character != "Unknown") {
+
+		if (player2Character == "Akira") {
+			category = "[A]kira";
+		}
+		else if (player2Character == "Blaze") {
+			category = "Bla[z]e";
+		}
+		else if (player2Character == "Jacky") {
+			category = "Ja[c]ky";
+		}
+
+		player2Character = newPlayer2Character;
+		updated = true;
+	}
+
+	return updated;
+}
+
+std::string categoryToString(std::string category) {
+	category.erase(std::remove(category.begin(), category.end(), '['), category.end());
+	category.erase(std::remove(category.begin(), category.end(), ']'), category.end());
+
+	return category;
 }
 
 int main()
@@ -531,17 +561,22 @@ int main()
 
 	readStats();
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+	bool reprintMenu = true;
 
 	const WindowPixelChecker vfChecker(vfWindow);
 
 	while (true) {
+		if (reprintMenu) {
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character, playerToSelect, player2Character);
+			reprintMenu = false;
+		}
+
 		if (random) {
 			stringIndex = (rand() % stringArray.size());
 			if (stringIndex == 0) {
 				stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character, playerToSelect, player2Character);
 			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
@@ -553,25 +588,30 @@ int main()
 			}
 			else {
 				stringIndex = tempStringIndex;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+				reprintMenu = true;
 			}
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
 			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
 			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
+		}
+		if (GetAsyncKeyState(VK_TAB) != 0) {
+			while (GetAsyncKeyState(VK_TAB) != 0);
+			reprintMenu = true;
+			playerToSelect = 2;
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -593,30 +633,34 @@ int main()
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
 			selectedStrings[stringArray[0] + stringArray[stringIndex]] = !selectedStrings[stringArray[0] + stringArray[stringIndex]];
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 		else if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
 			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+				reprintMenu = true;
 			}
 		}
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
 			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+				reprintMenu = true;
 			}
 		}
 
-		for (int i = 0; i < categories.size(); i++) {
-			byte shortcutKeycote = getKeyEventCode(categories[i][0]);
-			if (GetAsyncKeyState(shortcutKeycote) != 0) {
-				while (GetAsyncKeyState(shortcutKeycote) != 0);
-				category = categories[i][0];
-				stringArray = getStrings(category);
-				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
-				break;
+		if (playerToSelect == 2) {
+			for (int i = 0; i < categories.size(); i++) {
+				byte shortcutKeycote = getKeyEventCode(categories[i][0]);
+				if (GetAsyncKeyState(shortcutKeycote) != 0) {
+					while (GetAsyncKeyState(shortcutKeycote) != 0);
+					category = categories[i][0];
+					player2Character = categoryToString(category);
+					stringArray = getStrings(category);
+					stringIndex = 1;
+					reprintMenu = true;
+					playerToSelect = -1;
+					break;
+				}
 			}
 		}
 
@@ -636,7 +680,7 @@ int main()
 				}
 				else {
 					stringIndex = tempStringIndex;
-					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+					reprintMenu = true;
 				}
 			}
 
@@ -650,13 +694,13 @@ int main()
 			}
 
 			saveStats();
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 
 		Sleep(ONE_FRAME);
 
 		if (updateSelectedPlayers(vfChecker)) {
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 
 		if (GetAsyncKeyState(VK_ESCAPE) != 0) {
