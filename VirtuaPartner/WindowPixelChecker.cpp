@@ -34,7 +34,6 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 	int b = 0;
 
 	if (playerNum == 2) {
-		//xOffset = 75;
 		r = 5;
 		g = 199;
 		b = 255;
@@ -85,7 +84,7 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Kage";
 	}
 
-	if (checkPoint(1020 + xOffset, 516, r, g, b)) {
+	if (checkPoint(1020 + xOffset, 516, r, g, b) || checkPoint(1010, 519, r, g, b)) {
 		return "Jean";
 	}
 
@@ -101,7 +100,7 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Lau";
 	}
 
-	if (checkPoint(1020 - (140 * 4) + xOffset, 516, r, g, b)) {
+	if (checkPoint(1020 - (140 * 4) + xOffset, 516, r, g, b) || checkPoint(1010 - (140 * 4) + xOffset, 519, r, g, b)) {
 		return "Pai";
 	}
 
@@ -110,7 +109,9 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 	}
 
 	if (checkPoint(1020 - (140 * 6) + xOffset, 513, r, g, b) ||
-		checkPoint(210 + xOffset, 515, r, g, b)
+		checkPoint(210 + xOffset, 515, r, g, b) ||
+		checkPoint(259, 561, r, g, b) ||
+		checkPoint(259 - 75, 561, r, g, b)
 		) {
 		return "Taka";
 	}

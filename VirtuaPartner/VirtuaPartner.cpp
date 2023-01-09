@@ -504,6 +504,7 @@ bool updateSelectedPlayers(WindowPixelChecker checker)
 	}
 
 	std::string newPlayer2Character = checker.getSelectedPlayer(2);
+
 	if (player2Character != newPlayer2Character && newPlayer2Character != "Unknown") {
 
 		if (player2Character == "Akira") {
@@ -514,6 +515,15 @@ bool updateSelectedPlayers(WindowPixelChecker checker)
 		}
 		else if (player2Character == "Jacky") {
 			category = "Ja[c]ky";
+		}
+		else if (player2Character == "Lion") {
+			category = "L[i]on";
+		}
+		else if (player2Character == "Sarah") {
+			category = "[S]arah";
+		}
+		else if (player2Character == "Lau") {
+			category = "[L]au";
 		}
 
 		player2Character = newPlayer2Character;

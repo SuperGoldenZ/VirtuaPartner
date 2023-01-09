@@ -118,8 +118,9 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	printCharacterName("CPU Char: " + player2CharacterName, false, 1);
 	printCharacterName("TAB to select CPU character manually", false, 1);
 
-	printCharacterName("P[u]nish Check", punishCheck, 2);
-
+	if (player1CharacterName != "") {
+		printCharacterName("P[u]nish Check", punishCheck, 2);
+	}
 
 	int currentCategoryIndex = -1;
 	for (int i = 0; i < categories.size(); i++) {
