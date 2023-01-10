@@ -18,6 +18,17 @@ Progmatic Windows keyboard inputs to make sparring partner in Virtua Fighter.
 
 - Keep statistics about how often you successfully punish with guaranteed counter
 
+## Character Select
+
+Player 1 character, which is selected for Guaranteed Punish feedback, can currently only be selected at the Dojo Character Select screen.
+The character you select will automatically be picked up by Virtua Partner.
+
+Right now, only the following characters support Player 1 selection & Guaranteed Punish feedback.
+1. El Blaze
+2. Shun
+
+Player 2 character can be selected by hitting TAB while already in Dojo mode and then hitting displayed keyboard shorts on the screen.
+
 ## Configuration Syntax
 
 Virtua Partner uses text files in domain specific language to represent CPU movements.
