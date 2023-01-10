@@ -5,7 +5,7 @@ Bla[z]e
 8+P+K	# -9
 2__6+P+K	# -8, high
 1+P+K	# -13
-4_1_2_3_6+PP__	# -13, hit Blaze out of roll
+4_1_2_3_6+PP__	# -13
 6+K+G	# -15
 
 ### Strings
@@ -19,6 +19,20 @@ KKK__		#hmh
 2+KPP__		#lhh
 2+KPK__		#lhm
 P+KPP__		#hhm
+6+PK #mm
+
+### Mixup: Elbow Knee Throw
+46+PP__2+K	#nodelaylow
+46+PPG533+P+G  #throw
+
+### Mixup: Low kick throw
+6+PK #mmnodelay
+6+P___K #mdelaym
+6+PG58426+P+G #mthrow
+
+### Mixup: Rolling uppercut thow
+4_1_2_3_6+PP__	 #roll1
+4_1_2_3_6+P5G8426+P+G  #rollthrow
 
 ### Blaze's moves that have Guaranteed punish
 9+GP
