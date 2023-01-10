@@ -318,6 +318,15 @@ namespace VirtuaPartnerTest
 			Assert::AreEqual(19, result);
 		}
 
+		TEST_METHOD(Test26FrameAdvantage)
+		{
+			filename = _T("data\\26_frame_advantage.gif");
+
+			int result = checkFrameAdvantage();
+
+			Assert::AreEqual(32, result);
+		}
+
 		TEST_METHOD(Test32FrameAdvantage)
 		{
 			filename = _T("data\\32_frame_advantage.gif");

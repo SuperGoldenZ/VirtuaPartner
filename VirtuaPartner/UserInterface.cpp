@@ -93,7 +93,7 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings, std::string player1CharacterName)
+void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings, std::string player1CharacterName, int playerToSelect, std::string player2CharacterName)
 {
 	clear_screen();
 	SetConsoleTextAttribute(hConsole, 11);
@@ -109,11 +109,15 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	printCharacterName("[2] Right Side", leftSide, 1);
 
 	if (punishCheck) {
-		printCharacterName("Player char: " + player1CharacterName, false, 0 ,38);
+		printCharacterName("Player char: " + player1CharacterName, false, 0, 38);
 	}
 	else {
 		printCharacterName("Player char: Any", false, 0, 38);
 	}
+
+	printCharacterName("CPU Char: " + player2CharacterName, false, 1);
+	printCharacterName("TAB to select CPU character manually", false, 1);
+
 	printCharacterName("P[u]nish Check", punishCheck, 2);
 
 
@@ -133,10 +137,18 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	int moveNumber = 1;
 	int i = 0;
 	SetConsoleTextAttribute(hConsole, 112);
-	std::cout << "CPU Char:   Commands:                                     " << std::endl;
-	while (i < categories.size() || moveNumber < categories[currentCategoryIndex].size()) {
+	if (playerToSelect == -1) {
+		std::cout << "CPU Char Commands: " << std::endl;
+	}
+	else {
+		std::cout << "Select player " << playerToSelect << " " << std::endl;
+	}
+
+	while ((i < categories.size() || moveNumber < categories[currentCategoryIndex].size()) && (player2CharacterName != "" || playerToSelect == 2)) {
 		if (i < categories.size()) {
-			printCharacterName(categories[i][0], currentCategory == categories[i][0], 0);
+			if (playerToSelect == 2) {
+				printCharacterName(categories[i][0], currentCategory == categories[i][0], 0);
+			}
 			i++;
 		}
 		else {
@@ -149,23 +161,25 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 		if (moveNumber < categories[currentCategoryIndex].size()) {
 			std::string statsIndex = categories[currentCategoryIndex][0] + categories[currentCategoryIndex][moveNumber];
 
-			if (punishCheck) {
-				if (selectedStrings[statsIndex]) {
-					std::cout << "*";
+			if (playerToSelect == -1) {
+				if (punishCheck) {
+					if (selectedStrings[statsIndex]) {
+						std::cout << "*";
+					}
+					else {
+						std::cout << " ";
+					}
+					printCharacterName(
+						categories[currentCategoryIndex][moveNumber],
+						str == categories[currentCategoryIndex][moveNumber],
+						0,
+						35);
+					std::cout << punishStats[statsIndex].toString();
 				}
 				else {
 					std::cout << " ";
+					printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
 				}
-				printCharacterName(
-					categories[currentCategoryIndex][moveNumber],
-					str == categories[currentCategoryIndex][moveNumber],
-					0,
-					35);
-				std::cout << punishStats[statsIndex].toString();
-			}
-			else {
-				std::cout << " ";
-				printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
 			}
 
 			moveNumber++;
@@ -177,7 +191,7 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	std::cout << std::endl;
 
 	SetConsoleTextAttribute(hConsole, 112);
-	std::cout << "NumPad Controls:                                         " << std::endl;
+	std::cout << "NumPad Controls: " << std::endl;
 
 	printCharacterName("[+] Next String", false, 0, 35);
 	printCharacterName("[-] Prev String", false, 1);
