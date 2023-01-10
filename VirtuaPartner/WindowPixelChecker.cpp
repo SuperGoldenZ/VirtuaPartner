@@ -39,6 +39,9 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		b = 255;
 	}
 
+	//shun 2p
+	//eileen 2p (accidentally taka)
+	//
 	//Check timer and costume type to make sure not to change character on stage select or in dojo
 	if (!checkPoint(635, 74, 255, 232, 171) || !checkPoint(96, 473, 111, 98, 63)) {
 		return "Unknown";

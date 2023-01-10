@@ -161,6 +161,7 @@
     <Text Include="configs\blaze.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\brad.txt" />
     <Text Include="configs\defense.txt" />
     <Text Include="configs\eileen.txt">
       <DeploymentContent>true</DeploymentContent>
@@ -177,15 +178,20 @@
     <Text Include="configs\jeffry.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\kage.txt" />
     <Text Include="configs\lau.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\lion.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\pai.txt" />
     <Text Include="configs\sarah.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\shun.txt" />
+    <Text Include="configs\taka.txt" />
+    <Text Include="configs\vanessa.txt" />
     <Text Include="configs\wolf.txt">
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
