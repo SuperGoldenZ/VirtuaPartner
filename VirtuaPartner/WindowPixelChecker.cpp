@@ -47,7 +47,7 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Unknown";
 	}
 
-	if (checkPoint(1020 + xOffset, 516 + 50, r, g, b)) {
+	if (checkPoint(1020 + xOffset, 516 + 50, r, g, b) || checkPoint(1130, 576, r, g, b)) {
 		return "Blaze";
 	}
 

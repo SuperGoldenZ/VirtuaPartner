@@ -142,11 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="PunishChecker.cpp" />
     <ClCompile Include="PunishCheckerBlaze.cpp" />
     <ClCompile Include="PunishCheckerShun.cpp" />
     <ClCompile Include="PunishStats.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="VirtuaPartner.cpp" />
     <ClCompile Include="WindowPixelChecker.cpp" />
   </ItemGroup>
@@ -199,11 +200,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="PunishChecker.h" />
     <ClInclude Include="PunishCheckerBlaze.h" />
     <ClInclude Include="PunishCheckerShun.h" />
     <ClInclude Include="PunishStats.h" />
-    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="WindowPixelChecker.h" />
   </ItemGroup>
   <ItemGroup>

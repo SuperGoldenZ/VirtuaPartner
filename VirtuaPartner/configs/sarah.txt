@@ -2,24 +2,19 @@
 ############
 # Back turned
 ############
-44+P552+K
-44+P551+K
-44+P55P+KK
-
+44+P552+K #backturned
+44+P551+K #backturned
+44+P55P+KK #backturned
 
 ############
 # Flamingo
 ############
-4+KG5P2+K
-4+KG5KKKK
-4+KG56+K5K
-4+KG57+K
-#4+KG58+P+K555  #cannot actually throw punish
-#4+KG52+P+K555  #cannot actually throw punish
-4+KG56+K+G
-4+KG52+K+G
-
-
+4+KG5P2+K #flamingo
+4+KG5KKKK #flamingo
+4+KG56+K5K #flamingo
+4+KG57+K #flamingo
+4+KG56+K+G #flamingo
+4+KG52+K+G #flamingo
 
 ############
 # Forward slide

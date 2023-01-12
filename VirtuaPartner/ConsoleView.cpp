@@ -6,15 +6,15 @@
 #include <string>
 #include <tchar.h>
 
-#include "UserInterface.h"
+#include "ConsoleView.h"
 #include "PunishStats.h"
 
-UserInterface::UserInterface()
+ConsoleView::ConsoleView()
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
-void UserInterface::clear_screen() {
+void ConsoleView::clear_screen() {
 	const char FILL = ' ';
 
 	COORD tl = { 0,0 };
@@ -27,21 +27,21 @@ void UserInterface::clear_screen() {
 	SetConsoleCursorPosition(console, tl);
 }
 
-int UserInterface::getColor(bool selected)
+int ConsoleView::getColor(bool selected)
 {
 	if (selected) return 14;
 
 	return 7;
 }
 
-void UserInterface::printCharacterName(std::string name, bool selected)
+void ConsoleView::printCharacterName(std::string name, bool selected)
 {
 	printCharacterName(name, selected, 0, 10);
 }
 
-void UserInterface::printCharacterName(std::string name, bool selected, int numEndline)
+void ConsoleView::printCharacterName(std::string name, bool selected, int numEndline)
 {
-	for (int i = 0; i < name.size(); i++) {
+	for (unsigned int i = 0; i < name.size(); i++) {
 		if (i > 0 && name[i - 1] == '[') {
 			SetConsoleTextAttribute(hConsole, 15);
 		}
@@ -66,9 +66,9 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printCharacterName(std::string name, bool selected, int numEndline, int widthToPrint)
+void ConsoleView::printCharacterName(std::string name, bool selected, int numEndline, int widthToPrint)
 {
-	for (int i = 0; i < name.size(); i++) {
+	for (unsigned int i = 0; i < name.size(); i++) {
 		if (i > 0 && name[i - 1] == '[') {
 			SetConsoleTextAttribute(hConsole, 15);
 		}
@@ -93,7 +93,7 @@ void UserInterface::printCharacterName(std::string name, bool selected, int numE
 	}
 }
 
-void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, std::string str, bool leftSide, std::string currentCategory, bool punishCheck, std::map<std::string, PunishStats> punishStats, std::map<std::string, bool> selectedStrings, std::string player1CharacterName, int playerToSelect, std::string player2CharacterName)
+void ConsoleView::printMenu(Model model)
 {
 	clear_screen();
 	SetConsoleTextAttribute(hConsole, 11);
@@ -101,54 +101,49 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	SetConsoleTextAttribute(hConsole, 12);
 	std::cout << "Partner ";
 	SetConsoleTextAttribute(hConsole, 7);
-	std::cout << "(alpha 4)" << std::endl;
+	std::cout << "(alpha 5)" << std::endl;
 	std::cout << "-----------------------" << std::endl;
 
 	std::cout << "Player side: ";
-	printCharacterName("[1] Left Side", !leftSide, 0, 25);
-	printCharacterName("[2] Right Side", leftSide, 1);
+	printCharacterName("[1] Left Side", !model.leftSide, 0, 25);
+	printCharacterName("[2] Right Side", model.leftSide, 1);
 
-	if (punishCheck) {
-		printCharacterName("Player char: " + player1CharacterName, false, 0, 38);
+	if (model.punishCheck) {
+		printCharacterName("Player char: " + model.player1Character, false, 0, 38);
 	}
 	else {
 		printCharacterName("Player char: Any", false, 0, 38);
 	}
 
-	printCharacterName("CPU Char: " + player2CharacterName, false, 1);
+	printCharacterName("CPU Char: " + model.player2Character, false, 1);
 	printCharacterName("TAB to select CPU character manually", false, 1);
 
-	if (player1CharacterName != "") {
-		printCharacterName("P[u]nish Check", punishCheck, 2);
+	if (model.player1Character != "") {
+		printCharacterName("P[u]nish Check", model.punishCheck, 2);
 	}
 
-	int currentCategoryIndex = -1;
-	for (int i = 0; i < categories.size(); i++) {
-		if (categories[i][0] == currentCategory) {
-			currentCategoryIndex = i;
-			break;
-		}
-	}
+	int currentCategoryIndex = model.getCurrentCategoryIndex();
 
 	if (currentCategoryIndex == -1) {
 		return;
 	}
 
-	int lineNumber = 0;
 	int moveNumber = 1;
 	int i = 0;
 	SetConsoleTextAttribute(hConsole, 112);
-	if (playerToSelect == -1) {
+	if (model.playerToSelect == -1) {
 		std::cout << "CPU Char Commands: " << std::endl;
 	}
 	else {
-		std::cout << "Select player " << playerToSelect << " " << std::endl;
+		std::cout << "Select player " << model.playerToSelect << " " << std::endl;
 	}
 
-	while ((i < categories.size() || moveNumber < categories[currentCategoryIndex].size()) && (player2CharacterName != "" || playerToSelect == 2)) {
-		if (i < categories.size()) {
-			if (playerToSelect == 2) {
-				printCharacterName(categories[i][0], currentCategory == categories[i][0], 0);
+	while ((i < model.categories.size() || moveNumber < model.categories[currentCategoryIndex].size()) && (model.player2Character != "" || model.playerToSelect == 2)) {
+		if (i < model.categories.size()) {
+			if (model.playerToSelect == 2) {
+				printCharacterName(model.categories[i][0],
+					model.currentCategory == model.categories[i][0],
+					0);
 			}
 			i++;
 		}
@@ -159,27 +154,32 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 		}
 
 		// Print moves on the right side
-		if (moveNumber < categories[currentCategoryIndex].size()) {
-			std::string statsIndex = categories[currentCategoryIndex][0] + categories[currentCategoryIndex][moveNumber];
+		if (moveNumber < model.categories[currentCategoryIndex].size()) {
+			std::string statsIndex = model.categories[currentCategoryIndex][0] + model.categories[currentCategoryIndex][moveNumber];
 
-			if (playerToSelect == -1) {
-				if (punishCheck) {
-					if (selectedStrings[statsIndex]) {
+			if (model.playerToSelect == -1) {
+				if (model.punishCheck) {
+					if (model.selectedStrings[statsIndex]) {
 						std::cout << "*";
 					}
 					else {
 						std::cout << " ";
 					}
-					printCharacterName(
-						categories[currentCategoryIndex][moveNumber],
-						str == categories[currentCategoryIndex][moveNumber],
-						0,
-						35);
-					std::cout << punishStats[statsIndex].toString();
+					if (model.stringIndex < model.stringArray.size() - 1) {
+						printCharacterName(
+							model.categories[currentCategoryIndex][moveNumber],
+							model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber],
+							0,
+							35);
+						std::cout << model.punishStats[statsIndex].toString();
+					}
+					else {
+						std::cout << "invalid stringindex " << model.stringIndex << " " << model.stringArray.size();
+					}
 				}
 				else {
 					std::cout << " ";
-					printCharacterName(categories[currentCategoryIndex][moveNumber], str == categories[currentCategoryIndex][moveNumber], -1);
+					printCharacterName(model.categories[currentCategoryIndex][moveNumber], model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber], -1);
 				}
 			}
 
@@ -213,13 +213,13 @@ void UserInterface::printMenu(std::vector<std::vector<std::string>> categories, 
 	std::cout << "? ";
 }
 
-void UserInterface::printStrings(const std::vector<std::string> strings) {
+void ConsoleView::printStrings(const std::vector<std::string> strings) {
 	for (int i = 0; i < strings.size(); i++) {
 		std::cout << strings[i] << std::endl;
 	}
 }
 
-void UserInterface::showWaitingScreen()
+void ConsoleView::showWaitingScreen()
 {
 	clear_screen();
 	std::cout << "Searching for \"Virtua Fighter\" window.\nPlease start game in a window containing \"Virtua Fighter\" and \"Vulkan\" text" << std::endl;

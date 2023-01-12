@@ -50,7 +50,7 @@ void liftAllKeys(bool defense)
 }
 
 const char getHotkey(std::string str) {
-	for (int i = 0; i < str.length(); i++) {
+	for (unsigned int i = 0; i < str.length(); i++) {
 		if (str[i] == '[') {
 			return toupper(str[i + 1]);
 		}
