@@ -95,7 +95,6 @@ bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string n
 		updated = true;
 	}
 
-
 	if (player2Character != newPlayer2Character && newPlayer2Character != "Unknown") {
 		player2Character = newPlayer2Character;
 		if (player2Character == "Akira") {
@@ -154,6 +153,9 @@ bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string n
 		}
 		else if (player2Character == "Wolf") {
 			currentCategory = "[W]olf";
+		}
+		else if (player2Character == "Lei-Fei") {
+			currentCategory = "Lei-[F]ei";
 		}
 
 		updated = true;

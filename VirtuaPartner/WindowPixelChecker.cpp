@@ -27,8 +27,6 @@ bool WindowPixelChecker::checkPoint(const int x, const int y, const int r, const
 
 std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 {
-	int xOffset = 0;
-
 	int r = 255;
 	int g = 0;
 	int b = 0;
@@ -47,84 +45,101 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Unknown";
 	}
 
-	if (checkPoint(1020 + xOffset, 516 + 50, r, g, b) || checkPoint(1130, 576, r, g, b)) {
-		return "Blaze";
-	}
+	const int TOP_ROW_Y = 512;
+	const int THIRD_ROW_X = 537;
 
-	if (checkPoint(1020 - (140 * 1) + xOffset, 516 + 50, r, g, b)) {
-		return "Lion";
-	}
-
-	if (checkPoint(1020 - (140 * 1) + xOffset, 667, r, g, b)) {
-		return "Goh";
-	}
-
-	if (checkPoint(1020 - (140 * 2) + xOffset, 667, r, g, b)) {
-		return "Brad";
-	}
-
-	if (checkPoint(1020 - (140 * 3) + xOffset, 667, r, g, b)) {
-		return "Vanessa";
-	}
-
-	if (checkPoint(1020 - (140 * 4) + xOffset, 667, r, g, b)) {
-		return "Lei-Fei";
-	}
-
-	if (checkPoint(1020 - (140 * 5) + xOffset, 667, r, g, b)) {
-		return "Aoi";
-	}
-
-	if (checkPoint(1020 - (140 * 3) + xOffset, 516 + 50, r, g, b)) {
-		return "Jacky";
-	}
-
-	if (checkPoint(1020 - (140 * 4) + xOffset, 516 + 50, r, g, b)) {
-		return "Sarah";
-	}
-
-	if (checkPoint(1020 - (140 * 5) + xOffset, 516 + 50, r, g, b)) {
-		return "Kage";
-	}
-
-	if (checkPoint(1020 + xOffset, 516, r, g, b) || checkPoint(1010, 519, r, g, b)) {
-		return "Jean";
-	}
-
-	if (checkPoint(1020 - 140 + xOffset, 516, r, g, b)) {
-		return "Jeffrey";
-	}
-
-	if (checkPoint(1020 - (140 * 2) + xOffset, 516, r, g, b)) {
-		return "Wolf";
-	}
-
-	if (checkPoint(1020 - (140 * 3) + xOffset, 516, r, g, b)) {
-		return "Lau";
-	}
-
-	if (checkPoint(1020 - (140 * 4) + xOffset, 516, r, g, b) || checkPoint(1010 - (140 * 4) + xOffset, 519, r, g, b)) {
-		return "Pai";
-	}
-
-	if (checkPoint(1020 - (140 * 5) + xOffset, 516, r, g, b)) {
-		return "Akira";
-	}
-
-	if (checkPoint(1020 - (140 * 6) + xOffset, 513, r, g, b) ||
-		checkPoint(210 + xOffset, 515, r, g, b) ||
-		checkPoint(259, 561, r, g, b) ||
-		checkPoint(259 - 75, 561, r, g, b)
+	if (checkPoint(1020 - (140 * 6), TOP_ROW_Y, r, g, b) ||
+		checkPoint(210, TOP_ROW_Y, r, g, b) ||
+		checkPoint(259 - 75, TOP_ROW_Y, r, g, b)
 		) {
 		return "Taka";
 	}
 
-	if (checkPoint(839 + xOffset, 609, r, g, b)) {
+	if (checkPoint(1020 - (140 * 5), TOP_ROW_Y, r, g, b)) {
+		return "Akira";
+	}
+
+	if (checkPoint(THIRD_ROW_X, TOP_ROW_Y, r, g, b) || checkPoint(1010 - (140 * 4), TOP_ROW_Y, r, g, b)) {
+		return "Pai";
+	}
+
+	if (checkPoint(1020 - (140 * 3), TOP_ROW_Y, r, g, b)) {
+		return "Lau";
+	}
+
+	if (checkPoint(958, TOP_ROW_Y, r, g, b) ||
+		checkPoint(865, TOP_ROW_Y, r, g, b)
+		) {
+		return "Jeffry";
+	}
+
+	if (checkPoint(1028, TOP_ROW_Y, r, g, b) || checkPoint(1130, TOP_ROW_Y, r, g, b)) {
+		return "Jean";
+	}
+
+	if (checkPoint(797, TOP_ROW_Y, r, g, b)) {
+		return "Wolf";
+	}
+
+	// Bottom Row
+	const int BOTTOM_ROW_Y = 667;
+
+	if (checkPoint(1020 - (140 * 1), BOTTOM_ROW_Y, r, g, b)) {
+		return "Goh";
+	}
+
+	if (checkPoint(1020 - (140 * 2), BOTTOM_ROW_Y, r, g, b)) {
+		return "Brad";
+	}
+
+	if (checkPoint(1020 - (140 * 3), BOTTOM_ROW_Y, r, g, b)) {
+		return "Vanessa";
+	}
+
+	if (checkPoint(THIRD_ROW_X, BOTTOM_ROW_Y, r, g, b)) {
+		return "Lei-Fei";
+	}
+
+	if (checkPoint(1020 - (140 * 5), BOTTOM_ROW_Y, r, g, b)) {
+		return "Aoi";
+	}
+
+	// Middle Row
+	const int MIDDLE_ROW_Y = 564;
+
+	if (checkPoint(1020, MIDDLE_ROW_Y, r, g, b) || checkPoint(1130, MIDDLE_ROW_Y, r, g, b)) {
+		return "Blaze";
+	}
+
+	if (checkPoint(1020 - (140 * 1), MIDDLE_ROW_Y, r, g, b) ||
+		checkPoint(1130 - (140 * 1), MIDDLE_ROW_Y, r, g, b)
+		) {
+		return "Lion";
+	}
+
+	if (checkPoint(828, MIDDLE_ROW_Y, r, g, b)) {
 		return "Shun";
 	}
 
-	if (checkPoint(280 + xOffset, 608, r, g, b)) {
+	if (checkPoint(280, MIDDLE_ROW_Y, r, g, b) ||
+		checkPoint(270, MIDDLE_ROW_Y, r, g, b) ||
+		checkPoint(209, MIDDLE_ROW_Y, r, g, b) ||
+		checkPoint(190, MIDDLE_ROW_Y, r, g, b)
+		) {
 		return "Eileen";
+	}
+
+
+	if (checkPoint(682, MIDDLE_ROW_Y, r, g, b)) {
+		return "Jacky";
+	}
+
+	if (checkPoint(THIRD_ROW_X, MIDDLE_ROW_Y, r, g, b)) {
+		return "Sarah";
+	}
+
+	if (checkPoint(406, MIDDLE_ROW_Y, r, g, b)) {
+		return "Kage";
 	}
 
 	return "Unknown";
