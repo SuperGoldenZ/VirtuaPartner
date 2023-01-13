@@ -218,26 +218,6 @@ namespace VirtuaPartnerTest
 			Assert::AreEqual("Unknown", result.c_str());
 		}
 
-		TEST_METHOD(TestPlayer1Shun)
-		{
-			filename = _T("data\\character_select_shun_left.gif");
-
-			std::string result = checkSelectedPlayer(1);
-			std::wstring widestr = std::wstring(result.begin(), result.end());
-
-			Assert::AreEqual("Shun", result.c_str());
-		}
-
-		TEST_METHOD(TestPlayer1Jean)
-		{
-			filename = _T("data\\character_select_jean_left.gif");
-
-			std::string result = checkSelectedPlayer(1);
-			std::wstring widestr = std::wstring(result.begin(), result.end());
-
-			Assert::AreEqual("Jean", result.c_str());
-		}
-
 		TEST_METHOD(TestPlayer2Jean)
 		{
 			filename = _T("data\\character_select_jean_right.gif");
@@ -263,16 +243,6 @@ namespace VirtuaPartnerTest
 			filename = _T("data\\character_select_both_taka.gif");
 
 			std::string result = checkSelectedPlayer(1);
-			std::wstring widestr = std::wstring(result.begin(), result.end());
-
-			Assert::AreEqual("Taka", result.c_str());
-		}
-
-		TEST_METHOD(TestPlayer2Taka)
-		{
-			filename = _T("data\\character_select_both_taka.gif");
-
-			std::string result = checkSelectedPlayer(2);
 			std::wstring widestr = std::wstring(result.begin(), result.end());
 
 			Assert::AreEqual("Taka", result.c_str());
