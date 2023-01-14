@@ -47,6 +47,7 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 
 	const int TOP_ROW_Y = 512;
 	const int THIRD_ROW_X = 537;
+	const int COLUMN_6_P2_X = 958;
 
 	if (checkPoint(1020 - (140 * 6), TOP_ROW_Y, r, g, b) ||
 		checkPoint(210, TOP_ROW_Y, r, g, b) ||
@@ -67,7 +68,7 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Lau";
 	}
 
-	if (checkPoint(958, TOP_ROW_Y, r, g, b) ||
+	if (checkPoint(COLUMN_6_P2_X, TOP_ROW_Y, r, g, b) ||
 		checkPoint(865, TOP_ROW_Y, r, g, b)
 		) {
 		return "Jeffry";
@@ -111,8 +112,8 @@ std::string WindowPixelChecker::getSelectedPlayer(int playerNum)
 		return "Blaze";
 	}
 
-	if (checkPoint(1020 - (140 * 1), MIDDLE_ROW_Y, r, g, b) ||
-		checkPoint(1130 - (140 * 1), MIDDLE_ROW_Y, r, g, b)
+	if (checkPoint(COLUMN_6_P2_X, MIDDLE_ROW_Y, r, g, b) ||
+		checkPoint(865, MIDDLE_ROW_Y, r, g, b)
 		) {
 		return "Lion";
 	}
