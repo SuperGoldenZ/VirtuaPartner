@@ -138,11 +138,11 @@ void ConsoleView::printMenu(Model model)
 		std::cout << "Select player " << model.playerToSelect << " " << std::endl;
 	}
 
-	while ((i < model.categories.size() || moveNumber < model.categories[currentCategoryIndex].size()) && (model.player2Character != "" || model.playerToSelect == 2)) {
-		if (i < model.categories.size()) {
+	while ((i < model.allCharacterCpuCommandStrings.size() || moveNumber < model.allCharacterCpuCommandStrings[currentCategoryIndex].size()) && (model.player2Character != "" || model.playerToSelect == 2)) {
+		if (i < model.allCharacterCpuCommandStrings.size()) {
 			if (model.playerToSelect == 2) {
-				printCharacterName(model.categories[i][0],
-					model.currentCategory == model.categories[i][0],
+				printCharacterName(model.allCharacterCpuCommandStrings[i][0],
+					model.currentCpuCharacter == model.allCharacterCpuCommandStrings[i][0],
 					0);
 			}
 			i++;
@@ -154,8 +154,8 @@ void ConsoleView::printMenu(Model model)
 		}
 
 		// Print moves on the right side
-		if (moveNumber < model.categories[currentCategoryIndex].size()) {
-			std::string statsIndex = model.categories[currentCategoryIndex][0] + model.categories[currentCategoryIndex][moveNumber];
+		if (moveNumber < model.allCharacterCpuCommandStrings[currentCategoryIndex].size()) {
+			std::string statsIndex = model.allCharacterCpuCommandStrings[currentCategoryIndex][0] + model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber];
 
 			if (model.playerToSelect == -1) {
 				if (model.punishCheck) {
@@ -167,8 +167,8 @@ void ConsoleView::printMenu(Model model)
 					}
 					if (model.stringIndex < model.stringArray.size() - 1) {
 						printCharacterName(
-							model.categories[currentCategoryIndex][moveNumber],
-							model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber],
+							model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber],
+							model.stringArray[model.stringIndex] == model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber],
 							0,
 							35);
 						std::cout << model.punishStats[statsIndex].toString();
@@ -179,7 +179,7 @@ void ConsoleView::printMenu(Model model)
 				}
 				else {
 					std::cout << " ";
-					printCharacterName(model.categories[currentCategoryIndex][moveNumber], model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber], -1);
+					printCharacterName(model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber], model.stringArray[model.stringIndex] == model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber], -1);
 				}
 			}
 

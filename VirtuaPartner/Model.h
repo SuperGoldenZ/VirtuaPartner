@@ -12,7 +12,7 @@
 class Model
 {
 private:
-	std::vector<std::string> readFile(std::string filename);
+	std::vector<std::string> readConfigYamlFile(std::string filename);
 
 public:
 	std::string player1Character;
@@ -32,8 +32,9 @@ public:
 
 	std::map<std::string, PunishStats> punishStats;
 	std::map<std::string, bool> selectedStrings;	
-	std::string currentCategory;
-	std::vector<std::vector<std::string>> categories;
+	std::string currentCpuCharacter;
+	std::map<std::string, std::vector<std::string>> commands;
+	std::vector<std::vector<std::string>> allCharacterCpuCommandStrings;
 	std::vector<std::string> stringArray;
 	std::vector<std::string> getStrings(std::string category);
 	bool updateSelectedPlayers(std::string newPlayer1Character, std::string newPlayer2Character);

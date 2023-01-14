@@ -7,15 +7,25 @@
 #include <Windows.h>
 #include <tchar.h>
 #include <cstring>
+#include <iostream>
 
 Model::Model()
 {
 
 }
 
+bool hasEnding(std::string const& fullString, std::string const& ending) {
+	if (fullString.length() >= ending.length()) {
+		return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+	}
+	else {
+		return false;
+	}
+}
+
 void Model::loadConfigFiles()
 {
-	categories.clear();
+	allCharacterCpuCommandStrings.clear();
 
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	WIN32_FIND_DATA ffd;
@@ -29,9 +39,10 @@ void Model::loadConfigFiles()
 			configFile += "configs\\";
 			std::wstring wFileName(ffd.cFileName);
 			std::string filename(wFileName.begin(), wFileName.end());
-
-			configFile += filename;
-			categories.push_back(readFile(configFile));
+			if (hasEnding(filename, ".yml")) {
+				configFile += filename;
+				allCharacterCpuCommandStrings.push_back(readConfigYamlFile(configFile));
+			}
 		}
 	} while (FindNextFile(hFind, &ffd) != 0);
 }
@@ -39,8 +50,8 @@ void Model::loadConfigFiles()
 int Model::getCurrentCategoryIndex()
 {
 	int currentCategoryIndex = -1;
-	for (int i = 0; i < categories.size(); i++) {
-		if (categories[i][0] == currentCategory) {
+	for (int i = 0; i < allCharacterCpuCommandStrings.size(); i++) {
+		if (allCharacterCpuCommandStrings[i][0] == currentCpuCharacter) {
 			currentCategoryIndex = i;
 			break;
 		}
@@ -49,25 +60,29 @@ int Model::getCurrentCategoryIndex()
 	return currentCategoryIndex;
 }
 
-std::vector<std::string> Model::readFile(std::string filename)
+std::vector<std::string> Model::readConfigYamlFile(std::string filename)
 {
 	std::vector<std::string> strings;
 
 	std::ifstream file(filename);
-	std::string firstLine;
+	std::string characterName;
 
 	if (file.is_open()) {
 		for (std::string line; getline(file, line);) {
 			if (line[0] != '#' && !line.empty()) {
-				if (!firstLine.empty() && punishStats.find(firstLine + line) == punishStats.end()) {
-					punishStats[firstLine + line] = PunishStats();
-					selectedStrings[firstLine + line] = false;
+				if (line.rfind("name: ", 0) == 0) {
+					characterName = line.substr(6);
+					std::cout << "character name: " << characterName << std::endl;
 				}
+				//if (!characterName.empty() && punishStats.find(characterName + line) == punishStats.end()) {
+				//	punishStats[characterName + line] = PunishStats();
+				//	selectedStrings[characterName + line] = false;
+				//}
 				strings.push_back(line);
 			}
 
-			if (firstLine.empty()) {
-				firstLine = line;
+			if (characterName.empty()) {
+				characterName = line;
 			}
 		}
 	}
@@ -77,13 +92,13 @@ std::vector<std::string> Model::readFile(std::string filename)
 
 std::vector<std::string> Model::getStrings(std::string category) {
 
-	for (unsigned int i = 0; i < categories.size(); i++) {
-		if (categories[i][0] == category) {
-			return categories[i];
+	for (unsigned int i = 0; i < allCharacterCpuCommandStrings.size(); i++) {
+		if (allCharacterCpuCommandStrings[i][0] == category) {
+			return allCharacterCpuCommandStrings[i];
 		}
 	}
 
-	return categories[0];
+	return allCharacterCpuCommandStrings[0];
 }
 
 bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string newPlayer2Character)
@@ -98,69 +113,69 @@ bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string n
 	if (player2Character != newPlayer2Character && newPlayer2Character != "Unknown") {
 		player2Character = newPlayer2Character;
 		if (player2Character == "Akira") {
-			currentCategory = "[A]kira";
+			currentCpuCharacter = "[A]kira";
 		}
 		else if (player2Character == "Aoi") {
-			currentCategory = "A[o]i";
+			currentCpuCharacter = "A[o]i";
 		}
 		else if (player2Character == "Blaze") {
-			currentCategory = "Bla[z]e";
+			currentCpuCharacter = "Bla[z]e";
 		}
 		else if (player2Character == "Brad") {
-			currentCategory = "[B]rad";
+			currentCpuCharacter = "[B]rad";
 		}
 		else if (player2Character == "Eileen") {
-			currentCategory = "[E]ileen";
+			currentCpuCharacter = "[E]ileen";
 		}
 		else if (player2Character == "Goh") {
-			currentCategory = "[G]oh";
+			currentCpuCharacter = "[G]oh";
 		}
 		else if (player2Character == "Jacky") {
-			currentCategory = "Ja[c]ky";
+			currentCpuCharacter = "Ja[c]ky";
 		}
 		else if (player2Character == "Jean") {
-			currentCategory = "[J]ean";
+			currentCpuCharacter = "[J]ean";
 		}
 		else if (player2Character == "Jeffry") {
-			currentCategory = "Jeff[r]y";
+			currentCpuCharacter = "Jeff[r]y";
 		}
 		else if (player2Character == "Lion") {
-			currentCategory = "L[i]on";
+			currentCpuCharacter = "L[i]on";
 		}
 		else if (player2Character == "Sarah") {
-			currentCategory = "[S]arah";
+			currentCpuCharacter = "[S]arah";
 		}
 		else if (player2Character == "Lau") {
-			currentCategory = "[L]au";
+			currentCpuCharacter = "[L]au";
 		}
 		else if (player2Character == "Kage") {
-			currentCategory = "[K]age";
+			currentCpuCharacter = "[K]age";
 		}
 		else if (player2Character == "Lau") {
-			currentCategory = "[L]au";
+			currentCpuCharacter = "[L]au";
 		}
 		else if (player2Character == "Pai") {
-			currentCategory = "[P]ai";
+			currentCpuCharacter = "[P]ai";
 		}
 		else if (player2Character == "Shun") {
-			currentCategory = "S[h]un";
+			currentCpuCharacter = "S[h]un";
 		}
 		else if (player2Character == "Taka") {
-			currentCategory = "[T]aka";
+			currentCpuCharacter = "[T]aka";
 		}
 		else if (player2Character == "Vanessa") {
-			currentCategory = "[V]anessa";
+			currentCpuCharacter = "[V]anessa";
 		}
 		else if (player2Character == "Wolf") {
-			currentCategory = "[W]olf";
+			currentCpuCharacter = "[W]olf";
 		}
 		else if (player2Character == "Lei-Fei") {
-			currentCategory = "Lei-[F]ei";
+			currentCpuCharacter = "Lei-[F]ei";
 		}
 
 		updated = true;
-		player2Character = categoryToString(currentCategory);
-		stringArray = getStrings(currentCategory);
+		player2Character = categoryToString(currentCpuCharacter);
+		stringArray = getStrings(currentCpuCharacter);
 		stringIndex = 1;
 		playerToSelect = -1;
 	}

@@ -183,6 +183,7 @@
     <Text Include="configs\lau.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\lau.yml" />
     <Text Include="configs\leifei.txt" />
     <Text Include="configs\lion.txt">
       <DeploymentContent>true</DeploymentContent>

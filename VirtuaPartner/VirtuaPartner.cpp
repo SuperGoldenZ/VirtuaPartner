@@ -447,8 +447,8 @@ int main()
 
 	model.loadConfigFiles();
 
-	model.currentCategory = model.categories[0][0];
-	model.stringArray = model.getStrings(model.currentCategory);
+	model.currentCpuCharacter = model.allCharacterCpuCommandStrings[0][0];
+	model.stringArray = model.getStrings(model.currentCpuCharacter);
 
 	readStats();
 
@@ -542,13 +542,13 @@ int main()
 		}
 
 		if (model.playerToSelect == 2) {
-			for (unsigned int i = 0; i < model.categories.size(); i++) {
-				byte shortcutKeycote = getKeyEventCode(model.categories[i][0]);
+			for (unsigned int i = 0; i < model.allCharacterCpuCommandStrings.size(); i++) {
+				byte shortcutKeycote = getKeyEventCode(model.allCharacterCpuCommandStrings[i][0]);
 				if (GetAsyncKeyState(shortcutKeycote) != 0) {
 					while (GetAsyncKeyState(shortcutKeycote) != 0);
-					model.currentCategory = model.categories[i][0];
-					model.player2Character = model.categoryToString(model.currentCategory);
-					model.stringArray = model.getStrings(model.currentCategory);
+					model.currentCpuCharacter = model.allCharacterCpuCommandStrings[i][0];
+					model.player2Character = model.categoryToString(model.currentCpuCharacter);
+					model.stringArray = model.getStrings(model.currentCpuCharacter);
 					model.stringIndex = 1;
 					reprintMenu = true;
 					model.playerToSelect = -1;
@@ -579,7 +579,7 @@ int main()
 
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
-			if (model.currentCategory == "[D]efense") {
+			if (model.currentCpuCharacter == "[D]efense") {
 				executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
@@ -603,7 +603,7 @@ int main()
 		}
 
 		model.loadConfigFiles();
-		model.stringArray = model.getStrings(model.currentCategory);
+		model.stringArray = model.getStrings(model.currentCpuCharacter);
 	}
 
 
