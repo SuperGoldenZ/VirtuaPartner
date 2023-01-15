@@ -127,8 +127,11 @@ void ConsoleView::printMenu(Model model)
 	SetConsoleTextAttribute(hConsole, 112);
 	if (model.playerToSelect == -1) {
 		std::cout << "\nCategories: ";
+
+		SetConsoleTextAttribute(hConsole, 7);
 		std::cout << "|";
 		for (unsigned int i = 0; i < model.characterCommands.getCategories(model.currentCpuCharacter).size(); i++) {
+
 			printCharacterName(model.characterCommands.getCategories(model.currentCpuCharacter)[i],
 				model.characterCommands.getCategories(model.currentCpuCharacter)[i] == model.selectedCategory, 0);
 			std::cout << "|";
@@ -158,6 +161,7 @@ void ConsoleView::printMenu(Model model)
 				model.currentCpuCharacter == model.characterCommands.characterNames[i],
 				0);
 		}
+		std::cout << std::endl;
 	}
 
 	/*
@@ -217,7 +221,7 @@ void ConsoleView::printMenu(Model model)
 	SetConsoleTextAttribute(hConsole, 112);
 	std::cout << "NumPad Controls: " << std::endl;
 
-	printCharacterName("[Up   Arrow] Next String", false, 0, 35);
+	printCharacterName("[Up Arrow] Next String", false, 0, 35);
 	printCharacterName("[Down Arrow] Prev String", false, 1);
 
 	printCharacterName("", false, 0, 35);

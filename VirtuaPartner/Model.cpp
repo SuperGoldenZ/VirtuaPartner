@@ -254,3 +254,15 @@ bool Model::isSelectedCommand(const std::string command)
 	const std::string index = currentCpuCharacter + selectedCategory + command;
 	return selectedStrings.count(index) && selectedStrings[index];
 }
+
+void Model::setToDefaltCategory()
+{
+	selectedCategory = characterCommands.getCategories(currentCpuCharacter)[0];
+	selectedCommand = characterCommands.getCommands(currentCpuCharacter, selectedCategory)[0];
+}
+
+std::string Model::getRandomCommand()
+{
+	selectedCommand = characterCommands.getRandomCommand(currentCpuCharacter, selectedCategory);
+	return selectedCommand;
+}

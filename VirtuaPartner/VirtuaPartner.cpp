@@ -461,6 +461,10 @@ int main()
 			reprintMenu = false;
 		}
 
+		if (random) {
+			model.getRandomCommand();
+		}
+
 		/*
 		if (random) {
 		model.stringIndex = (rand() % model.stringArray.size());
@@ -547,53 +551,54 @@ int main()
 			model.selectPreviousCommand();
 			reprintMenu = true;
 		}
-		/*
-		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && model.stringIndex > 0) {
-		while (GetAsyncKeyState(VK_SUBTRACT) != 0);
-		if (model.stringIndex > 1) {
-		model.stringIndex--;
-		reprintMenu = true;
-		}
-		}
 
-		/*
 		if (model.playerToSelect == 2) {
-		for (unsigned int i = 0; i < model.allCharacterCpuCommandStrings.size(); i++) {
-		byte shortcutKeycote = getKeyEventCode(model.allCharacterCpuCommandStrings[i][0]);
-		if (GetAsyncKeyState(shortcutKeycote) != 0) {
-		while (GetAsyncKeyState(shortcutKeycote) != 0);
-		model.currentCpuCharacter = model.allCharacterCpuCommandStrings[i][0];
-		model.player2Character = model.categoryToString(model.currentCpuCharacter);
-		model.stringArray = model.getStrings(model.currentCpuCharacter);
-		model.stringIndex = 1;
-		reprintMenu = true;
-		model.playerToSelect = -1;
-		break;
+			for (unsigned int i = 0; i < model.characterCommands.numCharactersLoaded; i++) {
+				const std::string characterName(model.characterCommands.characterNames[i]);
+				byte shortcutKeycote = getKeyEventCode(characterName);
+				if (GetAsyncKeyState(shortcutKeycote) != 0) {
+					while (GetAsyncKeyState(shortcutKeycote) != 0);
+					model.currentCpuCharacter = characterName;
+					model.player2Character = model.categoryToString(model.currentCpuCharacter);
+					model.stringArray = model.getStrings(model.currentCpuCharacter);
+					model.setToDefaltCategory();
+					reprintMenu = true;
+					model.playerToSelect = -1;
+					break;
+				}
+			}
 		}
-		}
-		}*/
 
 		if (GetAsyncKeyState(VK_DECIMAL) != 0) {
 			while (GetAsyncKeyState(VK_DECIMAL) != 0);
 			repeat = true;
 			randomSelectedOnly = true;
 		}
-		else if (GetAsyncKeyState(VK_SPACE) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
-			if (GetAsyncKeyState(VK_DIVIDE)) {
+		else if (GetAsyncKeyState(VK_SPACE) != 0 || repeat) {
+			if (repeat == true && GetAsyncKeyState(VK_SPACE) != 0) {
+				repeat = false;
+				random = false;
+				std::cout << "\nStopped repeat";
+				while (GetAsyncKeyState(VK_SPACE) != 0);
+				continue;
+			}
+			if (GetAsyncKeyState(KEYS['R'])) {
+				repeat = true;
+				random = true;
+				reprintMenu = true;
+				/*
 				int tempStringIndex = getRandomStarredMove(model.stringArray);
 
 				if (tempStringIndex == -1) {
-					repeat = false;
-					randomSelectedOnly = false;
-					continue;
+				repeat = false;
+				randomSelectedOnly = false;
+				continue;
 				}
 				else {
-					//model.stringIndex = tempStringIndex;
-					reprintMenu = true;
-				}
+				//model.stringIndex = tempStringIndex;
+				reprintMenu = true;
+				}*/
 			}
-
-			while (GetAsyncKeyState(VK_SPACE) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
 			if (model.currentCpuCharacter == "[D]efense") {
 				//executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);

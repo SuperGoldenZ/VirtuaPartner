@@ -23,5 +23,6 @@ public:
 	std::string getPreviousCategory(const std::string characterName, const std::string categoryName);
 	std::string getNextCommand(const std::string characterName, const std::string categoryName, const std::string command);
 	std::string getPreviousCommand(const std::string characterName, const std::string categoryName, const std::string command);
+	std::string getRandomCommand(const std::string characterName, const std::string categoryName);
 };
 

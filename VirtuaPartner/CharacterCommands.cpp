@@ -83,3 +83,9 @@ std::string CharacterCommands::getPreviousCommand(const std::string characterNam
 		}
 	}
 }
+
+std::string CharacterCommands::getRandomCommand(const std::string characterName, const std::string categoryName)
+{
+	const unsigned int tempStringIndex = (rand() % commands[characterName + categoryName].size());
+	return commands[characterName + categoryName][tempStringIndex];
+}

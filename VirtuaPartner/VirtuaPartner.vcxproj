@@ -189,7 +189,7 @@
     <Text Include="configs\lion.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\pai.txt" />
+    <Text Include="configs\pai.yml" />
     <Text Include="configs\sarah.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>

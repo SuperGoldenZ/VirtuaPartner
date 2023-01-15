@@ -51,6 +51,8 @@ public:
 
 	void toggleSelectedCommand();
 	bool isSelectedCommand(const std::string command);
+	void setToDefaltCategory();
+	std::string getRandomCommand();
 };
 
 #endif
