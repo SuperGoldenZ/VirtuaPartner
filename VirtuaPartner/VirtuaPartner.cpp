@@ -461,26 +461,27 @@ int main()
 			reprintMenu = false;
 		}
 
+		/*
 		if (random) {
-			model.stringIndex = (rand() % model.stringArray.size());
-			if (model.stringIndex == 0) {
-				model.stringIndex = 1;
-			}
-			ui.printMenu(model);
-			std::cout << std::endl << "Random string #" << model.stringIndex << " / " << (model.stringArray.size() - 1) << std::endl;
+		model.stringIndex = (rand() % model.stringArray.size());
+		if (model.stringIndex == 0) {
+		model.stringIndex = 1;
+		}
+		ui.printMenu(model);
+		std::cout << std::endl << "Random string #" << model.stringIndex << " / " << (model.stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
-			int tempStringIndex = getRandomStarredMove(model.stringArray);
+		int tempStringIndex = getRandomStarredMove(model.stringArray);
 
-			if (tempStringIndex == -1) {
-				repeat = false;
-				randomSelectedOnly = false;
-			}
-			else {
-				model.stringIndex = tempStringIndex;
-				reprintMenu = true;
-			}
+		if (tempStringIndex == -1) {
+		repeat = false;
+		randomSelectedOnly = false;
 		}
+		else {
+		model.stringIndex = tempStringIndex;
+		reprintMenu = true;
+		}
+		}*/
 
 		if (GetAsyncKeyState(VK_NEXT)) {
 			while (GetAsyncKeyState(VK_NEXT) != 0);
@@ -490,6 +491,7 @@ int main()
 		if (GetAsyncKeyState(VK_PRIOR)) {
 			while (GetAsyncKeyState(VK_PRIOR) != 0);
 			model.selectPreviousCategory();
+
 			reprintMenu = true;
 		}
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
@@ -532,22 +534,26 @@ int main()
 
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
-			model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]] = !model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]];
+			//model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]] = !model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]];
 			reprintMenu = true;
 		}
-		else if (GetAsyncKeyState(VK_ADD) != 0) {
-			while (GetAsyncKeyState(VK_ADD) != 0);
-			if (model.stringIndex < model.stringArray.size() - 1) {
-				model.stringIndex++;
-				reprintMenu = true;
-			}
+		else if (GetAsyncKeyState(VK_DOWN) != 0) {
+			while (GetAsyncKeyState(VK_DOWN) != 0);
+			model.selectNextCommand();
+			reprintMenu = true;
 		}
+		else if (GetAsyncKeyState(VK_UP) != 0) {
+			while (GetAsyncKeyState(VK_UP) != 0);
+			model.selectPreviousCommand();
+			reprintMenu = true;
+		}
+		/*
 		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && model.stringIndex > 0) {
-			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
-			if (model.stringIndex > 1) {
-				model.stringIndex--;
-				reprintMenu = true;
-			}
+		while (GetAsyncKeyState(VK_SUBTRACT) != 0);
+		if (model.stringIndex > 1) {
+		model.stringIndex--;
+		reprintMenu = true;
+		}
 		}
 
 		/*
@@ -582,7 +588,7 @@ int main()
 					continue;
 				}
 				else {
-					model.stringIndex = tempStringIndex;
+					//model.stringIndex = tempStringIndex;
 					reprintMenu = true;
 				}
 			}
@@ -590,10 +596,10 @@ int main()
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
 			if (model.currentCpuCharacter == "[D]efense") {
-				executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
+				//executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
-				executeCommandString(model.stringArray[model.stringIndex], false, 1, ONE_FRAME, model.stringArray[0] + model.stringArray[model.stringIndex]);
+				//executeCommandString(model.stringArray[model.stringIndex], false, 1, ONE_FRAME, model.stringArray[0] + model.stringArray[model.stringIndex]);
 			}
 
 			saveStats();

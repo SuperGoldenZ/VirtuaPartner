@@ -21,5 +21,7 @@ public:
 	std::vector<std::string> getCategories(const std::string characterName);
 	std::string getNextCategory(const std::string characterName, const std::string categoryName);
 	std::string getPreviousCategory(const std::string characterName, const std::string categoryName);
+	std::string getNextCommand(const std::string characterName, const std::string categoryName, const std::string command);
+	std::string getPreviousCommand(const std::string characterName, const std::string categoryName, const std::string command);
 };
 

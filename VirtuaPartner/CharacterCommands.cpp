@@ -49,10 +49,37 @@ std::string CharacterCommands::getPreviousCategory(const std::string characterNa
 	for (unsigned int i = 0; i < categories[characterName].size(); i++) {
 		if (categories[characterName][i] == categoryName) {
 			if (i == 0) {
-				return categories[characterName][categories[characterName].size()-1];
+				return categories[characterName][categories[characterName].size() - 1];
 			}
 
-			return categories[characterName][i-1];
+			return categories[characterName][i - 1];
+		}
+	}
+}
+
+std::string CharacterCommands::getNextCommand(const std::string characterName, const std::string categoryName, const std::string commandName)
+{
+	for (unsigned int i = 0; i < commands[characterName + categoryName].size(); i++) {
+		if (commands[characterName + categoryName][i] == commandName) {
+			if (i < commands[characterName + categoryName].size() - 1) {
+				return commands[characterName + categoryName][i + 1];
+			}
+
+			return commands[characterName + categoryName][0];
+		}
+	}
+}
+
+std::string CharacterCommands::getPreviousCommand(const std::string characterName, const std::string categoryName, const std::string commandName)
+{
+	for (unsigned int i = 0; i < commands[characterName + categoryName].size(); i++) {
+		if (commands[characterName + categoryName][i] == commandName) {
+			if (i == 0) {
+				const int newIndex = commands[characterName + categoryName].size() - 1;
+				return commands[characterName + categoryName][newIndex];
+			}
+
+			return commands[characterName + categoryName][i - 1];
 		}
 	}
 }

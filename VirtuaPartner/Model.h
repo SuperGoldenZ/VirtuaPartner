@@ -19,6 +19,7 @@ public:
 	std::string player1Character;
 	std::string player2Character;
 	std::string selectedCategory = "";
+	std::string selectedCommand = "";
 
 	int playerToSelect = -1;
 	
@@ -28,7 +29,6 @@ public:
 	//Whether to give feedback on guaranteed punish damage or not
 	bool punishCheck = true;
 
-	unsigned int stringIndex = 1;
 	CharacterCommands characterCommands;
 
 	Model();
@@ -39,12 +39,15 @@ public:
 	std::vector<std::string> stringArray;
 	std::vector<std::string> getStrings(std::string category);
 	bool updateSelectedPlayers(std::string newPlayer1Character, std::string newPlayer2Character);
-	//int getCurrentCategoryIndex();
+
 	void loadConfigFiles();
 	std::string categoryToString(std::string category);
 
 	void selectNextCategory();
 	void selectPreviousCategory();
+
+	void selectNextCommand();
+	void selectPreviousCommand();
 };
 
 #endif

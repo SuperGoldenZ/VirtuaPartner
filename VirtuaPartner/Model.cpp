@@ -104,6 +104,10 @@ void Model::readConfigYamlFile(std::string filename)
 						if (line.find("-") == 4) {
 							commandString = line.substr(6);
 							characterCommands.addCommand(characterName, categoryName, commandString);
+
+							if (selectedCommand == "") {
+								selectedCommand = commandString;
+							}
 						}
 					}
 				}
@@ -196,7 +200,7 @@ bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string n
 		updated = true;
 		player2Character = categoryToString(currentCpuCharacter);
 		stringArray = getStrings(currentCpuCharacter);
-		stringIndex = 1;
+		selectedCommand = characterCommands.getCommands(selectedCategory, currentCpuCharacter)[0];
 		playerToSelect = -1;
 	}
 
@@ -214,9 +218,22 @@ std::string Model::categoryToString(std::string category) {
 void Model::selectNextCategory()
 {
 	selectedCategory = characterCommands.getNextCategory(currentCpuCharacter, selectedCategory);
+	selectedCommand = characterCommands.getCommands(currentCpuCharacter, selectedCategory)[0];
 }
 
 void Model::selectPreviousCategory()
 {
 	selectedCategory = characterCommands.getPreviousCategory(currentCpuCharacter, selectedCategory);
+	selectedCommand = characterCommands.getCommands(currentCpuCharacter, selectedCategory)[0];
 }
+
+void Model::selectNextCommand()
+{
+	selectedCommand = characterCommands.getNextCommand(currentCpuCharacter, selectedCategory, selectedCommand);
+}
+
+void Model::selectPreviousCommand()
+{
+	selectedCommand = characterCommands.getPreviousCommand(currentCpuCharacter, selectedCategory, selectedCommand);
+}
+

@@ -137,7 +137,7 @@ void ConsoleView::printMenu(Model model)
 		// Print moves
 		for (unsigned int i = 0; i < model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory).size(); i++) {
 			printCharacterName(model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory)[i],
-				false, 1);
+				model.selectedCommand == model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory)[i], 1);
 		}
 	}
 	else {
