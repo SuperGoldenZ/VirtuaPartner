@@ -578,7 +578,7 @@ int main()
 			repeat = true;
 			randomSelectedOnly = true;
 		}
-		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
+		else if (GetAsyncKeyState(VK_SPACE) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
 			if (GetAsyncKeyState(VK_DIVIDE)) {
 				int tempStringIndex = getRandomStarredMove(model.stringArray);
 
@@ -593,13 +593,13 @@ int main()
 				}
 			}
 
-			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
+			while (GetAsyncKeyState(VK_SPACE) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
 			if (model.currentCpuCharacter == "[D]efense") {
 				//executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
-				//executeCommandString(model.stringArray[model.stringIndex], false, 1, ONE_FRAME, model.stringArray[0] + model.stringArray[model.stringIndex]);
+				executeCommandString(model.selectedCommand, false, 1, ONE_FRAME, model.currentCpuCharacter + model.selectedCategory + model.selectedCommand);
 			}
 
 			saveStats();

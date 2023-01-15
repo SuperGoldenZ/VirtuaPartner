@@ -214,7 +214,7 @@ void ConsoleView::printMenu(Model model)
 	printCharacterName("", false, 0, 35);
 	printCharacterName("[*] Toggle favorite", false, 1);
 
-	printCharacterName("[1] Play selected", false, 0, 35);
+	std::cout << "[SPACE] Play selected" << std::endl;
 	printCharacterName("[/] Play favorite (random)", false, 1);
 
 	printCharacterName("[0] Start repeat (cur selected)", false, 0, 35);
