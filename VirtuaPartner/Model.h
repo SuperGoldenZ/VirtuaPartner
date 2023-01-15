@@ -34,7 +34,7 @@ public:
 	Model();
 
 	std::map<std::string, PunishStats> punishStats;
-	std::map<std::string, bool> selectedStrings;	
+	std::map<std::string, bool> selectedStrings;
 	std::string currentCpuCharacter = "";
 	std::vector<std::string> stringArray;
 	std::vector<std::string> getStrings(std::string category);
@@ -48,6 +48,9 @@ public:
 
 	void selectNextCommand();
 	void selectPreviousCommand();
+
+	void toggleSelectedCommand();
+	bool isSelectedCommand(const std::string command);
 };
 
 #endif

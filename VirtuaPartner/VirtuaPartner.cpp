@@ -534,7 +534,7 @@ int main()
 
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
-			//model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]] = !model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]];
+			model.toggleSelectedCommand();
 			reprintMenu = true;
 		}
 		else if (GetAsyncKeyState(VK_DOWN) != 0) {

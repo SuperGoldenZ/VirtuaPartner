@@ -237,3 +237,20 @@ void Model::selectPreviousCommand()
 	selectedCommand = characterCommands.getPreviousCommand(currentCpuCharacter, selectedCategory, selectedCommand);
 }
 
+void Model::toggleSelectedCommand()
+{
+	const std::string index = currentCpuCharacter + selectedCategory + selectedCommand;
+
+	if (selectedStrings.count(index)) {
+		selectedStrings[index] = !selectedStrings[index];
+	}
+	else {
+		selectedStrings[index] = true;
+	}
+}
+
+bool Model::isSelectedCommand(const std::string command)
+{
+	const std::string index = currentCpuCharacter + selectedCategory + command;
+	return selectedStrings.count(index) && selectedStrings[index];
+}
