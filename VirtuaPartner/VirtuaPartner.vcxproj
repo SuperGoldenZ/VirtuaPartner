@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterCommands.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PunishChecker.cpp" />
     <ClCompile Include="PunishCheckerBlaze.cpp" />
@@ -201,6 +202,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharacterCommands.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PunishChecker.h" />

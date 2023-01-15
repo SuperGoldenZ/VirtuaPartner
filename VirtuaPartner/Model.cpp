@@ -8,6 +8,7 @@
 #include <tchar.h>
 #include <cstring>
 #include <iostream>
+#include "CharacterCommands.h"
 
 Model::Model()
 {
@@ -25,7 +26,9 @@ bool hasEnding(std::string const& fullString, std::string const& ending) {
 
 void Model::loadConfigFiles()
 {
-	allCharacterCpuCommandStrings.clear();
+	characterCommands.clear();
+	//currentCpuCharacter = "";
+	//selectedCategory = "";
 
 	HANDLE hFind = INVALID_HANDLE_VALUE;
 	WIN32_FIND_DATA ffd;
@@ -41,43 +44,69 @@ void Model::loadConfigFiles()
 			std::string filename(wFileName.begin(), wFileName.end());
 			if (hasEnding(filename, ".yml")) {
 				configFile += filename;
-				allCharacterCpuCommandStrings.push_back(readConfigYamlFile(configFile));
+				readConfigYamlFile(configFile);
 			}
 		}
 	} while (FindNextFile(hFind, &ffd) != 0);
 }
 
+/*
 int Model::getCurrentCategoryIndex()
 {
-	int currentCategoryIndex = -1;
-	for (int i = 0; i < allCharacterCpuCommandStrings.size(); i++) {
-		if (allCharacterCpuCommandStrings[i][0] == currentCpuCharacter) {
-			currentCategoryIndex = i;
-			break;
-		}
-	}
-
-	return currentCategoryIndex;
+int currentCategoryIndex = -1;
+for (int i = 0; i < 19; i++) {
+if (allCharacterCpuCommandStrings[i][0] == currentCpuCharacter) {
+currentCategoryIndex = i;
+break;
+}
 }
 
-std::vector<std::string> Model::readConfigYamlFile(std::string filename)
+return currentCategoryIndex;
+}*/
+
+void Model::readConfigYamlFile(std::string filename)
 {
 	std::vector<std::string> strings;
 
 	std::ifstream file(filename);
 	std::string characterName;
+	std::string categoryName;
+	std::string commandString;
 
+	bool processingCategories = false;
 	if (file.is_open()) {
 		for (std::string line; getline(file, line);) {
 			if (line[0] != '#' && !line.empty()) {
-				if (line.rfind("name: ", 0) == 0) {
-					characterName = line.substr(6);
-					std::cout << "character name: " << characterName << std::endl;
+				if (line.rfind("CharacterName: ", 0) == 0) {
+					line.erase(std::remove(line.begin(), line.end(), '"'), line.end());
+
+					characterName = line.substr(15);
+
+					if (currentCpuCharacter == "") {
+						currentCpuCharacter = characterName;
+					}
+
+					characterCommands.addCharacterName(characterName);
 				}
-				//if (!characterName.empty() && punishStats.find(characterName + line) == punishStats.end()) {
-				//	punishStats[characterName + line] = PunishStats();
-				//	selectedStrings[characterName + line] = false;
-				//}
+				else if (line.rfind("Categories:", 0) == 0) {
+					processingCategories = true;
+				}
+				else if (processingCategories) {
+					if (line.find("-") == 2) {
+						categoryName = line.substr(4);
+						characterCommands.addCategoryName(characterName, categoryName);
+
+						if (selectedCategory == "") {
+							selectedCategory = categoryName;
+						}
+					}
+					else {
+						if (line.find("-") == 4) {
+							commandString = line.substr(6);
+							characterCommands.addCommand(characterName, categoryName, commandString);
+						}
+					}
+				}
 				strings.push_back(line);
 			}
 
@@ -86,19 +115,10 @@ std::vector<std::string> Model::readConfigYamlFile(std::string filename)
 			}
 		}
 	}
-
-	return strings;
 }
 
 std::vector<std::string> Model::getStrings(std::string category) {
-
-	for (unsigned int i = 0; i < allCharacterCpuCommandStrings.size(); i++) {
-		if (allCharacterCpuCommandStrings[i][0] == category) {
-			return allCharacterCpuCommandStrings[i];
-		}
-	}
-
-	return allCharacterCpuCommandStrings[0];
+	return characterCommands.getCommands(player2Character, category);
 }
 
 bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string newPlayer2Character)
@@ -189,4 +209,9 @@ std::string Model::categoryToString(std::string category) {
 	category.erase(std::remove(category.begin(), category.end(), ']'), category.end());
 
 	return category;
+}
+
+void Model::selectNextCategory()
+{
+	selectedCategory = characterCommands.selectNextCaregory(currentCpuCharacter, selectedCategory);
 }

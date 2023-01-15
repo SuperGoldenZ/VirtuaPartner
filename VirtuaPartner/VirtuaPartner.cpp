@@ -447,7 +447,6 @@ int main()
 
 	model.loadConfigFiles();
 
-	model.currentCpuCharacter = model.allCharacterCpuCommandStrings[0][0];
 	model.stringArray = model.getStrings(model.currentCpuCharacter);
 
 	readStats();
@@ -483,6 +482,11 @@ int main()
 			}
 		}
 
+		if (GetAsyncKeyState(VK_NEXT)) {
+			while (GetAsyncKeyState(VK_NEXT) != 0);
+			model.selectNextCategory();
+			reprintMenu = true;
+		}
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			model.punishCheck = !model.punishCheck;
@@ -541,21 +545,22 @@ int main()
 			}
 		}
 
+		/*
 		if (model.playerToSelect == 2) {
-			for (unsigned int i = 0; i < model.allCharacterCpuCommandStrings.size(); i++) {
-				byte shortcutKeycote = getKeyEventCode(model.allCharacterCpuCommandStrings[i][0]);
-				if (GetAsyncKeyState(shortcutKeycote) != 0) {
-					while (GetAsyncKeyState(shortcutKeycote) != 0);
-					model.currentCpuCharacter = model.allCharacterCpuCommandStrings[i][0];
-					model.player2Character = model.categoryToString(model.currentCpuCharacter);
-					model.stringArray = model.getStrings(model.currentCpuCharacter);
-					model.stringIndex = 1;
-					reprintMenu = true;
-					model.playerToSelect = -1;
-					break;
-				}
-			}
+		for (unsigned int i = 0; i < model.allCharacterCpuCommandStrings.size(); i++) {
+		byte shortcutKeycote = getKeyEventCode(model.allCharacterCpuCommandStrings[i][0]);
+		if (GetAsyncKeyState(shortcutKeycote) != 0) {
+		while (GetAsyncKeyState(shortcutKeycote) != 0);
+		model.currentCpuCharacter = model.allCharacterCpuCommandStrings[i][0];
+		model.player2Character = model.categoryToString(model.currentCpuCharacter);
+		model.stringArray = model.getStrings(model.currentCpuCharacter);
+		model.stringIndex = 1;
+		reprintMenu = true;
+		model.playerToSelect = -1;
+		break;
 		}
+		}
+		}*/
 
 		if (GetAsyncKeyState(VK_DECIMAL) != 0) {
 			while (GetAsyncKeyState(VK_DECIMAL) != 0);
