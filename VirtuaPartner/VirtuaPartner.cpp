@@ -14,13 +14,15 @@ VirtuaPartner.cpp
 #include <filesystem>
 #include <thread>
 #include <sstream>
+#include <algorithm>
 
 #include "keyboard.h"
-#include "UserInterface.h"
+#include "ConsoleView.h"
 #include "PunishStats.h"
 #include "WindowPixelChecker.h"
 #include "PunishCheckerBlaze.h"
 #include "PunishCheckerShun.h"
+#include "Model.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -32,32 +34,8 @@ const byte ONE_FRAME = 16;
 
 int struggleType = 0;
 
-std::string category;
-
-std::string player1Character;
-
-//If CPU is on the left side or not
-bool leftSide = false;
-
-//Whether to give feedback on guaranteed punish damage or not
-bool punishCheck = true;
-
-vector<vector<string>> categories;
-UserInterface ui;
-
-std::map<string, PunishStats> punishStats;
-std::map<string, bool> selectedStrings;
-
-vector<string> getStrings(string category) {
-
-	for (int i = 0; i < categories.size(); i++) {
-		if (categories[i][0] == category) {
-			return categories[i];
-		}
-	}
-
-	return categories[0];
-}
+ConsoleView ui;
+Model model = Model();
 
 bool isVirtuaFighterGameWindow(HWND hWnd)
 {
@@ -189,7 +167,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '4':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['A'], 0, 0, 0);
 				}
 				else {
@@ -199,7 +177,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '6':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['D'], 0, 0, 0);
 				}
 				else {
@@ -219,7 +197,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '7':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['A'], 0, 0, 0);
 				}
 				else {
@@ -231,7 +209,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '3':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['D'], 0, 0, 0);
 				}
 				else {
@@ -243,7 +221,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '1':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['A'], 0, 0, 0);
 				}
 				else {
@@ -255,7 +233,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				executeNext = true;
 				break;
 			case '9':
-				if (leftSide) {
+				if (model.leftSide) {
 					keybd_event(KEYS['D'], 0, 0, 0);
 				}
 				else {
@@ -296,21 +274,21 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	else {
 		// Don't press guard if throw counterable and checking punish because computer will try to reverse nitaku
 		// and hit if you are not fast enough
-		if (str.find("#throwcounterable") == std::string::npos || !punishCheck) {
+		if (str.find("#throwcounterable") == std::string::npos || !model.punishCheck) {
 			keybd_event(KEYS['G'], 0, 0, 0);
 			std::cout << " G...";
 		}
 
-		if (punishCheck) {
+		if (model.punishCheck) {
 			byte result = -1;
 			PunishChecker::AdvantageClass advantageClass;
 
-			if (player1Character == "Shun") {
+			if (model.player1Character == "Shun") {
 				PunishCheckerShun shun = PunishCheckerShun(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
 				result = shun.giveFeedback();
 				advantageClass = shun.advantageClass;
 			}
-			else if (player1Character == "Blaze") {
+			else if (model.player1Character == "Blaze") {
 				PunishCheckerBlaze blaze = PunishCheckerBlaze(vfWindow, str.find("#recoverslow") != std::string::npos, str.find("#hitslow") != std::string::npos);
 				result = blaze.giveFeedback();
 				advantageClass = blaze.advantageClass;
@@ -341,7 +319,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 					break;
 				}
 
-				punishStats[statsIndex].failureCount++;
+				model.punishStats[statsIndex].failureCount++;
 				PunishChecker::playFailureSound();
 				Sleep(500);
 			}
@@ -351,7 +329,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				//Green background
 				system("color a1");
 				cout << "MAX\nPUNISH!";
-				punishStats[statsIndex].punishCount++;
+				model.punishStats[statsIndex].punishCount++;
 				PunishChecker::playSuccessSound();
 				Sleep(500);
 			}
@@ -372,63 +350,14 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	std::cout << std::endl;
 }
 
-std::vector<std::string> readFile(string filename)
-{
-	std::vector<std::string> strings;
-
-	std::ifstream file(filename);
-	std::string firstLine;
-
-	if (file.is_open()) {
-		for (std::string line; getline(file, line);) {
-			if (line[0] != '#' && !line.empty()) {
-				if (!firstLine.empty() && punishStats.find(firstLine + line) == punishStats.end()) {
-					punishStats[firstLine + line] = PunishStats();
-					selectedStrings[firstLine + line] = false;
-				}
-				strings.push_back(line);
-			}
-
-			if (firstLine.empty()) {
-				firstLine = line;
-			}
-		}
-	}
-
-	return strings;
-}
-
-void loadConfigFiles()
-{
-	categories.clear();
-
-	HANDLE hFind = INVALID_HANDLE_VALUE;
-	WIN32_FIND_DATA ffd;
-
-	hFind = FindFirstFile(_T("configs\\*"), &ffd);
-	do
-	{
-		if (!(ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-		{
-			string configFile;
-			configFile += "configs\\";
-			wstring wFileName(ffd.cFileName);
-			string filename(wFileName.begin(), wFileName.end());
-
-			configFile += filename;
-			categories.push_back(readFile(configFile));
-		}
-	} while (FindNextFile(hFind, &ffd) != 0);
-}
-
 void saveStats()
 {
 	ofstream outfile;
 	outfile.open("stats.csv", ios::out | ios::trunc);
 
-	for (auto const& x : punishStats)
+	for (auto const& x : model.punishStats)
 	{
-		outfile << x.first << "," << punishStats[x.first].punishCount << "," << punishStats[x.first].failureCount << endl;
+		outfile << x.first << "," << model.punishStats[x.first].punishCount << "," << model.punishStats[x.first].failureCount << endl;
 	}
 	outfile.close();
 }
@@ -465,7 +394,7 @@ void readStats()
 				}
 				i++;
 			}
-			punishStats[key] = stats;
+			model.punishStats[key] = stats;
 		}
 	}
 }
@@ -480,7 +409,7 @@ int getRandomStarredMove(vector<string> stringArray)
 		if (tempStringIndex == 0) {
 			tempStringIndex = 1;
 		}
-		if (selectedStrings[stringArray[0] + stringArray[tempStringIndex]]) {
+		if (model.selectedStrings[stringArray[0] + stringArray[tempStringIndex]]) {
 			return tempStringIndex;
 		}
 	}
@@ -491,13 +420,9 @@ int getRandomStarredMove(vector<string> stringArray)
 
 bool updateSelectedPlayers(WindowPixelChecker checker)
 {
-	std::string newPlayer1Character = checker.getSelectedPlayer1();
-	if (player1Character != newPlayer1Character && newPlayer1Character != "Unknown") {
-		player1Character = newPlayer1Character;
-		return true;
-	}
-
-	return false;
+	std::string newPlayer1Character = checker.getSelectedPlayer(1);
+	std::string newPlayer2Character = checker.getSelectedPlayer(2);
+	return model.updateSelectedPlayers(newPlayer1Character, newPlayer2Character);
 }
 
 int main()
@@ -520,58 +445,64 @@ int main()
 	bool random = false;
 	bool randomSelectedOnly = false;
 
-	vector<string> stringArray;
+	model.loadConfigFiles();
 
-	loadConfigFiles();
-
-	category = categories[0][0];
-	stringArray = getStrings(category);
-
-	int stringIndex = 1;
+	model.currentCategory = model.categories[0][0];
+	model.stringArray = model.getStrings(model.currentCategory);
 
 	readStats();
 
-	ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+	bool reprintMenu = true;
 
 	const WindowPixelChecker vfChecker(vfWindow);
 
 	while (true) {
+		if (reprintMenu) {
+			ui.printMenu(model);
+			reprintMenu = false;
+		}
+
 		if (random) {
-			stringIndex = (rand() % stringArray.size());
-			if (stringIndex == 0) {
-				stringIndex = 1;
+			model.stringIndex = (rand() % model.stringArray.size());
+			if (model.stringIndex == 0) {
+				model.stringIndex = 1;
 			}
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
-			std::cout << std::endl << "Random string #" << stringIndex << " / " << (stringArray.size() - 1) << std::endl;
+			ui.printMenu(model);
+			std::cout << std::endl << "Random string #" << model.stringIndex << " / " << (model.stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
-			int tempStringIndex = getRandomStarredMove(stringArray);
+			int tempStringIndex = getRandomStarredMove(model.stringArray);
 
 			if (tempStringIndex == -1) {
 				repeat = false;
 				randomSelectedOnly = false;
 			}
 			else {
-				stringIndex = tempStringIndex;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+				model.stringIndex = tempStringIndex;
+				reprintMenu = true;
 			}
 		}
 
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
-			punishCheck = !punishCheck;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			model.punishCheck = !model.punishCheck;
+			reprintMenu = true;
 		}
 
 		if (GetAsyncKeyState(VK_1) != 0) {
 			while (GetAsyncKeyState(VK_1) != 0);
-			leftSide = false;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			model.leftSide = false;
+			reprintMenu = true;
 		}
 		if (GetAsyncKeyState(VK_2) != 0) {
 			while (GetAsyncKeyState(VK_2) != 0);
-			leftSide = true;
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			model.leftSide = true;
+			reprintMenu = true;
+		}
+		if (GetAsyncKeyState(VK_TAB) != 0) {
+			while (GetAsyncKeyState(VK_TAB) != 0);
+			reprintMenu = true;
+			model.playerToSelect = 2;
 		}
 		if (GetAsyncKeyState(VK_NUMPAD0) != 0) {
 			while (GetAsyncKeyState(VK_NUMPAD0) != 0);
@@ -592,31 +523,37 @@ int main()
 
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
-			selectedStrings[stringArray[0] + stringArray[stringIndex]] = !selectedStrings[stringArray[0] + stringArray[stringIndex]];
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]] = !model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]];
+			reprintMenu = true;
 		}
 		else if (GetAsyncKeyState(VK_ADD) != 0) {
 			while (GetAsyncKeyState(VK_ADD) != 0);
-			if (stringIndex < stringArray.size() - 1) {
-				ui.printMenu(categories, stringArray[++stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			if (model.stringIndex < model.stringArray.size() - 1) {
+				model.stringIndex++;
+				reprintMenu = true;
 			}
 		}
-		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && stringIndex > 0) {
+		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && model.stringIndex > 0) {
 			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
-			if (stringIndex > 1) {
-				ui.printMenu(categories, stringArray[--stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			if (model.stringIndex > 1) {
+				model.stringIndex--;
+				reprintMenu = true;
 			}
 		}
 
-		for (int i = 0; i < categories.size(); i++) {
-			byte shortcutKeycote = getKeyEventCode(categories[i][0]);
-			if (GetAsyncKeyState(shortcutKeycote) != 0) {
-				while (GetAsyncKeyState(shortcutKeycote) != 0);
-				category = categories[i][0];
-				stringArray = getStrings(category);
-				stringIndex = 1;
-				ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
-				break;
+		if (model.playerToSelect == 2) {
+			for (unsigned int i = 0; i < model.categories.size(); i++) {
+				byte shortcutKeycote = getKeyEventCode(model.categories[i][0]);
+				if (GetAsyncKeyState(shortcutKeycote) != 0) {
+					while (GetAsyncKeyState(shortcutKeycote) != 0);
+					model.currentCategory = model.categories[i][0];
+					model.player2Character = model.categoryToString(model.currentCategory);
+					model.stringArray = model.getStrings(model.currentCategory);
+					model.stringIndex = 1;
+					reprintMenu = true;
+					model.playerToSelect = -1;
+					break;
+				}
 			}
 		}
 
@@ -627,7 +564,7 @@ int main()
 		}
 		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
 			if (GetAsyncKeyState(VK_DIVIDE)) {
-				int tempStringIndex = getRandomStarredMove(stringArray);
+				int tempStringIndex = getRandomStarredMove(model.stringArray);
 
 				if (tempStringIndex == -1) {
 					repeat = false;
@@ -635,28 +572,29 @@ int main()
 					continue;
 				}
 				else {
-					stringIndex = tempStringIndex;
-					ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+					model.stringIndex = tempStringIndex;
+					reprintMenu = true;
 				}
 			}
 
 			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
-			if (category == "[D]efense") {
-				executeCommandString(stringArray[stringIndex], true, 8, 1);
+			if (model.currentCategory == "[D]efense") {
+				executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
-				executeCommandString(stringArray[stringIndex], false, 1, ONE_FRAME, stringArray[0] + stringArray[stringIndex]);
+				executeCommandString(model.stringArray[model.stringIndex], false, 1, ONE_FRAME, model.stringArray[0] + model.stringArray[model.stringIndex]);
 			}
 
 			saveStats();
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+			reprintMenu = true;
 		}
 
 		Sleep(ONE_FRAME);
 
 		if (updateSelectedPlayers(vfChecker)) {
-			ui.printMenu(categories, stringArray[stringIndex], leftSide, category, punishCheck, punishStats, selectedStrings, player1Character);
+
+			reprintMenu = true;
 		}
 
 		if (GetAsyncKeyState(VK_ESCAPE) != 0) {
@@ -664,8 +602,8 @@ int main()
 			break;
 		}
 
-		loadConfigFiles();
-		stringArray = getStrings(category);
+		model.loadConfigFiles();
+		model.stringArray = model.getStrings(model.currentCategory);
 	}
 
 

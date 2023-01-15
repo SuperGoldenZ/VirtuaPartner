@@ -14,7 +14,7 @@ public:
 	bool checkPoint(const int x, const int y, const int r, const int g, const int b);	
 	HDC dc;
 	HWND _virtuaFighterWindow;
-	std::string getSelectedPlayer1();
+	std::string getSelectedPlayer(int playerNum);
 
 	const int WHITE_R = 255;
 	const int WHITE_G = 251;

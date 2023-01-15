@@ -204,13 +204,25 @@
     <Image Include="data\23_frame_advantage.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
+    <Image Include="data\26_frame_advantage.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\32_frame_advantage.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="data\all_black.jpg">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </Image>
+    <Image Include="data\character_select_both_taka.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
     <Image Include="data\character_select_jean_left.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\character_select_jean_right.gif">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="data\character_select_pai_right.gif">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Image Include="data\character_select_shun_left.gif">

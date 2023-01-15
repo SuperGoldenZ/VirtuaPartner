@@ -2,23 +2,28 @@
 #include <string>
 
 std::map<char, byte> KEYS = {
-	{'O',0x4F},
-	{'J', 0x4A},
-	{'I', 0x49},
-	{'L', 0x4C},
 	{'A', 0x41},
+	{'B', 0x42},
 	{'C', 0x43},
-	{'R', 0x52},
-	{'W', 0x57},
 	{'D', 0x44},
+	{'E', 0x45},
+	{'F', 0x46},
 	{'G', 0x47},
+	{'H', 0x48},
+	{'I', 0x49},
+	{'J', 0x4A},
+	{'K', 0x4B},
+	{'L', 0x4C},
+	{'O', 0x4F},
 	{'P', 0x50},
+	{'R', 0x52},
+	{'T', 0x54},
+	{'V', 0x56},
+	{'W', 0x57},
 	{'K', 0x4B},
 	{'S', 0x53},
-	{'Z', 0x5A},
-	{'E', 0x45},
 	{'U', 0x55},
-	{'F', 0x46}
+	{'Z', 0x5A}
 };
 
 const byte VK_1 = 0x31;
@@ -45,7 +50,7 @@ void liftAllKeys(bool defense)
 }
 
 const char getHotkey(std::string str) {
-	for (int i = 0; i < str.length(); i++) {
+	for (unsigned int i = 0; i < str.length(); i++) {
 		if (str[i] == '[') {
 			return toupper(str[i + 1]);
 		}

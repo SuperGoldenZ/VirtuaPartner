@@ -142,11 +142,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="PunishChecker.cpp" />
     <ClCompile Include="PunishCheckerBlaze.cpp" />
     <ClCompile Include="PunishCheckerShun.cpp" />
     <ClCompile Include="PunishStats.cpp" />
-    <ClCompile Include="UserInterface.cpp" />
+    <ClCompile Include="ConsoleView.cpp" />
     <ClCompile Include="VirtuaPartner.cpp" />
     <ClCompile Include="WindowPixelChecker.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <Text Include="configs\blaze.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\brad.txt" />
     <Text Include="configs\defense.txt" />
     <Text Include="configs\eileen.txt">
       <DeploymentContent>true</DeploymentContent>
@@ -177,15 +179,21 @@
     <Text Include="configs\jeffry.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\kage.txt" />
     <Text Include="configs\lau.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\leifei.txt" />
     <Text Include="configs\lion.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\pai.txt" />
     <Text Include="configs\sarah.txt">
       <DeploymentContent>true</DeploymentContent>
     </Text>
+    <Text Include="configs\shun.txt" />
+    <Text Include="configs\taka.txt" />
+    <Text Include="configs\vanessa.txt" />
     <Text Include="configs\wolf.txt">
       <DeploymentContent>true</DeploymentContent>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
@@ -193,11 +201,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="PunishChecker.h" />
     <ClInclude Include="PunishCheckerBlaze.h" />
     <ClInclude Include="PunishCheckerShun.h" />
     <ClInclude Include="PunishStats.h" />
-    <ClInclude Include="UserInterface.h" />
+    <ClInclude Include="ConsoleView.h" />
     <ClInclude Include="WindowPixelChecker.h" />
   </ItemGroup>
   <ItemGroup>
