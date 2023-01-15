@@ -213,5 +213,10 @@ std::string Model::categoryToString(std::string category) {
 
 void Model::selectNextCategory()
 {
-	selectedCategory = characterCommands.selectNextCaregory(currentCpuCharacter, selectedCategory);
+	selectedCategory = characterCommands.getNextCategory(currentCpuCharacter, selectedCategory);
+}
+
+void Model::selectPreviousCategory()
+{
+	selectedCategory = characterCommands.getPreviousCategory(currentCpuCharacter, selectedCategory);
 }

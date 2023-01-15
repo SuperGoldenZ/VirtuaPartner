@@ -31,7 +31,7 @@ std::vector<std::string> CharacterCommands::getCategories(const std::string char
 	return categories[characterName];
 }
 
-std::string CharacterCommands::selectNextCaregory(const std::string characterName, const std::string categoryName)
+std::string CharacterCommands::getNextCategory(const std::string characterName, const std::string categoryName)
 {
 	for (unsigned int i = 0; i < categories[characterName].size(); i++) {
 		if (categories[characterName][i] == categoryName) {
@@ -40,6 +40,19 @@ std::string CharacterCommands::selectNextCaregory(const std::string characterNam
 			}
 
 			return categories[characterName][0];
+		}
+	}
+}
+
+std::string CharacterCommands::getPreviousCategory(const std::string characterName, const std::string categoryName)
+{
+	for (unsigned int i = 0; i < categories[characterName].size(); i++) {
+		if (categories[characterName][i] == categoryName) {
+			if (i == 0) {
+				return categories[characterName][categories[characterName].size()-1];
+			}
+
+			return categories[characterName][i-1];
 		}
 	}
 }

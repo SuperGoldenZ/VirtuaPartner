@@ -44,6 +44,7 @@ public:
 	std::string categoryToString(std::string category);
 
 	void selectNextCategory();
+	void selectPreviousCategory();
 };
 
 #endif

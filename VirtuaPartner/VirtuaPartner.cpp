@@ -487,6 +487,11 @@ int main()
 			model.selectNextCategory();
 			reprintMenu = true;
 		}
+		if (GetAsyncKeyState(VK_PRIOR)) {
+			while (GetAsyncKeyState(VK_PRIOR) != 0);
+			model.selectPreviousCategory();
+			reprintMenu = true;
+		}
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			model.punishCheck = !model.punishCheck;

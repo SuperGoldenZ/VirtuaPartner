@@ -19,6 +19,7 @@ public:
 	std::vector<std::string> getCommands(const std::string characterName, const std::string categoryName);
 	void clear();
 	std::vector<std::string> getCategories(const std::string characterName);
-	std::string selectNextCaregory(const std::string characterName, const std::string categoryName);
+	std::string getNextCategory(const std::string characterName, const std::string categoryName);
+	std::string getPreviousCategory(const std::string characterName, const std::string categoryName);
 };
 
