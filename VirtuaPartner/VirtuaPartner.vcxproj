@@ -153,17 +153,17 @@
     <ClCompile Include="WindowPixelChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="configs\akira.txt">
+    <Text Include="configs\akira.yml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\aoi.txt">
+    <Text Include="configs\aoi.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\blaze.txt">
+    <Text Include="configs\blaze.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\brad.txt" />
+    <Text Include="configs\brad.yml" />
     <Text Include="configs\defense.txt" />
     <Text Include="configs\eileen.txt">
       <DeploymentContent>true</DeploymentContent>
