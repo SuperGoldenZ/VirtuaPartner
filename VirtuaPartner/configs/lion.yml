@@ -1,0 +1,28 @@
+CharacterName: L[i]on
+Categories:
+  - Backturned
+    - 44+P552+K
+  - Punishable
+    - PPP+K
+    - 6+PP
+    - 6+K+G
+    - 3+PP #throwcounterable
+    - 66+K5K
+    - 4+KP
+    - 46+P+KPP
+  - Punishable Low
+    - 9+G5K #recoverslow
+    - 4+P+K+G5PP52+K #recoverslow
+    - 1+K+G
+    - 1+K #recoverslow
+    - 2+K+G #recoverslow
+    - 9+P+K+GK #recoverslow
+    - 2+P+K #recoverslow
+    - 1+P+K #recoverslow
+    - 43+P #recoverslow
+    - 41236+P #recoverslow
+    - 1+PP #recoverslow
+    - 2+KK #recoverslow
+  - Toro Teihozen
+    - 4+P+K+GPPK55P
+    - 554+P+K+G5PP52+K #recoverslow
