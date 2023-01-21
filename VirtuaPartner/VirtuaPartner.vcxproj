@@ -165,34 +165,28 @@
     </Text>
     <Text Include="configs\brad.yml" />
     <Text Include="configs\defense.txt" />
-    <Text Include="configs\eileen.txt">
+    <Text Include="configs\eileen.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\goh.txt">
+    <Text Include="configs\goh.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\jacky.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\jean.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
     <Text Include="configs\jeffry.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\kage.txt" />
+    <Text Include="configs\kage.yml" />
     <Text Include="configs\lau.yml" />
-    <Text Include="configs\leifei.txt" />
+    <Text Include="configs\leifei.yml" />
     <Text Include="configs\lion.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\pai.yml" />
-    <Text Include="configs\sarah.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
-    <Text Include="configs\shun.txt" />
-    <Text Include="configs\taka.txt" />
-    <Text Include="configs\vanessa.txt" />
+    <Text Include="configs\shun.yml" />
+    <Text Include="configs\taka.yml" />
+    <Text Include="configs\vanessa.yml" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CharacterCommands.h" />
@@ -212,6 +206,8 @@
     <None Include="..\README.md">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="configs\jean.yml" />
+    <None Include="configs\sarah.yml" />
     <None Include="configs\wolf.yml" />
   </ItemGroup>
   <ItemGroup>
