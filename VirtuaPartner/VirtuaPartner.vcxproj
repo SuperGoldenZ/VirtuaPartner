@@ -181,9 +181,6 @@
       <DeploymentContent>true</DeploymentContent>
     </Text>
     <Text Include="configs\kage.txt" />
-    <Text Include="configs\lau.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
     <Text Include="configs\lau.yml" />
     <Text Include="configs\leifei.txt" />
     <Text Include="configs\lion.yml">
@@ -196,10 +193,6 @@
     <Text Include="configs\shun.txt" />
     <Text Include="configs\taka.txt" />
     <Text Include="configs\vanessa.txt" />
-    <Text Include="configs\wolf.txt">
-      <DeploymentContent>true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CharacterCommands.h" />
@@ -219,6 +212,7 @@
     <None Include="..\README.md">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="configs\wolf.yml" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="failed_01.wav">
