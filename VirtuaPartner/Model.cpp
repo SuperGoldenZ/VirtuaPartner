@@ -50,20 +50,6 @@ void Model::loadConfigFiles()
 	} while (FindNextFile(hFind, &ffd) != 0);
 }
 
-/*
-int Model::getCurrentCategoryIndex()
-{
-int currentCategoryIndex = -1;
-for (int i = 0; i < 19; i++) {
-if (allCharacterCpuCommandStrings[i][0] == currentCpuCharacter) {
-currentCategoryIndex = i;
-break;
-}
-}
-
-return currentCategoryIndex;
-}*/
-
 void Model::readConfigYamlFile(std::string filename)
 {
 	std::vector<std::string> strings;
