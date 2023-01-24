@@ -362,42 +362,6 @@ void saveStats()
 	outfile.close();
 }
 
-void readStats()
-{
-	std::vector<std::string> strings;
-
-	std::ifstream file("stats.csv");
-	if (!file.good()) {
-		return;
-	}
-
-	std::string firstLine;
-
-	if (file.is_open()) {
-		for (std::string line; getline(file, line);) {
-			std::stringstream ss(line);
-			string key = "";
-			int i = 0;
-			PunishStats stats;
-
-			for (std::string field; getline(ss, field, ','); ) {
-				switch (i) {
-				case 0:
-					key = field;
-					break;
-				case 1:
-					stats.punishCount = std::stoi(field);
-					break;
-				case 2:
-					stats.failureCount = std::stoi(field);
-					break;
-				}
-				i++;
-			}
-			model.punishStats[key] = stats;
-		}
-	}
-}
 
 int getRandomStarredMove(vector<string> stringArray)
 {
@@ -449,7 +413,7 @@ int main()
 
 	model.stringArray = model.getStrings(model.currentCpuCharacter);
 
-	readStats();
+	PunishStats::readStatsFromFile(&model.punishStats);
 
 	bool reprintMenu = true;
 
@@ -604,7 +568,7 @@ int main()
 				//executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
-				executeCommandString(model.selectedCommand, false, 1, ONE_FRAME, model.currentCpuCharacter + model.selectedCategory + model.selectedCommand);
+				executeCommandString(model.selectedCommand, false, 1, ONE_FRAME, model.getStatsIndex(model.selectedCommand));
 			}
 
 			saveStats();

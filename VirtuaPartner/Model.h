@@ -53,6 +53,7 @@ public:
 	bool isSelectedCommand(const std::string command);
 	void setToDefaltCategory();
 	std::string getRandomCommand();
+	std::string getStatsIndex(const std::string command);
 };
 
 #endif

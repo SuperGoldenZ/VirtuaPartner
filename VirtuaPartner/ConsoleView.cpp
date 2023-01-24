@@ -139,17 +139,27 @@ void ConsoleView::printMenu(Model model)
 		std::cout << std::endl;
 
 		// Print moves
-		for (unsigned int i = 0; i < model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory).size(); i++) {
+		const std::vector<std::string> commands = model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory);
+
+		for (unsigned int i = 0; i < commands.size(); i++) {
 			if (model.punishCheck) {
-				if (model.isSelectedCommand(model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory)[i])) {
+				if (model.isSelectedCommand(commands[i])) {
 					std::cout << "*";
 				}
 				else {
 					std::cout << " ";
 				}
 			}
-			printCharacterName(model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory)[i],
-				model.selectedCommand == model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory)[i], 1);
+			const std::string commandToPrint = commands[i];
+			printCharacterName(commandToPrint,
+				model.selectedCommand == commands[i], 0, 35);
+
+			if (model.punishCheck) {
+				std::string statsIndex = model.getStatsIndex(commands[i]);
+				std::cout << model.punishStats[statsIndex].toString();
+			}
+
+			std::cout << std::endl;
 		}
 	}
 	else {
@@ -163,58 +173,6 @@ void ConsoleView::printMenu(Model model)
 		}
 		std::cout << std::endl;
 	}
-
-	/*
-	while ((i < model.allCharacterCpuCommandStrings.size() || moveNumber < model.allCharacterCpuCommandStrings[currentCategoryIndex].size()) && (model.player2Character != "" || model.playerToSelect == 2)) {
-	if (i < model.allCharacterCpuCommandStrings.size()) {
-	if (model.playerToSelect == 2) {
-	printCharacterName(model.allCharacterCpuCommandStrings[i][0],
-	model.currentCpuCharacter == model.allCharacterCpuCommandStrings[i][0],
-	0);
-	}
-	i++;
-	}
-	else {
-	for (int j = 0; j <= 10; j++) {
-	std::cout << " ";
-	}
-	}
-
-	// Print moves on the right side
-	if (moveNumber < model.allCharacterCpuCommandStrings[currentCategoryIndex].size()) {
-	std::string statsIndex = model.allCharacterCpuCommandStrings[currentCategoryIndex][0] + model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber];
-
-	if (model.playerToSelect == -1) {
-	if (model.punishCheck) {
-	if (model.selectedStrings[statsIndex]) {
-	std::cout << "*";
-	}
-	else {
-	std::cout << " ";
-	}
-	if (model.stringIndex < model.stringArray.size() - 1) {
-	printCharacterName(
-	model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber],
-	model.stringArray[model.stringIndex] == model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber],
-	0,
-	35);
-	std::cout << model.punishStats[statsIndex].toString();
-	}
-	else {
-	std::cout << "invalid stringindex " << model.stringIndex << " " << model.stringArray.size();
-	}
-	}
-	else {
-	std::cout << " ";
-	printCharacterName(model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber], model.stringArray[model.stringIndex] == model.allCharacterCpuCommandStrings[currentCategoryIndex][moveNumber], -1);
-	}
-	}
-
-	moveNumber++;
-	}
-
-	std::cout << std::endl;
-	} */
 
 	std::cout << std::endl;
 

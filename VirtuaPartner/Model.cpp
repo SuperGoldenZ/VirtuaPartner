@@ -271,3 +271,8 @@ std::string Model::getRandomCommand()
 	selectedCommand = characterCommands.getRandomCommand(currentCpuCharacter, selectedCategory);
 	return selectedCommand;
 }
+
+std::string Model::getStatsIndex(const std::string command)
+{
+	return currentCpuCharacter + selectedCategory + command;
+}
