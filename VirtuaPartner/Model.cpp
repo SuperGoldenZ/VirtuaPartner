@@ -201,8 +201,8 @@ bool Model::updateSelectedPlayers(std::string newPlayer1Character, std::string n
 		player2Character = categoryToString(currentCpuCharacter);
 		stringArray = getStrings(currentCpuCharacter);
 
-		std::vector<std::string> commands = characterCommands.getCommands(selectedCategory, currentCpuCharacter);
-		if (commands.size() > 1) {
+		std::vector<std::string> commands = characterCommands.getCommands(currentCpuCharacter, selectedCategory);
+		if (commands.size() >= 1) {
 			selectedCommand = commands[0];
 		}
 
