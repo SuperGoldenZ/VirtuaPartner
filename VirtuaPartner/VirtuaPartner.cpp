@@ -49,12 +49,9 @@ bool isVirtuaFighterGameWindow(HWND hWnd)
 		return false;
 	}
 
-	if (windowTitle.find("Virtua Fighter 5 Final Showdown") == std::string::npos) {
-		return false;
-	}
-
-	// Prevent false positives (though limit to emulator like rpc3s & Vulkan)
-	if (windowTitle.find("Vulkan") == std::string::npos) {
+	if (windowTitle.find("Virtua Fighter 5 Final Showdown") == std::string::npos &&
+		windowTitle.find("The Song of Life") == std::string::npos
+		) {
 		return false;
 	}
 
