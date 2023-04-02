@@ -1,0 +1,32 @@
+CharacterName: Ja[c]ky
+Categories:
+  - Punishable
+    - 7+K+G
+    - PP56+PPP    
+    - PP56+PK
+    - 6+PPP
+    - 6+PK
+    - KK
+    - 6+K
+    - 3+KP52+K5K
+    - 9+KK
+    - P+K
+    - 1+P+KP5P
+    - 46+K+G
+    - 2+K+GKKK5K
+  - Punishable Shuffle
+    - 2+G___54+P+K+G52+KKK
+    - 4+P+K+G5P+KP
+  - Punishable Backturned
+    - 44+P5552+K
+  - Punishable Low
+    - 5PP56+PP52+K #hitslow
+    - 56+PP52+K
+    - 4+P52+K #hitslow
+    - 51+K #recoverslow
+    - 5K+G5K #recoverslow
+    - 51+K+G
+    - 9+G5K #recoverslow
+  - Charge
+    - 3+PPP+K
+    - 3+PPP+K_____ #fullcharge

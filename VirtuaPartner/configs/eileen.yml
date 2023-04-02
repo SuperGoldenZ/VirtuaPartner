@@ -1,0 +1,14 @@
+CharacterName: [E]ileen
+Categories:
+  - Punishable
+    - 333+P+K5P
+    - 6+P+KP5P
+    - 9+K
+    - 6+PP52+K
+    - 3+PP
+    - 4+PP5K
+    - P53+PK
+  - Punishable Low
+    - 552+K #recoverslow
+    - 552+K+G #recoverslow
+    - 1+K #recoverslow

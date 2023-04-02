@@ -122,70 +122,55 @@ void ConsoleView::printMenu(Model model)
 		printCharacterName("P[u]nish Check", model.punishCheck, 2);
 	}
 
-	int currentCategoryIndex = model.getCurrentCategoryIndex();
-
-	if (currentCategoryIndex == -1) {
-		return;
-	}
-
 	int moveNumber = 1;
 	int i = 0;
 	SetConsoleTextAttribute(hConsole, 112);
 	if (model.playerToSelect == -1) {
-		std::cout << "CPU Char Commands: " << std::endl;
-	}
-	else {
-		std::cout << "Select player " << model.playerToSelect << " " << std::endl;
-	}
+		std::cout << "\nCategories: ";
 
-	while ((i < model.categories.size() || moveNumber < model.categories[currentCategoryIndex].size()) && (model.player2Character != "" || model.playerToSelect == 2)) {
-		if (i < model.categories.size()) {
-			if (model.playerToSelect == 2) {
-				printCharacterName(model.categories[i][0],
-					model.currentCategory == model.categories[i][0],
-					0);
-			}
-			i++;
+		SetConsoleTextAttribute(hConsole, 7);
+		std::cout << "|";
+		for (unsigned int i = 0; i < model.characterCommands.getCategories(model.currentCpuCharacter).size(); i++) {
+
+			printCharacterName(model.characterCommands.getCategories(model.currentCpuCharacter)[i],
+				model.characterCommands.getCategories(model.currentCpuCharacter)[i] == model.selectedCategory, 0);
+			std::cout << "|";
 		}
-		else {
-			for (int j = 0; j <= 10; j++) {
-				std::cout << " ";
-			}
-		}
+		std::cout << std::endl;
 
-		// Print moves on the right side
-		if (moveNumber < model.categories[currentCategoryIndex].size()) {
-			std::string statsIndex = model.categories[currentCategoryIndex][0] + model.categories[currentCategoryIndex][moveNumber];
+		// Print moves
+		const std::vector<std::string> commands = model.characterCommands.getCommands(model.currentCpuCharacter, model.selectedCategory);
 
-			if (model.playerToSelect == -1) {
-				if (model.punishCheck) {
-					if (model.selectedStrings[statsIndex]) {
-						std::cout << "*";
-					}
-					else {
-						std::cout << " ";
-					}
-					if (model.stringIndex < model.stringArray.size() - 1) {
-						printCharacterName(
-							model.categories[currentCategoryIndex][moveNumber],
-							model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber],
-							0,
-							35);
-						std::cout << model.punishStats[statsIndex].toString();
-					}
-					else {
-						std::cout << "invalid stringindex " << model.stringIndex << " " << model.stringArray.size();
-					}
+		for (unsigned int i = 0; i < commands.size(); i++) {
+			if (model.punishCheck) {
+				if (model.isSelectedCommand(commands[i])) {
+					std::cout << "*";
 				}
 				else {
 					std::cout << " ";
-					printCharacterName(model.categories[currentCategoryIndex][moveNumber], model.stringArray[model.stringIndex] == model.categories[currentCategoryIndex][moveNumber], -1);
 				}
 			}
+			const std::string commandToPrint = commands[i];
+			printCharacterName(commandToPrint,
+				model.selectedCommand == commands[i], 0, 35);
 
-			moveNumber++;
+			if (model.punishCheck) {
+				std::string statsIndex = model.getStatsIndex(commands[i]);
+				std::cout << model.punishStats[statsIndex].toString();
+			}
+
+			std::cout << std::endl;
 		}
+	}
+	else {
+		std::cout << "\nSelect player " << model.playerToSelect << " " << std::endl;
+		// Print characters when player wants to select
 
+		for (unsigned int i = 0; i < model.characterCommands.numCharactersLoaded; i++) {
+			printCharacterName(model.characterCommands.characterNames[i],
+				model.currentCpuCharacter == model.characterCommands.characterNames[i],
+				0);
+		}
 		std::cout << std::endl;
 	}
 
@@ -194,13 +179,13 @@ void ConsoleView::printMenu(Model model)
 	SetConsoleTextAttribute(hConsole, 112);
 	std::cout << "NumPad Controls: " << std::endl;
 
-	printCharacterName("[+] Next String", false, 0, 35);
-	printCharacterName("[-] Prev String", false, 1);
+	printCharacterName("[Up Arrow] Next String", false, 0, 35);
+	printCharacterName("[Down Arrow] Prev String", false, 1);
 
 	printCharacterName("", false, 0, 35);
 	printCharacterName("[*] Toggle favorite", false, 1);
 
-	printCharacterName("[1] Play selected", false, 0, 35);
+	std::cout << "[SPACE] Play selected" << std::endl;
 	printCharacterName("[/] Play favorite (random)", false, 1);
 
 	printCharacterName("[0] Start repeat (cur selected)", false, 0, 35);

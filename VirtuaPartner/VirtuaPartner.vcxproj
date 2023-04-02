@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterCommands.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PunishChecker.cpp" />
     <ClCompile Include="PunishCheckerBlaze.cpp" />
@@ -152,54 +153,43 @@
     <ClCompile Include="WindowPixelChecker.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="configs\akira.txt">
+    <Text Include="configs\akira.yml">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\aoi.txt">
+    <Text Include="configs\aoi.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\blaze.txt">
+    <Text Include="configs\blaze.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\brad.txt" />
+    <Text Include="configs\brad.yml" />
     <Text Include="configs\defense.txt" />
-    <Text Include="configs\eileen.txt">
+    <Text Include="configs\eileen.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\goh.txt">
+    <Text Include="configs\goh.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\jacky.txt">
+    <Text Include="configs\jacky.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\jean.txt">
+    <Text Include="configs\jeffry.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\jeffry.txt">
+    <Text Include="configs\kage.yml" />
+    <Text Include="configs\lau.yml" />
+    <Text Include="configs\leifei.yml" />
+    <Text Include="configs\lion.yml">
       <DeploymentContent>true</DeploymentContent>
     </Text>
-    <Text Include="configs\kage.txt" />
-    <Text Include="configs\lau.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
-    <Text Include="configs\leifei.txt" />
-    <Text Include="configs\lion.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
-    <Text Include="configs\pai.txt" />
-    <Text Include="configs\sarah.txt">
-      <DeploymentContent>true</DeploymentContent>
-    </Text>
-    <Text Include="configs\shun.txt" />
-    <Text Include="configs\taka.txt" />
-    <Text Include="configs\vanessa.txt" />
-    <Text Include="configs\wolf.txt">
-      <DeploymentContent>true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-    </Text>
+    <Text Include="configs\pai.yml" />
+    <Text Include="configs\shun.yml" />
+    <Text Include="configs\taka.yml" />
+    <Text Include="configs\vanessa.yml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharacterCommands.h" />
     <ClInclude Include="keyboard.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PunishChecker.h" />
@@ -216,6 +206,9 @@
     <None Include="..\README.md">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="configs\jean.yml" />
+    <None Include="configs\sarah.yml" />
+    <None Include="configs\wolf.yml" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="failed_01.wav">

@@ -8,16 +8,19 @@
 #include <map>
 
 #include "PunishStats.h"
+#include "CharacterCommands.h"
 
 class Model
 {
 private:
-	std::vector<std::string> readFile(std::string filename);
+	void readConfigYamlFile(std::string filename);
 
 public:
 	std::string player1Character;
 	std::string player2Character;
-	
+	std::string selectedCategory = "";
+	std::string selectedCommand = "";
+
 	int playerToSelect = -1;
 	
 	//If CPU is on the left side or not
@@ -26,20 +29,31 @@ public:
 	//Whether to give feedback on guaranteed punish damage or not
 	bool punishCheck = true;
 
-	unsigned int stringIndex = 1;
+	CharacterCommands characterCommands;
 
 	Model();
 
 	std::map<std::string, PunishStats> punishStats;
-	std::map<std::string, bool> selectedStrings;	
-	std::string currentCategory;
-	std::vector<std::vector<std::string>> categories;
+	std::map<std::string, bool> selectedStrings;
+	std::string currentCpuCharacter = "";
 	std::vector<std::string> stringArray;
 	std::vector<std::string> getStrings(std::string category);
 	bool updateSelectedPlayers(std::string newPlayer1Character, std::string newPlayer2Character);
-	int getCurrentCategoryIndex();
+
 	void loadConfigFiles();
 	std::string categoryToString(std::string category);
+
+	void selectNextCategory();
+	void selectPreviousCategory();
+
+	void selectNextCommand();
+	void selectPreviousCommand();
+
+	void toggleSelectedCommand();
+	bool isSelectedCommand(const std::string command);
+	void setToDefaltCategory();
+	std::string getRandomCommand();
+	std::string getStatsIndex(const std::string command);
 };
 
 #endif

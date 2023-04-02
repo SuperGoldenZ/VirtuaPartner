@@ -1,0 +1,19 @@
+CharacterName: [W]olf
+Categories:
+  - Charge
+    - P+K_____
+  - Punishable
+    - P56+PP
+    - 6+PP
+    - 46+P
+    - 624+P5P
+    - 336+P
+    - 6+P+K
+    - 46+P+K
+    - 33+P+K
+    - 66+K+G
+    - 4+K+GK
+  - Punishable Low
+    - 55562+K #recoverslow
+    - 552+K #recoverslow
+    - 9+G5K #recoverslow

@@ -1,0 +1,25 @@
+CharacterName: [J]ean
+Categories:
+  - Charge
+    - K______ #fullcharge
+    - K___P+K #charge
+    - 33+PK_____ #fullcharge
+    - 33+PK___P+K #charge
+    - 4+PP___   #fullcharge
+    - 4+PP__P+K #charge
+    - PKP____  #fullcharge
+    - PKP__P+K #charge
+    - PPP____  #fullcharge
+    - PPP__P+K #charge
+  - Punishable
+    - 6+K
+    - 4+KK5P
+    - 66+P+K #throwcounterable
+    - 236+P+K
+    - 2+K+G
+    - 9+K+G
+  - Punishable Low
+    - PP52+K #hitslow
+    - 4+KK5K #hitslow
+    - 1+K #recoverslow
+    - 1+K+G #hitslow

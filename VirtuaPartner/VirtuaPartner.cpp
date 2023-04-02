@@ -49,12 +49,9 @@ bool isVirtuaFighterGameWindow(HWND hWnd)
 		return false;
 	}
 
-	if (windowTitle.find("Virtua Fighter 5 Final Showdown") == std::string::npos) {
-		return false;
-	}
-
-	// Prevent false positives (though limit to emulator like rpc3s & Vulkan)
-	if (windowTitle.find("Vulkan") == std::string::npos) {
+	if (windowTitle.find("Virtua Fighter 5 Final Showdown") == std::string::npos &&
+		windowTitle.find("The Song of Life") == std::string::npos
+		) {
 		return false;
 	}
 
@@ -362,42 +359,6 @@ void saveStats()
 	outfile.close();
 }
 
-void readStats()
-{
-	std::vector<std::string> strings;
-
-	std::ifstream file("stats.csv");
-	if (!file.good()) {
-		return;
-	}
-
-	std::string firstLine;
-
-	if (file.is_open()) {
-		for (std::string line; getline(file, line);) {
-			std::stringstream ss(line);
-			string key = "";
-			int i = 0;
-			PunishStats stats;
-
-			for (std::string field; getline(ss, field, ','); ) {
-				switch (i) {
-				case 0:
-					key = field;
-					break;
-				case 1:
-					stats.punishCount = std::stoi(field);
-					break;
-				case 2:
-					stats.failureCount = std::stoi(field);
-					break;
-				}
-				i++;
-			}
-			model.punishStats[key] = stats;
-		}
-	}
-}
 
 int getRandomStarredMove(vector<string> stringArray)
 {
@@ -447,10 +408,9 @@ int main()
 
 	model.loadConfigFiles();
 
-	model.currentCategory = model.categories[0][0];
-	model.stringArray = model.getStrings(model.currentCategory);
+	model.stringArray = model.getStrings(model.currentCpuCharacter);
 
-	readStats();
+	PunishStats::readStatsFromFile(&model.punishStats);
 
 	bool reprintMenu = true;
 
@@ -463,26 +423,42 @@ int main()
 		}
 
 		if (random) {
-			model.stringIndex = (rand() % model.stringArray.size());
-			if (model.stringIndex == 0) {
-				model.stringIndex = 1;
-			}
-			ui.printMenu(model);
-			std::cout << std::endl << "Random string #" << model.stringIndex << " / " << (model.stringArray.size() - 1) << std::endl;
+			model.getRandomCommand();
+		}
+
+		/*
+		if (random) {
+		model.stringIndex = (rand() % model.stringArray.size());
+		if (model.stringIndex == 0) {
+		model.stringIndex = 1;
+		}
+		ui.printMenu(model);
+		std::cout << std::endl << "Random string #" << model.stringIndex << " / " << (model.stringArray.size() - 1) << std::endl;
 		}
 		else if (randomSelectedOnly) {
-			int tempStringIndex = getRandomStarredMove(model.stringArray);
+		int tempStringIndex = getRandomStarredMove(model.stringArray);
 
-			if (tempStringIndex == -1) {
-				repeat = false;
-				randomSelectedOnly = false;
-			}
-			else {
-				model.stringIndex = tempStringIndex;
-				reprintMenu = true;
-			}
+		if (tempStringIndex == -1) {
+		repeat = false;
+		randomSelectedOnly = false;
 		}
+		else {
+		model.stringIndex = tempStringIndex;
+		reprintMenu = true;
+		}
+		}*/
 
+		if (GetAsyncKeyState(VK_NEXT)) {
+			while (GetAsyncKeyState(VK_NEXT) != 0);
+			model.selectNextCategory();
+			reprintMenu = true;
+		}
+		if (GetAsyncKeyState(VK_PRIOR)) {
+			while (GetAsyncKeyState(VK_PRIOR) != 0);
+			model.selectPreviousCategory();
+
+			reprintMenu = true;
+		}
 		if (GetAsyncKeyState(KEYS['U']) != 0) {
 			while (GetAsyncKeyState(KEYS['U']) != 0);
 			model.punishCheck = !model.punishCheck;
@@ -523,33 +499,30 @@ int main()
 
 		if (GetAsyncKeyState(VK_MULTIPLY) != 0) {
 			while (GetAsyncKeyState(VK_MULTIPLY) != 0);
-			model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]] = !model.selectedStrings[model.stringArray[0] + model.stringArray[model.stringIndex]];
+			model.toggleSelectedCommand();
 			reprintMenu = true;
 		}
-		else if (GetAsyncKeyState(VK_ADD) != 0) {
-			while (GetAsyncKeyState(VK_ADD) != 0);
-			if (model.stringIndex < model.stringArray.size() - 1) {
-				model.stringIndex++;
-				reprintMenu = true;
-			}
+		else if (GetAsyncKeyState(VK_DOWN) != 0) {
+			while (GetAsyncKeyState(VK_DOWN) != 0);
+			model.selectNextCommand();
+			reprintMenu = true;
 		}
-		else if (GetAsyncKeyState(VK_SUBTRACT) != 0 && model.stringIndex > 0) {
-			while (GetAsyncKeyState(VK_SUBTRACT) != 0);
-			if (model.stringIndex > 1) {
-				model.stringIndex--;
-				reprintMenu = true;
-			}
+		else if (GetAsyncKeyState(VK_UP) != 0) {
+			while (GetAsyncKeyState(VK_UP) != 0);
+			model.selectPreviousCommand();
+			reprintMenu = true;
 		}
 
 		if (model.playerToSelect == 2) {
-			for (unsigned int i = 0; i < model.categories.size(); i++) {
-				byte shortcutKeycote = getKeyEventCode(model.categories[i][0]);
+			for (unsigned int i = 0; i < model.characterCommands.numCharactersLoaded; i++) {
+				const std::string characterName(model.characterCommands.characterNames[i]);
+				byte shortcutKeycote = getKeyEventCode(characterName);
 				if (GetAsyncKeyState(shortcutKeycote) != 0) {
 					while (GetAsyncKeyState(shortcutKeycote) != 0);
-					model.currentCategory = model.categories[i][0];
-					model.player2Character = model.categoryToString(model.currentCategory);
-					model.stringArray = model.getStrings(model.currentCategory);
-					model.stringIndex = 1;
+					model.currentCpuCharacter = characterName;
+					model.player2Character = model.categoryToString(model.currentCpuCharacter);
+					model.stringArray = model.getStrings(model.currentCpuCharacter);
+					model.setToDefaltCategory();
 					reprintMenu = true;
 					model.playerToSelect = -1;
 					break;
@@ -562,28 +535,37 @@ int main()
 			repeat = true;
 			randomSelectedOnly = true;
 		}
-		else if (GetAsyncKeyState(VK_NUMPAD1) != 0 || repeat || GetAsyncKeyState(VK_DIVIDE)) {
-			if (GetAsyncKeyState(VK_DIVIDE)) {
+		else if (GetAsyncKeyState(VK_SPACE) != 0 || repeat) {
+			if (repeat == true && GetAsyncKeyState(VK_SPACE) != 0) {
+				repeat = false;
+				random = false;
+				std::cout << "\nStopped repeat";
+				while (GetAsyncKeyState(VK_SPACE) != 0);
+				continue;
+			}
+			if (GetAsyncKeyState(KEYS['R'])) {
+				repeat = true;
+				random = true;
+				reprintMenu = true;
+				/*
 				int tempStringIndex = getRandomStarredMove(model.stringArray);
 
 				if (tempStringIndex == -1) {
-					repeat = false;
-					randomSelectedOnly = false;
-					continue;
+				repeat = false;
+				randomSelectedOnly = false;
+				continue;
 				}
 				else {
-					model.stringIndex = tempStringIndex;
-					reprintMenu = true;
-				}
+				//model.stringIndex = tempStringIndex;
+				reprintMenu = true;
+				}*/
 			}
-
-			while (GetAsyncKeyState(VK_NUMPAD1) != 0);
 			while (GetAsyncKeyState(VK_DIVIDE) != 0);
-			if (model.currentCategory == "[D]efense") {
-				executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
+			if (model.currentCpuCharacter == "[D]efense") {
+				//executeCommandString(model.stringArray[model.stringIndex], true, 8, 1);
 			}
 			else {
-				executeCommandString(model.stringArray[model.stringIndex], false, 1, ONE_FRAME, model.stringArray[0] + model.stringArray[model.stringIndex]);
+				executeCommandString(model.selectedCommand, false, 1, ONE_FRAME, model.getStatsIndex(model.selectedCommand));
 			}
 
 			saveStats();
@@ -603,7 +585,7 @@ int main()
 		}
 
 		model.loadConfigFiles();
-		model.stringArray = model.getStrings(model.currentCategory);
+		model.stringArray = model.getStrings(model.currentCpuCharacter);
 	}
 
 
