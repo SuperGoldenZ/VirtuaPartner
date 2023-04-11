@@ -15,6 +15,7 @@ VirtuaPartner.cpp
 #include <thread>
 #include <sstream>
 #include <algorithm>
+#include <future>
 
 #include "keyboard.h"
 #include "ConsoleView.h"
@@ -103,6 +104,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 	}
 
 	bool holdForward = false;
+	bool beep = false;
 
 	//Will loop in case of performing defense manuver
 	//In case CPU is on offense, loopCount will always be 1
@@ -118,7 +120,10 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				Sleep(3);
 				keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
 			} else if (str[i] == '|') {
-				holdForward = true;
+				if (str[i - 1] == '6') {
+					holdForward = true;
+				}
+				beep = true;
 				std::cout << "|";
 				Sleep(12);
 				continue;
@@ -133,7 +138,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				if (str[i] == '_') {
 					std::cout << "_";
 				}
-				else if (str[i] != '!' && str[i] != '|' && !holdForward) {
+				else if (str[i] != '!' && !holdForward) {
 					liftAllKeys(defense);
 				}
 
@@ -159,11 +164,17 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				keybd_event(KEYS['P'], 0, 0, 0);
 				executeNext = true;
 				std::cout << "P";
+				if (beep) {
+					std::async(std::launch::async, [] { Beep(2000, 12); });
+				}
 				break;
 			case 'K':
 				keybd_event(KEYS['K'], 0, 0, 0);
 				std::cout << "K";
-				Beep(2000, 24);
+				if (beep || i < str.size() - 1 && str[i+1] == '|') {
+					std::async(std::launch::async, [] { Beep(2000, 12); });
+				}
+
 				executeNext = true;
 				break;
 			case 'G':
@@ -285,7 +296,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			std::cout << '\a';
 			std::cout << " G...";
 			if (holdForward) {
-				Beep(2000, 24);
+				std::async(std::launch::async, [] { Beep(2000, 24); });
 			}
 		}
 
@@ -434,6 +445,8 @@ int main()
 	bool reprintMenu = true;
 
 	const WindowPixelChecker vfChecker(vfWindow);
+
+	liftAllKeys(false);
 
 	while (true) {
 		if (reprintMenu) {
