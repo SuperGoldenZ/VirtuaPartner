@@ -102,6 +102,8 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		std::cout << " Holding Guard (";
 	}
 
+	bool holdForward = false;
+
 	//Will loop in case of performing defense manuver
 	//In case CPU is on offense, loopCount will always be 1
 	for (size_t loop = 0; loop < loopCount; loop++) {
@@ -115,6 +117,11 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				std::cout << "!";
 				Sleep(3);
 				keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
+			} else if (str[i] == '|') {
+				holdForward = true;
+				std::cout << "|";
+				Sleep(12);
+				continue;
 			}
 
 			//60 / 12 = 5 ms
@@ -126,7 +133,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 				if (str[i] == '_') {
 					std::cout << "_";
 				}
-				else if (str[i] != '!') {
+				else if (str[i] != '!' && str[i] != '|' && !holdForward) {
 					liftAllKeys(defense);
 				}
 
@@ -156,6 +163,7 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			case 'K':
 				keybd_event(KEYS['K'], 0, 0, 0);
 				std::cout << "K";
+				Beep(2000, 24);
 				executeNext = true;
 				break;
 			case 'G':
@@ -257,8 +265,9 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		}
 	}
 
-
-	Sleep(sleepCount * 12);
+	if (str[str.size()-1] != '|') {
+		Sleep(sleepCount * 12);
+	}
 
 	liftAllKeys(false);
 
@@ -273,7 +282,11 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 		// and hit if you are not fast enough
 		if (str.find("#throwcounterable") == std::string::npos || !model.punishCheck) {
 			keybd_event(KEYS['G'], 0, 0, 0);
+			std::cout << '\a';
 			std::cout << " G...";
+			if (holdForward) {
+				Beep(2000, 24);
+			}
 		}
 
 		if (model.punishCheck) {
@@ -335,7 +348,13 @@ void executeCommandString(std::string str, bool defense = false, size_t loopCoun
 			}
 		}
 
-		Sleep(1000);
+		if (str[str.size() - 1] != '|') {
+			Sleep(1000);
+		}
+		else {
+			Sleep(12);
+		}
+
 		system("color 0F");
 		setDefaultConsoleText();
 		keybd_event(KEYS['G'], 0, KEYEVENTF_KEYUP, 0);
@@ -447,7 +466,6 @@ int main()
 		reprintMenu = true;
 		}
 		}*/
-
 		if (GetAsyncKeyState(VK_NEXT)) {
 			while (GetAsyncKeyState(VK_NEXT) != 0);
 			model.selectNextCategory();
